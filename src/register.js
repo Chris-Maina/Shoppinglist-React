@@ -6,40 +6,75 @@ import Button from 'muicss/lib/react/button';
 import Panel from 'muicss/lib/react/panel';
 
 class RegisterPage extends Component {
+
     render() {
         return (
             <div >
-                <RegisterForm 
-                title="Register"
-                buttonClass="btn-register"/>
+                <RegisterForm
+                    title="Register"
+                />
             </div>
         );
     }
 }
 class RegisterForm extends Component {
+    constructor(props) {
+        super(props);
+        this.state = { username: '', email: '', password: '', cpassword: '', errors: [] };
+        this.handelsubmit = this.handelsubmit.bind(this);
+        this.onInputChange = this.onInputChange.bind(this);
+        this.validate = this.validate.bind(this);
+    }
+
+    onInputChange(evt) {
+        evt.preventDefault();
+        let fields = {};
+        fields[evt.target.name] = evt.target.value;
+        this.setState(fields);
+    }
+    handelsubmit(evt) {
+        const errors = this.validate(this.state.username, this.state.email, this.state.password, this.state.cpassword)
+        if (errors.length > 0) {
+            this.setState({ errors })
+        }
+        this.setState({ username: '', email: '', password: '', cpassword: '' });
+        evt.preventDefault();
+    }
+    validate(username, email, password, cpassword) {
+        var errors = [];
+        if (password !== cpassword) {
+            errors.push("Password mismatch");
+            return errors;
+        }
+        if (password.length < 6) {
+            errors.push("Password length should be atleast 6 characters long");
+            return errors;
+        }
+    }
     render() {
         return (
 
             <Panel className="panel-login RegisterForm">
-                    <div className="panel-heading">
-                        <h5 className="mui--text-title">{this.props.title}</h5>
-                    <hr/>
+                <span style={{ color: 'red' }}>{this.state.errors}</span>
+                <div className="panel-heading">
+                    <h5 className="mui--text-title">{this.props.title}</h5>
+                    <hr />
+                </div>
+                <Form onSubmit={this.handelsubmit}>
+                    <Input label=' Username ' name="username" value={this.state.username} onChange={this.onInputChange} floatingLabel={true} required ></Input>
+
+                    <Input label=' Email ' name="email" value={this.state.email} onChange={this.onInputChange} floatingLabel={true} type="email" required ></Input>
+
+                    <Input label=' Password ' name="password" value={this.state.password} onChange={this.onInputChange} floatingLabel={true} type="password" required ></Input>
+
+                    <Input label=' Confirm password ' name="cpassword" value={this.state.cpassword} onChange={this.onInputChange} floatingLabel={true} type="password" required></Input>
+
+                    <Button variant="raised" large className="btn-register"  >{this.props.title}</Button>
+                    <div className="mui--text-center">
+                        <a href="/auth/login" class="forgot-password">Already have an account?Login</a>
                     </div>
-                    <Form >
-                        <Input label=' Username ' floatingLabel={true} required ></Input>
+                </Form>
 
-                        <Input label=' Email ' floatingLabel={true} type="email" required ></Input>
-
-                        <Input label=' Password ' floatingLabel={true} type="password" required ></Input>
-
-                        <Input label=' Confirm password ' floatingLabel={true} type="password" required></Input>
-
-                        <Button variant="raised" large className={this.props.buttonClass}  >{this.props.title}</Button>
-                        <div className="mui--text-center">
-                            <a href="/auth/login" class="forgot-password">Already have an account?Login</a>
-                        </div>
-                    </Form>
-               
             </Panel>
 
         );
