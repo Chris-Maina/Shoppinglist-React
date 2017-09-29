@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { Navbar, NavItem, Button } from 'react-materialize';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import RegisterPage from './register';
-import LoginPage from './login';
+import RegisterPage from './components/register';
+import LoginPage from './components/login';
+import ShoppinglistPage from './components/shoppinglist';
+import ShoppingItemsPage from './components/shoppingitem';
 import './App.css';
 
 class App extends Component {
@@ -24,6 +26,7 @@ class Navigation extends Component {
           <NavItem href='/'>Home</NavItem>
           <NavItem href='/auth/register/'>Register</NavItem>
           <NavItem href='/auth/login/'>Login</NavItem>
+          <NavItem href='/shoppinglist'>My Lists</NavItem>
           {/* Define path for the other pages:
             Register, Login, Buckets, Activities
           
@@ -31,6 +34,8 @@ class Navigation extends Component {
           <Route exact path="/" component={Home} />
           <Route path="/auth/register/" component={RegisterPage} />
           <Route path="/auth/login/" component={LoginPage} />
+          <Route path="/shoppinglist/" component={ShoppinglistPage}/>
+          <Route path="/shoppingitem" component={ShoppingItemsPage}/>
         </Navbar>
       </Router>
     );
@@ -49,7 +54,7 @@ class Home extends Component {
             <p>Shopping list application helps you record all items you wish to buy. It allows you to record and share things you want to spend money on, meeting your needs and
 				        keeping track of your shopping lists. Register to get started!!!
 			      </p>
-            <Button waves='orange' node='a' href="/auth/register/" large className="btn-primary" id="register"> Register </Button>
+            <Button waves='orange' node='a' href="/auth/register/" className="btn-primary" id="register"> Register </Button>
           </div>
         </div>
       </header>
@@ -59,6 +64,7 @@ class Home extends Component {
 }
 
 // Footer
+{/*
 class Footer extends Component {
   render() {
     return (
@@ -71,5 +77,5 @@ class Footer extends Component {
       </footer>
     );
   }
-}
+}*/}
 export default App;
