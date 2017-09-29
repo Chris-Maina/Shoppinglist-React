@@ -1,0 +1,8 @@
+.pagecontent{
+    position: absolute;
+    margin-top: 25% ;
+    left: 50%;
+    width: 100%;
+    color: #000;
+    transform: translate(-50%, -50%);
+}
