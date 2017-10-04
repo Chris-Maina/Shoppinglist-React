@@ -3,7 +3,7 @@ import Container from 'muicss/lib/react/container';
 import Row from 'muicss/lib/react/row';
 import Col from 'muicss/lib/react/col';
 import Panel from 'muicss/lib/react/panel';
-import { Button, Icon } from 'react-materialize';
+import { Button } from 'react-materialize';
 import './shoppinglist.css';
 
 class ShoppingItemsPage extends Component {
