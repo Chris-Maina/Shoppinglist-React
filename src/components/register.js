@@ -42,8 +42,8 @@ class RegisterForm extends Component {
         }
         else {
             this.sendRequest(this.state.email, this.state.password)
-            evt.preventDefault();
             this.setState({ username: '', email: '', password: '', cpassword: '' });
+            evt.preventDefault();
         }
     }
     validate(username, email, password, cpassword) {
@@ -59,13 +59,10 @@ class RegisterForm extends Component {
     }
     sendRequest(email, password) {
         var data = { "email": email, "password": password }
-        fetch('http://localhost:5000/auth/register/', {
+        fetch('http://127.0.0.1:5000/auth/register/', {
             method: 'post',
-            mode: 'no-cors',
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Orgin':'http://localhost:5000/auth/register/',
-                'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
             },
             body: JSON.stringify(data)
         }).then(function (response) {
