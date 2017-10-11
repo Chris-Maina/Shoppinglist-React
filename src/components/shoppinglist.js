@@ -10,9 +10,9 @@ class ShoppinglistPage extends Component {
     render() {
         return (
             <Container fluid={true} className="pagecontent">
-                <ToggleableShoppingForm
+                <ToggleableShoppingForm 
                     isOpen={true} />
-                <Shoppinglists />
+                <Shoppinglists/>
             </Container>
         );
     }
@@ -23,10 +23,10 @@ class Shoppinglists extends Component {
             <div>
                 <EditableShoppinglist
                     name='Easter shopping'
-                    editForm={false} />
+                    editForm={true} />
                 <EditableShoppinglist
                     name='Back to school'
-                    editForm={true} />
+                    editForm={false} />
             </div>
         );
     }
@@ -54,7 +54,7 @@ class Shoppinglist extends Component {
                 <Col xs="9" md="6">
                     <div>
                         <Card className='small'
-                            header={<CardTitle image='images/iloveshopping.png'>List name</CardTitle>}
+                            header={<CardTitle image='images/iloveshopping.png'>{this.props.name}</CardTitle>}
                             actions={[<a href='/shoppingitem'>Add Item</a>]}
                         >
                             <Button color="primary" size="small" variant="raised">Edit</Button>
@@ -73,7 +73,7 @@ class ShoppinglistForm extends Component {
             <Row>
                 <Col xs="9" md="6">
                     <div>
-                        <Input label=' Shoppinglist name ' floatingLabel={true} type="text" required ></Input>
+                        <Input label=' Shoppinglist name ' floatingLabel={true} type="text" required value={this.props.name}></Input>
 
                         <Button color="primary" size="large" variant="raised" >{submittext}</Button>
                     </div>
