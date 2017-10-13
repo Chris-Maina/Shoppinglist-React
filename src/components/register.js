@@ -4,7 +4,8 @@ import Form from 'muicss/lib/react/form';
 import Input from 'muicss/lib/react/input';
 import Button from 'muicss/lib/react/button';
 import Panel from 'muicss/lib/react/panel';
-import fetch from 'isomorphic-fetch';
+import 'whatwg-fetch';
+
 
 class RegisterPage extends Component {
 
@@ -40,11 +41,10 @@ class RegisterForm extends Component {
             this.setState({ errors })
 
         }
-        else {
-            this.sendRequest(this.state.email, this.state.password)
-            this.setState({ username: '', email: '', password: '', cpassword: '' });
-            evt.preventDefault();
-        }
+        
+        this.sendRequest(this.state.email, this.state.password)
+        this.setState({ username: '', email: '', password: '', cpassword: '' });
+        evt.preventDefault();
     }
     validate(username, email, password, cpassword) {
         var errors = [];
@@ -59,10 +59,11 @@ class RegisterForm extends Component {
     }
     sendRequest(email, password) {
         var data = { "email": email, "password": password }
-        fetch('http://127.0.0.1:5000/auth/register/', {
-            method: 'post',
+        fetch('https://shoppinglist-restful-api.herokuapp.com/auth/register/', {
+            method: "POST",
+            mode: "cors",
             headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
             },
             body: JSON.stringify(data)
         }).then(function (response) {
