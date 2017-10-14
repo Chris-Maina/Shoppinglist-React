@@ -46,7 +46,7 @@ class RegisterForm extends Component {
         }
         // Send to server/API
         this.sendRequest(this.state.email, this.state.password)
-        this.setState({ username: '', email: '', password: '', cpassword: '' });   
+        this.setState({ username: '', email: '', password: '', cpassword: '' });
     }
     validate(username, email, password, cpassword) {
         var errors = '';
@@ -57,7 +57,7 @@ class RegisterForm extends Component {
         // Regular expression to check for special characters
         var re = /[a-z]|[A-Z]|[0-9]|_/;
         // console.log(re.test(username))
-        if(!re.test(username)){
+        if (!re.test(username)) {
             errors = "Username cannot have special characters";
             return errors;
         }
@@ -68,7 +68,7 @@ class RegisterForm extends Component {
         const url = 'https://shoppinglist-restful-api.herokuapp.com/auth/register/';
         axios({
             method: "post",
-            url: proxyUrl+url,
+            url: proxyUrl + url,
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -82,15 +82,15 @@ class RegisterForm extends Component {
             this.setState({ redirect: true })
             return response.data;
         }).catch(function (error) {
-            if(error.response){
+            if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
                 console.log(error.response.data);
                 toast.error(error.response.data.message)
-            }else if(error.request){
+            } else if (error.request) {
                 // The request was made but no response was received
                 console.log(error.request);
-            }else{
+            } else {
                 // Something happened in setting up the request that triggered an Error
                 console.log('Error', error.message);
             }
@@ -98,36 +98,36 @@ class RegisterForm extends Component {
         });
     }
     render() {
-        if(this.state.redirect){
+        if (this.state.redirect) {
             return <Redirect to="/auth/login/" />
         }
         return (
-            <div>     
-            <ToastContainer/>
-            <Panel className="panel-login RegisterForm">
-                <div className="panel-heading">
-                    <h5 className="mui--text-title">{this.props.title}</h5>
-                    <hr />
-                </div>
-                <Form onSubmit={this.handelsubmit}>
-                    <Input label=' Username ' name="username" value={this.state.username} onChange={this.onInputChange} floatingLabel={true} required ></Input>
-
-                    <Input label=' Email ' name="email" value={this.state.email} onChange={this.onInputChange} floatingLabel={true} type="email" required ></Input>
-
-                    <Input label=' Password ' name="password" value={this.state.password} onChange={this.onInputChange} floatingLabel={true} type="password" required ></Input>
-
-                    <Input label=' Confirm password ' name="cpassword" value={this.state.cpassword} onChange={this.onInputChange} floatingLabel={true} type="password" required></Input>
-
-                    <Button variant="raised" large className="btn-register"  >{this.props.title}</Button>
-                    <div className="mui--text-center">
-                        <a href="/auth/login" class="forgot-password">Already have an account?Login</a>
+            <div>
+                <ToastContainer />
+                <Panel className="panel-login RegisterForm">
+                    <div className="panel-heading">
+                        <h5 className="mui--text-title">{this.props.title}</h5>
+                        <hr />
                     </div>
-                </Form>
+                    <Form onSubmit={this.handelsubmit}>
+                        <Input label=' Username ' name="username" value={this.state.username} onChange={this.onInputChange} floatingLabel={true} required ></Input>
 
-            </Panel>
+                        <Input label=' Email ' name="email" value={this.state.email} onChange={this.onInputChange} floatingLabel={true} type="email" ></Input>
+
+                        <Input label=' Password ' name="password" value={this.state.password} onChange={this.onInputChange} floatingLabel={true} type="password"  ></Input>
+
+                        <Input label=' Confirm password ' name="cpassword" value={this.state.cpassword} onChange={this.onInputChange} floatingLabel={true} type="password" required></Input>
+
+                        <Button variant="raised" large className="btn-register"  >{this.props.title}</Button>
+                        <div className="mui--text-center">
+                            <a href="/auth/login" class="forgot-password">Already have an account?Login</a>
+                        </div>
+                    </Form>
+
+                </Panel>
             </div>
         );
-    
+
     }
 }
 export default RegisterPage;
