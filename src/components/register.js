@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router';
 import './register.css';
 import Form from 'muicss/lib/react/form';
 import Input from 'muicss/lib/react/input';
@@ -23,7 +24,7 @@ class RegisterPage extends Component {
 class RegisterForm extends Component {
     constructor(props) {
         super(props);
-        this.state = { username: '', email: '', password: '', cpassword: '', errors: '' };
+        this.state = { username: '', email: '', password: '', cpassword: '', errors: '', redirect: false };
         this.handelsubmit = this.handelsubmit.bind(this);
         this.onInputChange = this.onInputChange.bind(this);
         this.validate = this.validate.bind(this);
@@ -54,8 +55,9 @@ class RegisterForm extends Component {
             return errors;
         }
         // Regular expression to check for special characters
-        var res = /a-zA-Z0-9_/.test(username);
-        if(!res){
+        var re = /[a-z]|[A-Z]|[0-9]|_/;
+        // console.log(re.test(username))
+        if(!re.test(username)){
             errors = "Username cannot have special characters";
             return errors;
         }
@@ -74,10 +76,10 @@ class RegisterForm extends Component {
         }).then(function (response) {
             if (!response.statusText === 'OK') {
                 toast.error(response.data.message)
-                throw Error(response.statusText);
             }
             console.log(response.data);
             toast.success(response.data.message);
+            this.setState({ redirect: true })
             return response.data;
         }).catch(function (error) {
             if(error.response){
@@ -91,15 +93,16 @@ class RegisterForm extends Component {
             }else{
                 // Something happened in setting up the request that triggered an Error
                 console.log('Error', error.message);
-                toast.error(error.message)
             }
             console.log(error.config);
-            toast.error(error.config)
         });
     }
     render() {
+        if(this.state.redirect){
+            return <Redirect to="/auth/login/" />
+        }
         return (
-            <div>
+            <div>     
             <ToastContainer/>
             <Panel className="panel-login RegisterForm">
                 <div className="panel-heading">
@@ -124,6 +127,7 @@ class RegisterForm extends Component {
             </Panel>
             </div>
         );
+    
     }
 }
 export default RegisterPage;
