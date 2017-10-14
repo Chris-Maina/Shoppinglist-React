@@ -4,8 +4,9 @@ import Form from 'muicss/lib/react/form';
 import Input from 'muicss/lib/react/input';
 import Button from 'muicss/lib/react/button';
 import Panel from 'muicss/lib/react/panel';
-import 'whatwg-fetch';
-
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 class RegisterPage extends Component {
 
@@ -22,7 +23,7 @@ class RegisterPage extends Component {
 class RegisterForm extends Component {
     constructor(props) {
         super(props);
-        this.state = { username: '', email: '', password: '', cpassword: '', errors: [] };
+        this.state = { username: '', email: '', password: '', cpassword: '', errors: '' };
         this.handelsubmit = this.handelsubmit.bind(this);
         this.onInputChange = this.onInputChange.bind(this);
         this.validate = this.validate.bind(this);
@@ -35,55 +36,72 @@ class RegisterForm extends Component {
         this.setState(fields);
     }
     handelsubmit(evt) {
+        evt.preventDefault();
         var errors = '';
         errors = this.validate(this.state.username, this.state.email, this.state.password, this.state.cpassword)
-        if (errors.length > 0) {
-            this.setState({ errors })
-
+        if (errors) {
+            toast.error(errors)
+            return this.setState({ errors })
         }
-        
+        // Send to server/API
         this.sendRequest(this.state.email, this.state.password)
-        this.setState({ username: '', email: '', password: '', cpassword: '' });
-        evt.preventDefault();
+        this.setState({ username: '', email: '', password: '', cpassword: '' });   
     }
     validate(username, email, password, cpassword) {
-        var errors = [];
+        var errors = '';
         if (password !== cpassword) {
-            errors.push("Password mismatch");
+            errors = "Password mismatch";
             return errors;
         }
-        if (password.length < 6) {
-            errors.push("Password length should be atleast 6 characters long");
+        // Regular expression to check for special characters
+        var res = /a-zA-Z0-9_/.test(username);
+        if(!res){
+            errors = "Username cannot have special characters";
             return errors;
         }
     }
     sendRequest(email, password) {
         var data = { "email": email, "password": password }
-        fetch('https://shoppinglist-restful-api.herokuapp.com/auth/register/', {
-            method: "POST",
-            mode: "cors",
+        const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+        const url = 'https://shoppinglist-restful-api.herokuapp.com/auth/register/';
+        axios({
+            method: "post",
+            url: proxyUrl+url,
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data)
+            data: data
         }).then(function (response) {
-            if (!response.ok) {
+            if (!response.statusText === 'OK') {
+                toast.error(response.data.message)
                 throw Error(response.statusText);
             }
-            console.log(response.json());
-            return response.json();
-        }).then(function (data) {
-            // data from the resource
-            console.log(data);
+            console.log(response.data);
+            toast.success(response.data.message);
+            return response.data;
         }).catch(function (error) {
-            console.log(error);
+            if(error.response){
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.log(error.response.data);
+                toast.error(error.response.data.message)
+            }else if(error.request){
+                // The request was made but no response was received
+                console.log(error.request);
+            }else{
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+                toast.error(error.message)
+            }
+            console.log(error.config);
+            toast.error(error.config)
         });
     }
     render() {
         return (
-
+            <div>
+            <ToastContainer/>
             <Panel className="panel-login RegisterForm">
-                <span style={{ color: 'red' }}>{this.state.errors}</span>
                 <div className="panel-heading">
                     <h5 className="mui--text-title">{this.props.title}</h5>
                     <hr />
@@ -104,7 +122,7 @@ class RegisterForm extends Component {
                 </Form>
 
             </Panel>
-
+            </div>
         );
     }
 }
