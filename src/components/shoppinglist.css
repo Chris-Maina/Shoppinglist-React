@@ -1,8 +1,7 @@
 .pagecontent{
-    position: relative;
-    margin-top: 20%;
-    left: 75%;
+    margin-top: 5%;
     color: #000;
-    transform: translate(-50%, -50%);
+    justify-content: center;
+    align-items: center;
 }
 
