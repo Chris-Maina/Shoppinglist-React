@@ -42,11 +42,11 @@ class LoginForm extends Component {
     }
     sendRequest(email, password) {
         var data = { "email": email, "password": password }
-        const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+        // const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
         const url = 'https://shoppinglist-restful-api.herokuapp.com/auth/login/';
         axios({
             method: "post",
-            url: proxyUrl + url,
+            url: url,
             headers: {
                 'Content-Type': 'application/json',
             },
