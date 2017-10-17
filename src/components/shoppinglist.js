@@ -13,9 +13,11 @@ import 'react-toastify/dist/ReactToastify.min.css';
 class ShoppinglistPage extends Component {
     constructor(props) {
         super(props);
-        this.state = { shoppinglists: [], next_page: '', previous_page: ''};
-        this.getShoppinglists =  this.getShoppinglists.bind(this);
+        this.state = { shoppinglists: [], next_page: '', previous_page: '' };
+        this.getShoppinglists = this.getShoppinglists.bind(this);
         this.handelShoppinglistNameSubmit = this.handelShoppinglistNameSubmit.bind(this);
+        this.handleDeleteShoppinglist = this.handleDeleteShoppinglist.bind(this);
+        this.deleteShoppinglist = this.deleteShoppinglist.bind(this);
         this.handleEditShoppinglist = this.handleEditShoppinglist.bind(this);
         this.editShoppinglist = this.editShoppinglist.bind(this);
 
@@ -37,14 +39,14 @@ class ShoppinglistPage extends Component {
             if (!response.statusText === 'OK') {
                 toast.error(response.data.message)
             }
-            
+
             console.log(response.data.shopping_lists);
-            this.setState({ 
+            this.setState({
                 shoppinglists: response.data.shopping_lists,
                 next_page: response.data.next_page,
                 previous_page: response.data.previous_page
             });
-            
+
             return response.data;
         }).catch(function (error) {
             if (error.response) {
@@ -62,14 +64,56 @@ class ShoppinglistPage extends Component {
             console.log(error.config);
         });
     }
+    handleDeleteShoppinglist(shoppinglistname, sl_id) {
+        // DELETE request
+        this.deleteShoppinglist(shoppinglistname, sl_id);
+    }
+    deleteShoppinglist(shoppinglistname, sl_id) {
+        // DELETE
+        var data = { name: shoppinglistname };
+        const url = 'https://shoppinglist-restful-api.herokuapp.com/shoppinglists/' + sl_id;
+        axios({
+            method: "delete",
+            url: url,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + window.localStorage.getItem('token')
+            },
+            data: data
+        }).then((response) => {
+            if (!response.statusText === 'OK') {
+                toast.error(response.data.message)
+            }
+            console.log(response.data);
+            toast.success("Shoppinglist " + shoppinglistname + " deleted.");
+            // Get ALL shopping list
+            this.getShoppinglists();
+            return response.data;
+        }).catch(function (error) {
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.log(error.response.data);
+                toast.error(error.response.data.message)
+            } else if (error.request) {
+                // The request was made but no response was received
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+            }
+            console.log(error.config);
+        });
+    }
+
     handleEditShoppinglist(shoppinglistname, sl_id) {
         // PUT request
         this.editShoppinglist(shoppinglistname, sl_id);
     }
-    editShoppinglist(shoppinglistname, sl_id){
+    editShoppinglist(shoppinglistname, sl_id) {
         // PUT
-        var data = {name: shoppinglistname};
-        const url = 'https://shoppinglist-restful-api.herokuapp.com/shoppinglists/'+sl_id;
+        var data = { name: shoppinglistname };
+        const url = 'https://shoppinglist-restful-api.herokuapp.com/shoppinglists/' + sl_id;
         axios({
             method: "put",
             url: url,
@@ -83,7 +127,7 @@ class ShoppinglistPage extends Component {
                 toast.error(response.data.message)
             }
             console.log(response.data);
-            toast.success("Shoppinglist edited to "+response.data.name); 
+            toast.success("Shoppinglist edited to " + response.data.name);
             return response.data;
         }).catch(function (error) {
             if (error.response) {
@@ -106,11 +150,11 @@ class ShoppinglistPage extends Component {
     handelShoppinglistNameSubmit(shoppinglistname) {
         // POST request
         this.postShoppinglist(shoppinglistname);
-  
+
     };
     postShoppinglist(shoppinglistname) {
         // Send POST request
-        var data = {name: shoppinglistname};
+        var data = { name: shoppinglistname };
         const url = 'https://shoppinglist-restful-api.herokuapp.com/shoppinglists/';
         axios({
             method: "post",
@@ -125,7 +169,7 @@ class ShoppinglistPage extends Component {
                 toast.error(response.data.message)
             }
             console.log(response.data);
-            toast.success("Shoppinglist "+response.data.name +" created"); 
+            toast.success("Shoppinglist " + response.data.name + " created");
             return response.data;
         }).catch(function (error) {
             if (error.response) {
@@ -145,38 +189,39 @@ class ShoppinglistPage extends Component {
         // Get ALL shopping list
         this.getShoppinglists();
     }
-    
+
     render() {
         return (
             <div className="pagecontent">
-            <Container  >
-            <ToastContainer />
-                
-                <ToggleableShoppingForm
-                    formSubmit={this.handelShoppinglistNameSubmit} />
-                <AllShoppinglists
-                    shopping_lists={this.state.shoppinglists}
-                    editFormSubmit={this.handleEditShoppinglist} />
-                <NextPreviousPage
-                    next_page={this.state.next_page}
-                    prev_page={this.state.previous_page}/>
-            </Container>
+                <Container  >
+                    <ToastContainer />
+
+                    <ToggleableShoppingForm
+                        formSubmit={this.handelShoppinglistNameSubmit} />
+                    <AllShoppinglists
+                        shopping_lists={this.state.shoppinglists}
+                        editFormSubmit={this.handleEditShoppinglist}
+                        deleteSubmit={this.handleDeleteShoppinglist} />
+                    <NextPreviousPage
+                        next_page={this.state.next_page}
+                        prev_page={this.state.previous_page} />
+                </Container>
             </div>
-            
+
         );
     }
 }
-class NextPreviousPage extends Component{
-    constructor(props){
+class NextPreviousPage extends Component {
+    constructor(props) {
         super(props);
     }
-    render(){
-        return(
-        <div>
-            <Button className='orange' waves='light' size="small" ><a href={this.props.next_page}>Next Page</a></Button>
-            
-            <Button className='orange' waves='light' size="small" ><a href={this.props.prev_page}>Previous Page</a></Button>
-        </div>);
+    render() {
+        return (
+            <div>
+                <Button className='orange' waves='light' size="small" ><a href={this.props.next_page}>Next Page</a></Button>
+
+                <Button className='orange' waves='light' size="small" ><a href={this.props.prev_page}>Previous Page</a></Button>
+            </div>);
     }
 }
 class ToggleableShoppingForm extends Component {
@@ -219,16 +264,17 @@ class ToggleableShoppingForm extends Component {
     }
 }
 class AllShoppinglists extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
     }
     render() {
         const shopping_lists = this.props.shopping_lists.map((oneshoppinglist) => (
             <EditableShoppinglist
                 key={oneshoppinglist.id}
-                sl_id ={oneshoppinglist.id}
+                sl_id={oneshoppinglist.id}
                 name={oneshoppinglist.name}
-                editFormSubmit={this.props.editFormSubmit} />
+                editFormSubmit={this.props.editFormSubmit}
+                deleteSubmit={this.props.deleteSubmit} />
         ));
         return (
             <div>
@@ -243,9 +289,13 @@ class EditableShoppinglist extends Component {
         this.state = { editForm: false }
         this.handelEditBtnClick = this.handelEditBtnClick.bind(this);
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
+        this.handleDeleteBtnClick = this.handleDeleteBtnClick.bind(this);
     }
     handelEditBtnClick() {
         this.setState({ editForm: true });
+    }
+    handleDeleteBtnClick() {
+        this.props.deleteSubmit(this.props.name, this.props.sl_id);
     }
     handleFormSubmit(shoppinglistname) {
         this.props.editFormSubmit(shoppinglistname, this.props.sl_id);
@@ -268,7 +318,8 @@ class EditableShoppinglist extends Component {
             return (
                 <Shoppinglist
                     name={this.props.name}
-                    onEditSubmit={this.handelEditBtnClick} />
+                    onEditSubmit={this.handelEditBtnClick}
+                    onDeleteSubmit={this.handleDeleteBtnClick} />
             );
         }
     }
@@ -282,7 +333,7 @@ class Shoppinglist extends Component {
                     <div>
                         <Card className='blue-grey darken-1' textClassName='white-text' title={this.props.name} actions={[<a href='/shoppingitem'>Add Item</a>]}>
                             <Button color="primary" size="small" onClick={this.props.onEditSubmit}>Edit</Button>
-                            <Button className="red" size="small" >Delete</Button>
+                            <Button className="red" size="small" onClick={this.props.onDeleteSubmit}>Delete</Button>
                         </Card>
                     </div>
                 </Col>
