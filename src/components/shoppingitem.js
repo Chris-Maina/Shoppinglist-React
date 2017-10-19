@@ -5,19 +5,85 @@ import Col from 'muicss/lib/react/col';
 import Panel from 'muicss/lib/react/panel';
 import Form from 'muicss/lib/react/form';
 import Input from 'muicss/lib/react/input';
-import { Button } from 'react-materialize';
+import { Button, Card } from 'react-materialize';
 import './shoppinglist.css';
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 class ShoppingItemsPage extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            shoppingitems: [], next_page: '', previous_page: ''
+        }
+    }
+    componentDidMount() {
+        this.getShoppinglistsItems();
+    }
+    getShoppinglistsItems() {
+        // Send GET request
+        const url = 'https://shoppinglist-restful-api.herokuapp.com/shoppinglists/' + this.props.match.params.id + '/items';
+        axios({
+            method: "get",
+            url: url,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + window.localStorage.getItem('token')
+            }
+        }).then((response) => {
+            if (!response.statusText === 'OK') {
+                toast.error(response.data.message)
+            }
+
+            console.log(response.data.shopping_items);
+            this.setState({
+                shoppingitems: response.data.shopping_items,
+                next_page: response.data.next_page,
+                previous_page: response.data.previous_page
+            });
+
+            return response.data;
+        }).catch(function (error) {
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.log(error.response.data);
+                toast.error(error.response.data.message)
+            } else if (error.request) {
+                // The request was made but no response was received
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+            }
+            console.log(error.config);
+        });
+    }
     render() {
-        return (
-            <div className="pagecontent">
-                <Container >
-                    <ToggleShoppingItem />
-                    <ShoppingItemTable />
-                </Container>
-            </div>
-        );
+        if (typeof (this.state.shoppingitems) === 'string') {
+            return (
+                <div className="pagecontent">
+                    <Container >
+                        <ToggleShoppingItem />
+                        <Card textClassName='white-text' title={this.state.shoppingitems}>
+                        </Card>
+                    </Container>
+                </div>
+            );
+        } else {
+            return (
+
+                <div className="pagecontent">
+                    <Container >
+                        <ToggleShoppingItem />
+                        <ShoppingItemTable
+                            items={this.state.shoppingitems} />
+                    </Container>
+                </div>
+            );
+        }
+
     }
 }
 class ToggleShoppingItem extends Component {
@@ -54,9 +120,10 @@ class ToggleShoppingItem extends Component {
     }
 }
 class ShoppingItemTable extends Component {
-
+    constructor(props) {
+        super(props);
+    }
     render() {
-
         return (
             <Row>
                 <Col xs="18" md="12">
@@ -64,7 +131,8 @@ class ShoppingItemTable extends Component {
                         <Panel className="panel-login">
                             <table class="mui-table mui-table--bordered">
                                 <TableHead />
-                                <TableBody />
+                                <TableBody
+                                    items={this.props.items} />
                             </table>
                         </Panel>
                     </div>
@@ -92,9 +160,31 @@ class TableHead extends Component {
 class TableBody extends Component {
     constructor(props) {
         super(props);
+    }
+    render() {
+        const shoppingitems = this.props.items.map((item) =>
+            <EditableShoppingItem
+                key={item.id}
+                name={item.name}
+                price={item.price}
+                quantity={item.quantity}
+                onEditClick={this.handelFormOpen}
+            />
+        );
+        return (
+            <tbody>
+                {shoppingitems}
+            </tbody>
+        );
+    }
+}
+class EditableShoppingItem extends Component {
+    constructor(props) {
+        super(props);
         this.state = { editForm: false }
         this.handelFormOpen = this.handelFormOpen.bind(this);
     }
+
     handelFormOpen() {
         this.setState({ editForm: true });
     }
@@ -109,10 +199,12 @@ class TableBody extends Component {
             );
         }
         return (
-            <tbody>
-                <ShoppingItem
-                    onEditClick={this.handelFormOpen} />
-            </tbody>
+            <ShoppingItem
+                name={this.props.name}
+                price={this.props.price}
+                quantity={this.props.quantity}
+                onEditClick={this.handelFormOpen}
+            />
         );
     }
 }
@@ -123,9 +215,9 @@ class ShoppingItem extends Component {
     render() {
         return (
             <tr>
-                <td> Bread </td>
-                <td>1</td>
-                <td>10.0</td>
+                <td> {this.props.name} </td>
+                <td> {this.props.quantity} </td>
+                <td> {this.props.price} </td>
                 <td><Button color="primary" size="small" variant="raised" onClick={this.props.onEditClick}>Edit</Button></td>
                 <td><Button color="primary" size="small" variant="raised">Delete</Button></td>
             </tr>
