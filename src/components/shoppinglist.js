@@ -268,6 +268,13 @@ class AllShoppinglists extends Component {
         super(props);
     }
     render() {
+        if (typeof (this.props.shopping_lists) === 'string') {
+            return (
+                <EditableShoppinglist
+                    shoppinglist={this.props.shopping_lists} />
+            );
+
+        }
         const shopping_lists = this.props.shopping_lists.map((oneshoppinglist) => (
             <EditableShoppinglist
                 key={oneshoppinglist.id}
@@ -305,10 +312,20 @@ class EditableShoppinglist extends Component {
         this.setState({ editForm: false });
     }
     render() {
+        if (this.props.shoppinglist) {
+            return (
+                <div>
+                    <Card  textClassName='white-text' title={this.props.shoppinglist}>
+                    </Card>
+                </div>
+            );
+        }
+
         if (this.state.editForm) {
             return (
                 <ShoppinglistForm
                     name={this.props.name}
+                    sl_id={this.props.sl_id}
                     onFormSubmit={this.handleFormSubmit}
                     onFormClose={this.handleFormClose}
                 />
@@ -318,6 +335,7 @@ class EditableShoppinglist extends Component {
             return (
                 <Shoppinglist
                     name={this.props.name}
+                    sl_id={this.props.sl_id}
                     onEditSubmit={this.handelEditBtnClick}
                     onDeleteSubmit={this.handleDeleteBtnClick} />
             );
@@ -331,7 +349,10 @@ class Shoppinglist extends Component {
             <Row>
                 <Col xs="9" md="9">
                     <div>
-                        <Card className='blue-grey darken-1' textClassName='white-text' title={this.props.name} actions={[<a href='/shoppingitem'>Add Item</a>]}>
+                        <Card className='blue-grey darken-1' textClassName='white-text' title={this.props.name} 
+                        actions={[<a href={`/items/${this.props.sl_id}`}>Add Item</a>]}>
+
+                            <br />
                             <Button color="primary" size="small" onClick={this.props.onEditSubmit}>Edit</Button>
                             <Button className="red" size="small" onClick={this.props.onDeleteSubmit}>Delete</Button>
                         </Card>
