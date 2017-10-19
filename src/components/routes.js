@@ -21,7 +21,7 @@ class NavRoutes extends Component {
           <Route path="/auth/register/" component={RegisterPage} />
           <Route path="/auth/login/" component={LoginPage} />
           <Route path="/shoppinglist/" component={ShoppinglistPage}/>
-          <Route path="/shoppingitem" component={ShoppingItemsPage}/>
+          <Route path="/items/:id" component={ShoppingItemsPage}/>
           </div>
       </BrowserRouter>
     );
