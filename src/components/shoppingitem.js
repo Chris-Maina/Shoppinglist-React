@@ -21,6 +21,8 @@ class ShoppingItemsPage extends Component {
         this.createShoppingItem = this.createShoppingItem.bind(this);
         this.editShoppingItem = this.editShoppingItem.bind(this);
         this.handleUpdateItem = this.handleUpdateItem.bind(this);
+        this.deleteItem = this.deleteItem.bind(this);
+        this.handleDeleteItem = this.handleDeleteItem.bind(this);
     }
     componentDidMount() {
         this.getShoppinglistsItems();
@@ -153,6 +155,45 @@ class ShoppingItemsPage extends Component {
         this.getShoppinglistsItems();
 
     }
+    handleDeleteItem(shoppingitem, item_id){
+        this.deleteItem(shoppingitem, item_id);
+    }
+    deleteItem(shoppingitem, item_id){
+        var data= { name: shoppingitem }
+        const url = 'https://shoppinglist-restful-api.herokuapp.com' + this.props.match.url +'/'+ item_id;
+        axios({
+            method: "delete",
+            url: url,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + window.localStorage.getItem('token')
+            },
+            data: data
+        }).then((response) => {
+            if (!response.statusText === 'OK') {
+                toast.error(response.data.message)
+            }
+            console.log(response.data);
+            toast.success(response.data.message);
+            return response.data;
+        }).catch(function (error) {
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.log(error.response.data);
+                toast.error(error.response.data.message)
+            } else if (error.request) {
+                // The request was made but no response was received
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+            }
+            console.log(error.config);
+        });
+        // Get all shopping items
+        this.getShoppinglistsItems(); 
+    }
     render() {
         if (typeof (this.state.shoppingitems) === 'string') {
             return (
@@ -176,7 +217,8 @@ class ShoppingItemsPage extends Component {
                         formSubmit={this.handleShoppingItemCreate}/>
                         <ShoppingItemTable
                             items={this.state.shoppingitems}
-                            onUpdateSubmit={this.handleUpdateItem} />
+                            onUpdateSubmit={this.handleUpdateItem}
+                            onDeleteClick={this.handleDeleteItem} />
                     </Container>
                 </div>
             );
@@ -234,7 +276,8 @@ class ShoppingItemTable extends Component {
                                 <TableHead />
                                 <TableBody
                                     items={this.props.items}
-                                    onUpdateSubmit={this.props.onUpdateSubmit} />
+                                    onUpdateSubmit={this.props.onUpdateSubmit}
+                                    onDeleteClick={this.props.onDeleteClick} />
                             </table>
                         </Panel>
                     </div>
@@ -252,7 +295,7 @@ class TableHead extends Component {
                     <th>Activity Name</th>
                     <th>Quantity</th>
                     <th>Price</th>
-                    <th>Save Edit</th>
+                    <th>Edit</th>
                     <th>Trash</th>
                 </tr>
             </thead>
@@ -270,6 +313,7 @@ class TableBody extends Component {
                 quantity={item.quantity}
                 onEditClick={this.handelFormOpen}
                 formSubmit={this.props.onUpdateSubmit}
+                onDeleteClick ={this.props.onDeleteClick}
             />
         );
         return (
@@ -286,6 +330,7 @@ class EditableShoppingItem extends Component {
         this.handelFormOpen = this.handelFormOpen.bind(this);
         this.handleFormClose = this.handleFormClose.bind(this);
         this.handleUpdateSubmit = this.handleUpdateSubmit.bind(this);
+        this.handleDeleteClick = this.handleDeleteClick.bind(this);
     }
 
     handelFormOpen() {
@@ -296,6 +341,11 @@ class EditableShoppingItem extends Component {
     }
     handleUpdateSubmit(item){
         this.props.formSubmit(item);
+        this.setState({ editForm: false });
+    }
+    handleDeleteClick(){
+        this.props.onDeleteClick(this.props.name, this.props.item_id);
+
     }
     render() {
         if (this.state.editForm) {
@@ -316,6 +366,7 @@ class EditableShoppingItem extends Component {
                 price={this.props.price}
                 quantity={this.props.quantity}
                 onEditClick={this.handelFormOpen}
+                onDeleteClick={this.handleDeleteClick}
             />
         );
     }
@@ -328,7 +379,7 @@ class ShoppingItem extends Component {
                 <td> {this.props.quantity} </td>
                 <td> {this.props.price} </td>
                 <td><Button color="primary" size="small" variant="raised" onClick={this.props.onEditClick}>Edit</Button></td>
-                <td><Button color="primary" size="small" variant="raised">Delete</Button></td>
+                <td><Button color="primary" size="small" variant="raised" onClick={this.props.onDeleteClick}>Delete</Button></td>
             </tr>
         );
     }
