@@ -20,10 +20,11 @@ class ShoppingItemsPage extends Component {
     }
     componentDidMount() {
         this.getShoppinglistsItems();
+        console.log(this.props.match)
     }
     getShoppinglistsItems() {
         // Send GET request
-        const url = 'https://shoppinglist-restful-api.herokuapp.com/shoppinglists/' + this.props.match.params.id + '/items';
+        const url = 'https://shoppinglist-restful-api.herokuapp.com' + this.props.match.url;
         axios({
             method: "get",
             url: url,
