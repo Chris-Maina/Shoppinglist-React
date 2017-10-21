@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import Container from 'muicss/lib/react/container';
 import Row from 'muicss/lib/react/row';
 import Col from 'muicss/lib/react/col';
@@ -218,9 +219,9 @@ class NextPreviousPage extends Component {
     render() {
         return (
             <div>
-                <Button className='orange' waves='light' size="small" ><a href={this.props.next_page}>Next Page</a></Button>
+                <Button className='orange' waves='light' size="small" ><Link to={this.props.next_page}>Next Page</Link></Button>
 
-                <Button className='orange' waves='light' size="small" ><a href={this.props.prev_page}>Previous Page</a></Button>
+                <Button className='orange' waves='light' size="small" ><Link to={this.props.prev_page}>Previous Page</Link></Button>
             </div>);
     }
 }
@@ -350,7 +351,7 @@ class Shoppinglist extends Component {
                 <Col xs="9" md="9">
                     <div>
                         <Card className='blue-grey darken-1' textClassName='white-text' title={this.props.name} 
-                        actions={[<a href={`/items/${this.props.sl_id}`}>Add Item</a>]}>
+                        actions={[<Link to={`/items/${this.props.sl_id}`}>Add Item</Link>]}>
 
                             <br />
                             <Button color="primary" size="small" onClick={this.props.onEditSubmit}>Edit</Button>

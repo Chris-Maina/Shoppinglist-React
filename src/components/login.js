@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './register.css';
 import { Redirect } from 'react-router';
+import { Link } from 'react-router-dom';
 import Form from 'muicss/lib/react/form';
 import Input from 'muicss/lib/react/input';
 import Button from 'muicss/lib/react/button';
@@ -97,7 +98,7 @@ class LoginForm extends Component {
 
                         <Button variant="raised" large className="btn-login"  >{this.props.title}</Button>
                         <div className="mui--text-center">
-                            <a href="/auth/register" class="forgot-password">Don't have an account?Register</a>
+                            <Link to="/auth/register" class="forgot-password">Don't have an account?Register</Link>
                         </div>
                     </Form>
 

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button } from 'react-materialize';
+import { Link } from 'react-router-dom';
 import Footer from './footer';
 import './home.css';
 
@@ -16,7 +17,7 @@ class Home extends Component {
               <p>Shopping list application helps you record all items you wish to buy. It allows you to record and share things you want to spend money on, meeting your needs and
 				        keeping track of your shopping lists. Register to get started!!!
 			      </p>
-              <Button waves='orange' node='a' href='/auth/register/' className="btn-primary" id="register"> Register</Button>
+              <Button waves='orange' className="btn-primary" id="register"> <Link to="/auth/register/">Register</Link></Button>
             </div>
           </div>
           <Footer />
