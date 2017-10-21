@@ -355,7 +355,7 @@ class Shoppinglist extends Component {
                 <Col xs="9" md="9">
                     <div>
                         <Card className='blue-grey darken-1' textClassName='white-text' title={this.props.name}
-                            actions={[<Link to={`/shoppinglist/${this.props.sl_id}/items`}>Add Item</Link>]}>
+                            actions={[<Link to={`/shoppinglists/${this.props.sl_id}/items`}>Add Item</Link>]}>
 
                             <br />
                             <Button color="primary" size="small" onClick={this.props.onEditSubmit}>Edit</Button>
