@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import './register.css';
 import { Link, Redirect } from 'react-router-dom';
 import Form from 'muicss/lib/react/form';
+import Row from 'muicss/lib/react/row';
+import Col from 'muicss/lib/react/col';
 import Input from 'muicss/lib/react/input';
 import Button from 'muicss/lib/react/button';
 import Panel from 'muicss/lib/react/panel';
@@ -12,10 +14,15 @@ import 'react-toastify/dist/ReactToastify.min.css';
 class LoginPage extends Component {
     render() {
         return (
-            <div >
-                <LoginForm
-                    title="Login"
-                    buttonClass="btn-login" />
+            <div className="pagecontent">
+                <ToastContainer />
+                <Row>
+                    <Col xs="6" xs-offset="3" md="6" md-offset="3">
+                        <LoginForm
+                            title="Login"
+                            buttonClass="btn-login" />
+                    </Col>
+                </Row>
             </div>
         );
     }
@@ -83,12 +90,11 @@ class LoginForm extends Component {
         const redirect = this.state.redirect;
         if (redirect) {
             return (
-            <Redirect to="/shoppinglists/" from="/auth/login/"/>
-        );
+                <Redirect to="/shoppinglists/" from="/auth/login/" />
+            );
         }
         return (
             <div>
-                <ToastContainer />
                 <Panel className="panel-login RegisterForm">
                     <div className="panel-heading">
                         <h5 className="mui--text-title">Login</h5>
