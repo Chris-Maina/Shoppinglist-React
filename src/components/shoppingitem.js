@@ -17,10 +17,11 @@ class ShoppingItemsPage extends Component {
         this.state = {
             shoppingitems: [], next_page: '', previous_page: ''
         }
+        this.handleShoppingItemCreate = this.handleShoppingItemCreate.bind(this);
+        this.createShoppingItem = this.createShoppingItem.bind(this);
     }
     componentDidMount() {
         this.getShoppinglistsItems();
-        console.log(this.props.match)
     }
     getShoppinglistsItems() {
         // Send GET request
@@ -61,12 +62,58 @@ class ShoppingItemsPage extends Component {
             console.log(error.config);
         });
     }
+    handleShoppingItemCreate(item){
+        this.createShoppingItem(item);
+    }
+    createShoppingItem(item){
+        // Send POST request
+        var data= {
+            name: item.shoppingitemname,
+            price: item.price,
+            quantity: item.quantity
+        }
+        const url = 'https://shoppinglist-restful-api.herokuapp.com' + this.props.match.url;
+        axios({
+            method: "post",
+            url: url,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + window.localStorage.getItem('token')
+            },
+            data: data
+        }).then((response) => {
+            if (!response.statusText === 'OK') {
+                toast.error(response.data.message)
+            }
+            console.log(response.data);
+            toast.success("Shoppingitem " + response.data.name + " created");
+            return response.data;
+        }).catch(function (error) {
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.log(error.response.data);
+                toast.error(error.response.data.message)
+            } else if (error.request) {
+                // The request was made but no response was received
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+            }
+            console.log(error.config);
+        });
+        // Get all shopping items
+        this.getShoppinglistsItems();
+    }
     render() {
         if (typeof (this.state.shoppingitems) === 'string') {
             return (
                 <div className="pagecontent">
                     <Container >
-                        <ToggleShoppingItem />
+                        
+                        <ToggleShoppingItem
+                        />
                         <Card textClassName='white-text' title={this.state.shoppingitems}>
                         </Card>
                     </Container>
@@ -77,7 +124,9 @@ class ShoppingItemsPage extends Component {
 
                 <div className="pagecontent">
                     <Container >
-                        <ToggleShoppingItem />
+                        <ToastContainer />
+                        <ToggleShoppingItem 
+                        createSubmit={this.handleShoppingItemCreate}/>
                         <ShoppingItemTable
                             items={this.state.shoppingitems} />
                     </Container>
@@ -93,6 +142,7 @@ class ToggleShoppingItem extends Component {
         this.state = { isOpen: false };
         this.handleFormOpen = this.handleFormOpen.bind(this);
         this.handleFormClose = this.handleFormClose.bind(this);
+        this.handleCreateSubmit = this.handleCreateSubmit.bind(this);
     }
     handleFormOpen() {
         this.setState({ isOpen: true });
@@ -100,11 +150,16 @@ class ToggleShoppingItem extends Component {
     handleFormClose() {
         this.setState({ isOpen: false });
     }
+    handleCreateSubmit(item){
+        this.props.createSubmit(item);
+        this.setState({ isOpen: false });
+    }
     render() {
         if (this.state.isOpen) {
             return (
                 <ShoppingItemForm
-                    onCancleClick={this.handleFormClose} />
+                    onCancleClick={this.handleFormClose}
+                    createSubmit={this.handleCreateSubmit} />
             );
         }
         else {
@@ -121,9 +176,6 @@ class ToggleShoppingItem extends Component {
     }
 }
 class ShoppingItemTable extends Component {
-    constructor(props) {
-        super(props);
-    }
     render() {
         return (
             <Row>
@@ -159,9 +211,6 @@ class TableHead extends Component {
     }
 }
 class TableBody extends Component {
-    constructor(props) {
-        super(props);
-    }
     render() {
         const shoppingitems = this.props.items.map((item) =>
             <EditableShoppingItem
@@ -184,6 +233,7 @@ class EditableShoppingItem extends Component {
         super(props);
         this.state = { editForm: false }
         this.handelFormOpen = this.handelFormOpen.bind(this);
+        this.handleFormClose = this.handleFormClose.bind(this);
     }
 
     handelFormOpen() {
@@ -196,7 +246,11 @@ class EditableShoppingItem extends Component {
         if (this.state.editForm) {
             return (
                 <ShoppingItemForm
-                    onCancelClick={this.handleFormClose} />
+                    onCancelClick={this.handleFormClose}
+                    name={this.props.name}
+                    price={this.props.price}
+                    quantity={this.props.quantity}
+                    onEditClick={this.handelFormOpen} />
             );
         }
         return (
@@ -210,9 +264,6 @@ class EditableShoppingItem extends Component {
     }
 }
 class ShoppingItem extends Component {
-    constructor(props) {
-        super(props);
-    }
     render() {
         return (
             <tr>
@@ -226,16 +277,41 @@ class ShoppingItem extends Component {
     }
 }
 class ShoppingItemForm extends Component {
+    constructor(props){
+        super(props);
+        this.state ={shoppingitemname: '',price:'',quantity:''}
+        this.onInputChange = this.onInputChange.bind(this);
+        this.handelsubmit = this.handelsubmit.bind(this);
+    }
+    componentDidMount() {
+        this.setState({ shoppingitemname: this.props.name, price: this.props.price, quantity: this.props.quantity });
+    }
+    onInputChange(evt){
+        evt.preventDefault();
+        let fields = {};
+        fields[evt.target.name] = evt.target.value;
+        this.setState(fields);
+    }
+    handelsubmit(evt){
+        evt.preventDefault();
+        this.props.createSubmit({
+            shoppingitemname: this.state.shoppingitemname,
+            price: this.state.price,
+            quantity: this.state.quantity,
+        });
+
+    }
     render() {
+        const submittext = this.props.name ? 'Update' : 'Create';
         return (
             <Row>
                 <Col xs="18" md="12">
                     <div>
                         <Form onSubmit={this.handelsubmit}>
-                            <Input label='Item name' name='shoppingitemname' type="text" ></Input>
-                            <Input label='Price' name='price' type="number" ></Input>
-                            <Input label='Quantity' name='quantity' type="number" ></Input>
-                            <Button color="primary" size="large" onClick={this.handleSubmit}>Create</Button>
+                            <Input label='Item name' name='shoppingitemname' type="text" value= {this.state.shoppingitemname} onChange={this.onInputChange}></Input>
+                            <Input label='Price' name='price' type="number" value= {this.state.price} onChange={this.onInputChange}></Input>
+                            <Input label='Quantity' name='quantity' type="number" value= {this.state.quantity} onChange={this.onInputChange}></Input>
+                            <Button color="primary" size="large" onClick={this.handleSubmit}>{submittext}</Button>
                             <Button className="red" size="large" onClick={this.props.onCancelClick}>Cancel</Button>
                         </Form>
                     </div>
