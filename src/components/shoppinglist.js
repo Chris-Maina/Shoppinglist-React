@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link, Route,Switch } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Container from 'muicss/lib/react/container';
 import Row from 'muicss/lib/react/row';
 import Col from 'muicss/lib/react/col';
@@ -214,16 +214,15 @@ class ShoppinglistPage extends Component {
     }
 }
 class NextPreviousPage extends Component {
-    constructor(props) {
-        super(props);
-    }
     render() {
         return (
-            <div>
-                <Button className='orange' waves='light' size="small" ><Link to={this.props.next_page}>Next Page</Link></Button>
+            <Row>
+                <Col xs="8" xs-offset="2" md="8" md-offset="2">
+                    <Button className='orange' waves='light' size="small" ><Link to={this.props.next_page}>Next Page</Link></Button>
 
-                <Button className='orange' waves='light' size="small" ><Link to={this.props.prev_page}>Previous Page</Link></Button>
-            </div>);
+                    <Button className='orange' waves='light' size="small" ><Link to={this.props.prev_page}>Previous Page</Link></Button>
+                </Col>
+            </Row>);
     }
 }
 class ToggleableShoppingForm extends Component {
@@ -255,7 +254,7 @@ class ToggleableShoppingForm extends Component {
         } else {
             return (
                 <Row>
-                    <Col xs="18" md="12" >
+                    <Col xs="8" xs-offset="2" md="8" md-offset="2">
                         <div>
                             <Button floating large className='orange' waves='light' icon='add' onClick={this.handleFormOpen} />
                         </div>
@@ -266,9 +265,6 @@ class ToggleableShoppingForm extends Component {
     }
 }
 class AllShoppinglists extends Component {
-    constructor(props) {
-        super(props);
-    }
     render() {
         if (typeof (this.props.shopping_lists) === 'string') {
             return (
@@ -318,10 +314,12 @@ class EditableShoppinglist extends Component {
     render() {
         if (this.props.shoppinglist) {
             return (
-                <div>
-                    <Card textClassName='white-text' title={this.props.shoppinglist}>
-                    </Card>
-                </div>
+                <Row>
+                    <Col xs="8" xs-offset="2" md="8" md-offset="2">
+                        <Card textClassName='white-text' title={this.props.shoppinglist}>
+                        </Card>
+                    </Col>
+                </Row>
             );
         }
 
@@ -351,19 +349,19 @@ class Shoppinglist extends Component {
     render() {
         return (
             <div>
-            <Row>
-                <Col xs="9" md="9">
-                    <div>
-                        <Card className='blue-grey darken-1' textClassName='white-text' title={this.props.name}
-                            actions={[<Link to={`/shoppinglists/${this.props.sl_id}/items`}>Add Item</Link>]}>
+                <Row>
+                    <Col xs="8" xs-offset="2" md="8" md-offset="2">
+                        <div>
+                            <Card className='blue-grey darken-1' textClassName='white-text' title={this.props.name}
+                                actions={[<Link to={`/shoppinglists/${this.props.sl_id}/items`}>Add Item</Link>]}>
 
-                            <br />
-                            <Button color="primary" size="small" onClick={this.props.onEditSubmit}>Edit</Button>
-                            <Button className="red" size="small" onClick={this.props.onDeleteSubmit}>Delete</Button>
-                        </Card>
-                    </div>
-                </Col>
-            </Row>
+                                <br />
+                                <Button color="primary" size="small" onClick={this.props.onEditSubmit}>Edit</Button>
+                                <Button className="red" size="small" onClick={this.props.onDeleteSubmit}>Delete</Button>
+                            </Card>
+                        </div>
+                    </Col>
+                </Row>
             </div>
         );
     }
@@ -391,7 +389,7 @@ class ShoppinglistForm extends Component {
         const submittext = this.props.name ? 'Update' : 'Create';
         return (
             <Row>
-                <Col xs="9" md="6">
+                <Col xs="8" xs-offset="2" md="8" md-offset="2">
                     <div>
                         <Form onSubmit={this.handelsubmit}>
                             <Input label='Shoppinglist name' name='shoppinglistname' value={this.state.name} onChange={this.onInputChange} floatingLabel={true} type="text" required></Input>
