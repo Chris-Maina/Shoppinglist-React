@@ -248,7 +248,7 @@ class ToggleShoppingItem extends Component {
         if (this.state.isOpen) {
             return (
                 <ShoppingItemForm
-                    onCancleClick={this.handleFormClose}
+                    onCancelClick={this.handleFormClose}
                     formSubmit={this.handleCreateSubmit} />
             );
         }
@@ -390,6 +390,7 @@ class ShoppingItemForm extends Component {
         this.state ={shoppingitemname: '',price:'',quantity:''}
         this.onInputChange = this.onInputChange.bind(this);
         this.handelsubmit = this.handelsubmit.bind(this);
+        this.handleCancelClick = this.handleCancelClick.bind(this);
     }
     componentDidMount() {
         this.setState({ shoppingitemname: this.props.name, price: this.props.price, quantity: this.props.quantity });
@@ -410,6 +411,10 @@ class ShoppingItemForm extends Component {
         });
 
     }
+    handleCancelClick(evt){
+        evt.preventDefault();
+        this.props.onCancelClick();
+    }
     render() {
         const submittext = this.props.name ? 'Update' : 'Create';
         return (
@@ -421,7 +426,7 @@ class ShoppingItemForm extends Component {
                             <Input label='Price' name='price' type="number" value= {this.state.price} onChange={this.onInputChange}></Input>
                             <Input label='Quantity' name='quantity' type="number" value= {this.state.quantity} onChange={this.onInputChange}></Input>
                             <Button color="primary" size="large" onClick={this.handleSubmit}>{submittext}</Button>
-                            <Button className="red" size="large" onClick={this.props.onCancelClick}>Cancel</Button>
+                            <Button className="red" size="large" onClick={this.handleCancelClick}>Cancel</Button>
                         </Form>
                     </div>
                 </Col>
