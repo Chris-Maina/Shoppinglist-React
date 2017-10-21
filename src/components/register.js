@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import './register.css';
 import Form from 'muicss/lib/react/form';
+import Row from 'muicss/lib/react/row';
+import Col from 'muicss/lib/react/col';
 import Input from 'muicss/lib/react/input';
 import Button from 'muicss/lib/react/button';
 import Panel from 'muicss/lib/react/panel';
@@ -13,10 +15,14 @@ class RegisterPage extends Component {
 
     render() {
         return (
-            <div >
-                <RegisterForm
-                    title="Register"
-                />
+            <div className="pagecontent">
+                <ToastContainer />
+                <Row>
+                    <Col xs="6" xs-offset="3" md="6" md-offset="3">
+                        <RegisterForm
+                            title="Register" />
+                    </Col>
+                </Row>
             </div>
         );
     }
@@ -103,7 +109,6 @@ class RegisterForm extends Component {
         }
         return (
             <div>
-                <ToastContainer />
                 <Panel className="panel-login RegisterForm">
                     <div className="panel-heading">
                         <h5 className="mui--text-title">{this.props.title}</h5>
