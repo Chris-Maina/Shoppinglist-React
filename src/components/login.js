@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './register.css';
-import { Redirect } from 'react-router';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import Form from 'muicss/lib/react/form';
 import Input from 'muicss/lib/react/input';
 import Button from 'muicss/lib/react/button';
@@ -27,6 +26,7 @@ class LoginForm extends Component {
         this.state = { email: '', password: '', redirect: false };
         this.handelsubmit = this.handelsubmit.bind(this);
         this.onInputChange = this.onInputChange.bind(this);
+        this.sendRequest = this.sendRequest.bind(this);
     }
 
     onInputChange(evt) {
@@ -59,8 +59,8 @@ class LoginForm extends Component {
             //console.log(response.data);
             // Load access token in local storage
             window.localStorage.setItem('token', response.data.access_token);
+            // this.setState({ redirect: true });
             toast.success(response.data.message);
-            this.setState({ redirect: true })
             return response.data;
         }).catch(function (error) {
             if (error.response) {
@@ -79,9 +79,12 @@ class LoginForm extends Component {
         });
     }
     render() {
+        console.log(this.state.redirect);
         const redirect = this.state.redirect;
         if (redirect) {
-            return <Redirect to={{ pathname: "/shoppinglist/"}} />
+            return (
+            <Redirect to="/shoppinglists/" from="/auth/login/"/>
+        );
         }
         return (
             <div>
