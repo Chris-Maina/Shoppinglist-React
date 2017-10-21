@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Route,Switch } from 'react-router-dom';
 import Container from 'muicss/lib/react/container';
 import Row from 'muicss/lib/react/row';
 import Col from 'muicss/lib/react/col';
@@ -10,6 +10,7 @@ import './shoppinglist.css';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
+
 
 class ShoppinglistPage extends Component {
     constructor(props) {
@@ -277,12 +278,14 @@ class AllShoppinglists extends Component {
 
         }
         const shopping_lists = this.props.shopping_lists.map((oneshoppinglist) => (
-            <EditableShoppinglist
-                key={oneshoppinglist.id}
-                sl_id={oneshoppinglist.id}
-                name={oneshoppinglist.name}
-                editFormSubmit={this.props.editFormSubmit}
-                deleteSubmit={this.props.deleteSubmit} />
+            <div>
+                <EditableShoppinglist
+                    key={oneshoppinglist.id}
+                    sl_id={oneshoppinglist.id}
+                    name={oneshoppinglist.name}
+                    editFormSubmit={this.props.editFormSubmit}
+                    deleteSubmit={this.props.deleteSubmit} />
+            </div>
         ));
         return (
             <div>
@@ -316,7 +319,7 @@ class EditableShoppinglist extends Component {
         if (this.props.shoppinglist) {
             return (
                 <div>
-                    <Card  textClassName='white-text' title={this.props.shoppinglist}>
+                    <Card textClassName='white-text' title={this.props.shoppinglist}>
                     </Card>
                 </div>
             );
@@ -347,11 +350,12 @@ class EditableShoppinglist extends Component {
 class Shoppinglist extends Component {
     render() {
         return (
+            <div>
             <Row>
                 <Col xs="9" md="9">
                     <div>
-                        <Card className='blue-grey darken-1' textClassName='white-text' title={this.props.name} 
-                        actions={[<Link to={`/items/${this.props.sl_id}`}>Add Item</Link>]}>
+                        <Card className='blue-grey darken-1' textClassName='white-text' title={this.props.name}
+                            actions={[<Link to={`/shoppinglist/${this.props.sl_id}/items`}>Add Item</Link>]}>
 
                             <br />
                             <Button color="primary" size="small" onClick={this.props.onEditSubmit}>Edit</Button>
@@ -360,6 +364,7 @@ class Shoppinglist extends Component {
                     </div>
                 </Col>
             </Row>
+            </div>
         );
     }
 }
