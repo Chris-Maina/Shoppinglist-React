@@ -19,6 +19,8 @@ class ShoppingItemsPage extends Component {
         }
         this.handleShoppingItemCreate = this.handleShoppingItemCreate.bind(this);
         this.createShoppingItem = this.createShoppingItem.bind(this);
+        this.editShoppingItem = this.editShoppingItem.bind(this);
+        this.handleUpdateItem = this.handleUpdateItem.bind(this);
     }
     componentDidMount() {
         this.getShoppinglistsItems();
@@ -106,6 +108,51 @@ class ShoppingItemsPage extends Component {
         // Get all shopping items
         this.getShoppinglistsItems();
     }
+    handleUpdateItem(item){
+        this.editShoppingItem(item);
+    }
+    editShoppingItem(item){
+        // send PUT request
+        var data= {
+            name: item.shoppingitemname,
+            price: item.price,
+            quantity: item.quantity
+        }
+        const url = 'https://shoppinglist-restful-api.herokuapp.com' + this.props.match.url +'/'+ item.item_id;
+        axios({
+            method: "put",
+            url: url,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + window.localStorage.getItem('token')
+            },
+            data: data
+        }).then((response) => {
+            if (!response.statusText === 'OK') {
+                toast.error(response.data.message)
+            }
+            console.log(response.data);
+            toast.success("Successfully edited shopping item ");
+            return response.data;
+        }).catch(function (error) {
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.log(error.response.data);
+                toast.error(error.response.data.message)
+            } else if (error.request) {
+                // The request was made but no response was received
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+            }
+            console.log(error.config);
+        });
+        // Get all shopping items
+        this.getShoppinglistsItems();
+
+    }
     render() {
         if (typeof (this.state.shoppingitems) === 'string') {
             return (
@@ -126,9 +173,10 @@ class ShoppingItemsPage extends Component {
                     <Container >
                         <ToastContainer />
                         <ToggleShoppingItem 
-                        createSubmit={this.handleShoppingItemCreate}/>
+                        formSubmit={this.handleShoppingItemCreate}/>
                         <ShoppingItemTable
-                            items={this.state.shoppingitems} />
+                            items={this.state.shoppingitems}
+                            onUpdateSubmit={this.handleUpdateItem} />
                     </Container>
                 </div>
             );
@@ -151,7 +199,7 @@ class ToggleShoppingItem extends Component {
         this.setState({ isOpen: false });
     }
     handleCreateSubmit(item){
-        this.props.createSubmit(item);
+        this.props.formSubmit(item);
         this.setState({ isOpen: false });
     }
     render() {
@@ -159,7 +207,7 @@ class ToggleShoppingItem extends Component {
             return (
                 <ShoppingItemForm
                     onCancleClick={this.handleFormClose}
-                    createSubmit={this.handleCreateSubmit} />
+                    formSubmit={this.handleCreateSubmit} />
             );
         }
         else {
@@ -185,7 +233,8 @@ class ShoppingItemTable extends Component {
                             <table class="mui-table mui-table--bordered">
                                 <TableHead />
                                 <TableBody
-                                    items={this.props.items} />
+                                    items={this.props.items}
+                                    onUpdateSubmit={this.props.onUpdateSubmit} />
                             </table>
                         </Panel>
                     </div>
@@ -215,10 +264,12 @@ class TableBody extends Component {
         const shoppingitems = this.props.items.map((item) =>
             <EditableShoppingItem
                 key={item.id}
+                item_id = {item.id}
                 name={item.name}
                 price={item.price}
                 quantity={item.quantity}
                 onEditClick={this.handelFormOpen}
+                formSubmit={this.props.onUpdateSubmit}
             />
         );
         return (
@@ -234,6 +285,7 @@ class EditableShoppingItem extends Component {
         this.state = { editForm: false }
         this.handelFormOpen = this.handelFormOpen.bind(this);
         this.handleFormClose = this.handleFormClose.bind(this);
+        this.handleUpdateSubmit = this.handleUpdateSubmit.bind(this);
     }
 
     handelFormOpen() {
@@ -242,15 +294,20 @@ class EditableShoppingItem extends Component {
     handleFormClose() {
         this.setState({ editForm: false });
     }
+    handleUpdateSubmit(item){
+        this.props.formSubmit(item);
+    }
     render() {
         if (this.state.editForm) {
             return (
                 <ShoppingItemForm
                     onCancelClick={this.handleFormClose}
+                    item_id = {this.props.item_id}
                     name={this.props.name}
                     price={this.props.price}
                     quantity={this.props.quantity}
-                    onEditClick={this.handelFormOpen} />
+                    onEditClick={this.handelFormOpen}
+                    formSubmit = {this.handleUpdateSubmit} />
             );
         }
         return (
@@ -294,7 +351,8 @@ class ShoppingItemForm extends Component {
     }
     handelsubmit(evt){
         evt.preventDefault();
-        this.props.createSubmit({
+        this.props.formSubmit({
+            item_id: this.props.item_id,
             shoppingitemname: this.state.shoppingitemname,
             price: this.state.price,
             quantity: this.state.quantity,
