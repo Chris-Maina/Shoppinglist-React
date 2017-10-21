@@ -1,13 +1,8 @@
-.RegisterForm{
-  position: absolute;
-  margin-top: 30% ;
-  left: 50%;
-  width: 50%;
-  color: #000;
-  transform: translate(-50%, -50%);
-	-webkit-box-shadow:0px 2px 3px 0px rgba(0,0,0,0.2);
-	-moz-box-shadow:0px 2px 3px 0px rgba(0,0,0,0.2);
-	box-shadow:0px 2px 3px 0px rgba(0,0,0,0.2);
+.pagecontent{
+	margin-top: 25%;
+	color: #000;
+	justify-content: center;
+	align-items: center;
 }
 /*Register and login panels*/
 .panel-login{
