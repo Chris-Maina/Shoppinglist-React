@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import './register.css';
 import Form from 'muicss/lib/react/form';
 import Input from 'muicss/lib/react/input';
