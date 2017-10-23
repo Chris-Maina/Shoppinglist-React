@@ -66,8 +66,8 @@ class LoginForm extends Component {
             //console.log(response.data);
             // Load access token in local storage
             window.localStorage.setItem('token', response.data.access_token);
-            // this.setState({ redirect: true });
             toast.success(response.data.message);
+            this.setState({ redirect: true });
             return response.data;
         }).catch(function (error) {
             if (error.response) {
@@ -86,11 +86,9 @@ class LoginForm extends Component {
         });
     }
     render() {
-        console.log(this.state.redirect);
-        const redirect = this.state.redirect;
-        if (redirect) {
+        if (this.state.redirect) {
             return (
-                <Redirect to="/shoppinglists/" from="/auth/login/" />
+                <Redirect to="/shoppinglists/"  />
             );
         }
         return (
