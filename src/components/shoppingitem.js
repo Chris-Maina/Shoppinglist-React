@@ -10,6 +10,7 @@ import './shoppinglist.css';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
+import Navigation from './navbar';
 
 class ShoppingItemsPage extends Component {
     constructor(props) {
@@ -66,12 +67,12 @@ class ShoppingItemsPage extends Component {
             console.log(error.config);
         });
     }
-    handleShoppingItemCreate(item){
+    handleShoppingItemCreate(item) {
         this.createShoppingItem(item);
     }
-    createShoppingItem(item){
+    createShoppingItem(item) {
         // Send POST request
-        var data= {
+        var data = {
             name: item.shoppingitemname,
             price: item.price,
             quantity: item.quantity
@@ -110,17 +111,17 @@ class ShoppingItemsPage extends Component {
         // Get all shopping items
         this.getShoppinglistsItems();
     }
-    handleUpdateItem(item){
+    handleUpdateItem(item) {
         this.editShoppingItem(item);
     }
-    editShoppingItem(item){
+    editShoppingItem(item) {
         // send PUT request
-        var data= {
+        var data = {
             name: item.shoppingitemname,
             price: item.price,
             quantity: item.quantity
         }
-        const url = 'https://shoppinglist-restful-api.herokuapp.com' + this.props.match.url +'/'+ item.item_id;
+        const url = 'https://shoppinglist-restful-api.herokuapp.com' + this.props.match.url + '/' + item.item_id;
         axios({
             method: "put",
             url: url,
@@ -155,12 +156,12 @@ class ShoppingItemsPage extends Component {
         this.getShoppinglistsItems();
 
     }
-    handleDeleteItem(shoppingitem, item_id){
+    handleDeleteItem(shoppingitem, item_id) {
         this.deleteItem(shoppingitem, item_id);
     }
-    deleteItem(shoppingitem, item_id){
-        var data= { name: shoppingitem }
-        const url = 'https://shoppinglist-restful-api.herokuapp.com' + this.props.match.url +'/'+ item_id;
+    deleteItem(shoppingitem, item_id) {
+        var data = { name: shoppingitem }
+        const url = 'https://shoppinglist-restful-api.herokuapp.com' + this.props.match.url + '/' + item_id;
         axios({
             method: "delete",
             url: url,
@@ -192,34 +193,39 @@ class ShoppingItemsPage extends Component {
             console.log(error.config);
         });
         // Get all shopping items
-        this.getShoppinglistsItems(); 
+        this.getShoppinglistsItems();
     }
     render() {
         if (typeof (this.state.shoppingitems) === 'string') {
             return (
-                <div className="pagecontent">
-                    <Container >
-                        
-                        <ToggleShoppingItem
-                        />
-                        <Card textClassName='white-text' title={this.state.shoppingitems}>
-                        </Card>
-                    </Container>
+                <div>
+                    <Navigation />
+                    <div className="pagecontent">
+                        <Container >
+
+                            <ToggleShoppingItem
+                            />
+                            <Card textClassName='white-text' title={this.state.shoppingitems}>
+                            </Card>
+                        </Container>
+                    </div>
                 </div>
             );
         } else {
             return (
-
-                <div className="pagecontent">
-                    <Container >
-                        <ToastContainer />
-                        <ToggleShoppingItem 
-                        formSubmit={this.handleShoppingItemCreate}/>
-                        <ShoppingItemTable
-                            items={this.state.shoppingitems}
-                            onUpdateSubmit={this.handleUpdateItem}
-                            onDeleteClick={this.handleDeleteItem} />
-                    </Container>
+                <div>
+                    <Navigation />
+                    <div className="pagecontent">
+                        <Container >
+                            <ToastContainer />
+                            <ToggleShoppingItem
+                                formSubmit={this.handleShoppingItemCreate} />
+                            <ShoppingItemTable
+                                items={this.state.shoppingitems}
+                                onUpdateSubmit={this.handleUpdateItem}
+                                onDeleteClick={this.handleDeleteItem} />
+                        </Container>
+                    </div>
                 </div>
             );
         }
@@ -240,7 +246,7 @@ class ToggleShoppingItem extends Component {
     handleFormClose() {
         this.setState({ isOpen: false });
     }
-    handleCreateSubmit(item){
+    handleCreateSubmit(item) {
         this.props.formSubmit(item);
         this.setState({ isOpen: false });
     }
@@ -307,13 +313,13 @@ class TableBody extends Component {
         const shoppingitems = this.props.items.map((item) =>
             <EditableShoppingItem
                 key={item.id}
-                item_id = {item.id}
+                item_id={item.id}
                 name={item.name}
                 price={item.price}
                 quantity={item.quantity}
                 onEditClick={this.handelFormOpen}
                 formSubmit={this.props.onUpdateSubmit}
-                onDeleteClick ={this.props.onDeleteClick}
+                onDeleteClick={this.props.onDeleteClick}
             />
         );
         return (
@@ -339,11 +345,11 @@ class EditableShoppingItem extends Component {
     handleFormClose() {
         this.setState({ editForm: false });
     }
-    handleUpdateSubmit(item){
+    handleUpdateSubmit(item) {
         this.props.formSubmit(item);
         this.setState({ editForm: false });
     }
-    handleDeleteClick(){
+    handleDeleteClick() {
         this.props.onDeleteClick(this.props.name, this.props.item_id);
 
     }
@@ -352,12 +358,12 @@ class EditableShoppingItem extends Component {
             return (
                 <ShoppingItemForm
                     onCancelClick={this.handleFormClose}
-                    item_id = {this.props.item_id}
+                    item_id={this.props.item_id}
                     name={this.props.name}
                     price={this.props.price}
                     quantity={this.props.quantity}
                     onEditClick={this.handelFormOpen}
-                    formSubmit = {this.handleUpdateSubmit} />
+                    formSubmit={this.handleUpdateSubmit} />
             );
         }
         return (
@@ -385,9 +391,9 @@ class ShoppingItem extends Component {
     }
 }
 class ShoppingItemForm extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
-        this.state ={shoppingitemname: '',price:'',quantity:''}
+        this.state = { shoppingitemname: '', price: '', quantity: '' }
         this.onInputChange = this.onInputChange.bind(this);
         this.handelsubmit = this.handelsubmit.bind(this);
         this.handleCancelClick = this.handleCancelClick.bind(this);
@@ -395,13 +401,13 @@ class ShoppingItemForm extends Component {
     componentDidMount() {
         this.setState({ shoppingitemname: this.props.name, price: this.props.price, quantity: this.props.quantity });
     }
-    onInputChange(evt){
+    onInputChange(evt) {
         evt.preventDefault();
         let fields = {};
         fields[evt.target.name] = evt.target.value;
         this.setState(fields);
     }
-    handelsubmit(evt){
+    handelsubmit(evt) {
         evt.preventDefault();
         this.props.formSubmit({
             item_id: this.props.item_id,
@@ -411,7 +417,7 @@ class ShoppingItemForm extends Component {
         });
 
     }
-    handleCancelClick(evt){
+    handleCancelClick(evt) {
         evt.preventDefault();
         this.props.onCancelClick();
     }
@@ -422,9 +428,9 @@ class ShoppingItemForm extends Component {
                 <Col xs="18" md="12">
                     <div>
                         <Form onSubmit={this.handelsubmit}>
-                            <Input label='Item name' name='shoppingitemname' type="text" value= {this.state.shoppingitemname} onChange={this.onInputChange}></Input>
-                            <Input label='Price' name='price' type="number" value= {this.state.price} onChange={this.onInputChange}></Input>
-                            <Input label='Quantity' name='quantity' type="number" value= {this.state.quantity} onChange={this.onInputChange}></Input>
+                            <Input label='Item name' name='shoppingitemname' type="text" value={this.state.shoppingitemname} onChange={this.onInputChange}></Input>
+                            <Input label='Price' name='price' type="number" value={this.state.price} onChange={this.onInputChange}></Input>
+                            <Input label='Quantity' name='quantity' type="number" value={this.state.quantity} onChange={this.onInputChange}></Input>
                             <Button color="primary" size="large" onClick={this.handleSubmit}>{submittext}</Button>
                             <Button className="red" size="large" onClick={this.handleCancelClick}>Cancel</Button>
                         </Form>
