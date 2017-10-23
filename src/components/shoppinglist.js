@@ -10,6 +10,7 @@ import './shoppinglist.css';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
+import Navigation from './navbar';
 
 
 class ShoppinglistPage extends Component {
@@ -194,6 +195,8 @@ class ShoppinglistPage extends Component {
 
     render() {
         return (
+            <div>
+                <Navigation />
             <div className="pagecontent">
                 <Container  >
                     <ToastContainer />
@@ -209,7 +212,7 @@ class ShoppinglistPage extends Component {
                         prev_page={this.state.previous_page} />
                 </Container>
             </div>
-
+            </div>
         );
     }
 }
