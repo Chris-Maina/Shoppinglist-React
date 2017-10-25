@@ -24,12 +24,15 @@ class ShoppingItemsPage extends Component {
         this.handleUpdateItem = this.handleUpdateItem.bind(this);
         this.deleteItem = this.deleteItem.bind(this);
         this.handleDeleteItem = this.handleDeleteItem.bind(this);
+        this.searchShoppingItem = this.searchShoppingItem.bind(this);
+        this.handleShoppingItemSearch = this.handleShoppingItemSearch.bind(this);
     }
     componentDidMount() {
         this.getShoppinglistsItems();
     }
     getShoppinglistsItems() {
         // Send GET request
+        // this.props.match.url = /shoppinglists/4/items from shoppinglist file
         const url = 'https://shoppinglist-restful-api.herokuapp.com' + this.props.match.url;
         axios({
             method: "get",
@@ -92,6 +95,8 @@ class ShoppingItemsPage extends Component {
             }
             console.log(response.data);
             toast.success("Shoppingitem " + response.data.name + " created");
+             // Get all shopping items
+            this.getShoppinglistsItems();
             return response.data;
         }).catch(function (error) {
             if (error.response) {
@@ -108,8 +113,7 @@ class ShoppingItemsPage extends Component {
             }
             console.log(error.config);
         });
-        // Get all shopping items
-        this.getShoppinglistsItems();
+        
     }
     handleUpdateItem(item) {
         this.editShoppingItem(item);
@@ -136,6 +140,8 @@ class ShoppingItemsPage extends Component {
             }
             console.log(response.data);
             toast.success("Successfully edited shopping item ");
+             // Get all shopping items
+            this.getShoppinglistsItems();
             return response.data;
         }).catch(function (error) {
             if (error.response) {
@@ -152,8 +158,6 @@ class ShoppingItemsPage extends Component {
             }
             console.log(error.config);
         });
-        // Get all shopping items
-        this.getShoppinglistsItems();
 
     }
     handleDeleteItem(shoppingitem, item_id) {
@@ -176,6 +180,8 @@ class ShoppingItemsPage extends Component {
             }
             console.log(response.data);
             toast.success(response.data.message);
+             // Get all shopping items
+            this.getShoppinglistsItems();
             return response.data;
         }).catch(function (error) {
             if (error.response) {
@@ -192,8 +198,46 @@ class ShoppingItemsPage extends Component {
             }
             console.log(error.config);
         });
-        // Get all shopping items
-        this.getShoppinglistsItems();
+    }
+    handleShoppingItemSearch(searchtext){
+        this.searchShoppingItem(searchtext);
+    }
+    searchShoppingItem(searchtext){
+        // Send GET request
+        const url = 'https://shoppinglist-restful-api.herokuapp.com' + this.props.match.url +'?q='+ searchtext;
+        axios({
+            method: "get",
+            url: url,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + window.localStorage.getItem('token')
+            }
+        }).then((response) => {
+            if (!response.statusText === 'OK') {
+                toast.error(response.data.message)
+            }
+
+            console.log(response.data);
+            this.setState({
+                shoppingitems: response.data
+            });
+
+            return response.data;
+        }).catch(function (error) {
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.log(error.response.data);
+                toast.error(error.response.data.message)
+            } else if (error.request) {
+                // The request was made but no response was received
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+            }
+            console.log(error.config);
+        });
     }
     render() {
         if (typeof (this.state.shoppingitems) === 'string') {
@@ -202,9 +246,8 @@ class ShoppingItemsPage extends Component {
                     <Navigation />
                     <div className="pagecontent">
                         <Container >
-
                             <ToggleShoppingItem
-                            />
+                            formSubmit={this.handleShoppingItemCreate}/>
                             <Card textClassName='white-text' title={this.state.shoppingitems}>
                             </Card>
                         </Container>
@@ -219,7 +262,8 @@ class ShoppingItemsPage extends Component {
                         <Container >
                             <ToastContainer />
                             <ToggleShoppingItem
-                                formSubmit={this.handleShoppingItemCreate} />
+                                formSubmit={this.handleShoppingItemCreate}
+                                onSearchSubmit={this.handleShoppingItemSearch} />
                             <ShoppingItemTable
                                 items={this.state.shoppingitems}
                                 onUpdateSubmit={this.handleUpdateItem}
@@ -235,10 +279,13 @@ class ShoppingItemsPage extends Component {
 class ToggleShoppingItem extends Component {
     constructor(props) {
         super(props);
-        this.state = { isOpen: false };
+        this.state = { isOpen: false, isSearchOpen: false };
         this.handleFormOpen = this.handleFormOpen.bind(this);
         this.handleFormClose = this.handleFormClose.bind(this);
         this.handleCreateSubmit = this.handleCreateSubmit.bind(this);
+        this.handleSearchOpen = this.handleSearchOpen.bind(this);
+        this.handleSearch = this.handleSearch.bind(this);
+        this.handleSearchClose = this.handleSearchClose.bind(this);
     }
     handleFormOpen() {
         this.setState({ isOpen: true });
@@ -250,12 +297,31 @@ class ToggleShoppingItem extends Component {
         this.props.formSubmit(item);
         this.setState({ isOpen: false });
     }
+    handleSearchOpen() {
+        this.setState({ isSearchOpen: true });
+    }
+    handleSearchClose() {
+        this.setState({ isSearchOpen: false });
+    }
+    handleSearch(searchText){
+        this.props.onSearchSubmit(searchText);
+        this.setState({ isSearchOpen: false });
+    }
     render() {
-        if (this.state.isOpen) {
+        const isOpen = this.state.isOpen;
+        const isSearchOpen = this.state.isSearchOpen;
+        if (isOpen) {
             return (
                 <ShoppingItemForm
                     onCancelClick={this.handleFormClose}
                     formSubmit={this.handleCreateSubmit} />
+            );
+        }
+        else if(isSearchOpen){
+            return(
+                <SearchShoppingItem
+                onCancelClick={this.handleSearchClose}
+                onSearchSubmit={this.handleSearch}/>
             );
         }
         else {
@@ -264,6 +330,8 @@ class ToggleShoppingItem extends Component {
                     <Col xs="18" md="12">
                         <div>
                             <Button floating large className='orange' waves='light' icon='add' onClick={this.handleFormOpen} />
+
+                            <Button floating large className='orange space' waves='light' icon='search' onClick={this.handleSearchOpen} />
                         </div>
                     </Col>
                 </Row>
@@ -431,8 +499,8 @@ class ShoppingItemForm extends Component {
                             <Input label='Item name' name='shoppingitemname' type="text" value={this.state.shoppingitemname} onChange={this.onInputChange}></Input>
                             <Input label='Price' name='price' type="number" value={this.state.price} onChange={this.onInputChange}></Input>
                             <Input label='Quantity' name='quantity' type="number" value={this.state.quantity} onChange={this.onInputChange}></Input>
-                            <Button color="primary" size="large" onClick={this.handleSubmit}>{submittext}</Button>
-                            <Button className="red" size="large" onClick={this.handleCancelClick}>Cancel</Button>
+                            <Button color="primary" size="small" onClick={this.handleSubmit}>{submittext}</Button>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <Button className="red" size="small" onClick={this.handleCancelClick}>Cancel</Button>
                         </Form>
                     </div>
                 </Col>
@@ -440,4 +508,45 @@ class ShoppingItemForm extends Component {
         );
     }
 }
+class SearchShoppingItem extends Component{
+    constructor(props){
+        super(props);
+        this.state = { searchText: '' };
+        this.handleSearch = this.handleSearch.bind(this);
+        this.onSearchInputChange = this.onSearchInputChange.bind(this);
+        this.handleCancelClick = this.handleCancelClick.bind(this);
+    }
+    componentDidMount(){
+        this.setState({ searchText: this.props.searchText });
+    }
+    onSearchInputChange(evt){
+        evt.preventDefault();
+        this.setState({ searchText: evt.target.value });
+    }
+    handleSearch(evt){
+        evt.preventDefault();
+        this.props.onSearchSubmit(this.state.searchText);
+    }
+    handleCancelClick(evt) {
+        evt.preventDefault();
+        this.props.onCancelClick();
+    }
+    render(){
+        return(
+            <Row>
+            <Col xs="8" xs-offset="2" md="8" md-offset="2">
+                <div>
+                    <Form onSubmit={this.handleSearch}>
+                        <Input label="Search shoppinglist" floatingLabel={true} type="text"  name='searchtext' value={this.state.searchText} onChange={this.onSearchInputChange}></Input>
+                        <Button color="primary" size="small" onClick={this.handleSearch}>Search</Button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <Button className="red" size="small" onClick={this.handleCancelClick}>Cancel</Button>
+                    </Form>
+                </div>
+            </Col>
+        </Row>
+        );
+    }
+}
+
 export default ShoppingItemsPage;
