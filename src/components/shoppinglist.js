@@ -394,6 +394,7 @@ class EditableShoppinglist extends Component {
         this.handelEditBtnClick = this.handelEditBtnClick.bind(this);
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
         this.handleDeleteBtnClick = this.handleDeleteBtnClick.bind(this);
+        this.handleFormClose = this.handleFormClose.bind(this);
     }
     handelEditBtnClick() {
         this.setState({ editForm: true });
@@ -470,6 +471,7 @@ class ShoppinglistForm extends Component {
         this.state = { name: '' };
         this.onInputChange = this.onInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleCancelClick = this.handleCancelClick.bind(this);
     };
     componentDidMount() {
         this.setState({ name: this.props.name });
@@ -482,6 +484,10 @@ class ShoppinglistForm extends Component {
         evt.preventDefault();
         this.props.onFormSubmit(this.state.name);
     };
+    handleCancelClick(evt){
+        evt.preventDefault();
+        this.props.onFormClose();
+    }
     render() {
         const submittext = this.props.name ? 'Update' : 'Create';
         return (
@@ -491,7 +497,7 @@ class ShoppinglistForm extends Component {
                         <Form onSubmit={this.handelsubmit}>
                             <Input label='Shoppinglist name' name='shoppinglistname' value={this.state.name} onChange={this.onInputChange} floatingLabel={true} type="text" required></Input>
                             <Button color="primary" size="large" onClick={this.handleSubmit}>{submittext}</Button>
-                            <Button className="red" size="large" onClick={this.props.onFormClose}>Cancel</Button>
+                            <Button className="red" size="large" onClick={this.handleCancelClick}>Cancel</Button>
                         </Form>
                     </div>
                 </Col>
@@ -505,6 +511,7 @@ class SearchShoppinglist extends Component {
         this.state = { searchText: '' };
         this.handleSearch = this.handleSearch.bind(this);
         this.onSearchInputChange = this.onSearchInputChange.bind(this);
+        this.handleCancelClick = this.handleCancelClick.bind(this);
     }
     componentDidMount(){
         this.setState({ searchText: this.props.searchText });
@@ -517,6 +524,10 @@ class SearchShoppinglist extends Component {
         evt.preventDefault();
         this.props.onSearchSubmit(this.state.searchText);
     }
+    handleCancelClick(evt) {
+        evt.preventDefault();
+        this.props.onCancelClick();
+    }
     render() {
         return (
             <Row>
@@ -526,7 +537,7 @@ class SearchShoppinglist extends Component {
                             <Input label="Search shoppinglist" floatingLabel={true} type="text"  name='searchtext' value={this.state.searchText} onChange={this.onSearchInputChange}></Input>
                             <Button color="primary" size="small" onClick={this.handleSearch}>Search</Button>
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <Button className="red" size="small" onClick={this.props.onCancelClick}>Cancel</Button>
+                            <Button className="red" size="small" onClick={this.handleCancelClick}>Cancel</Button>
                         </Form>
                     </div>
                 </Col>
