@@ -698,7 +698,7 @@ class SearchShoppinglist extends Component {
 class LimitShoppinglists extends Component {
     constructor(props) {
         super(props);
-        this.state = { limit: '' }
+        this.state = { limit: '' };
         this.onLimitInputChange = this.onLimitInputChange.bind(this);
         this.handleLimit = this.handleLimit.bind(this);
         this.handleCancelClick = this.handleCancelClick.bind(this);
