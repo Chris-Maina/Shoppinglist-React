@@ -27,6 +27,8 @@ class ShoppinglistPage extends Component {
         this.handleSearchShoppinglist = this.handleSearchShoppinglist.bind(this);
         this.getNextPage = this.getNextPage.bind(this);
         this.handleNextClick = this.handleNextClick.bind(this);
+        this.getPreviousPage = this.getPreviousPage.bind(this);
+        this.handlePrevClick = this.handlePrevClick.bind(this);
         this.handleLimitShoppinglists = this.handleLimitShoppinglists.bind(this);
         this.limitShoppinglists = this.limitShoppinglists.bind(this);
 
@@ -240,14 +242,58 @@ class ShoppinglistPage extends Component {
     handlePrevClick() {
         this.getPreviousPage();
     }
+    getPreviousPage() {
+        // Send GET request with parameter page
+        const prev_page_url = this.state.previous_page;
+
+        if (prev_page_url === 'None') {
+            return toast.info("There are no shoppinglist in previous page");
+        }
+        const url = 'https://shoppinglist-restful-api.herokuapp.com' + prev_page_url;
+        axios({
+            method: "get",
+            url: url,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + window.localStorage.getItem('token')
+            }
+        }).then((response) => {
+            if (!response.statusText === 'OK') {
+                toast.error(response.data.message)
+            }
+
+            console.log(response.data);
+            this.setState({
+                shoppinglists: response.data.shopping_lists,
+                next_page: response.data.next_page,
+                previous_page: response.data.previous_page
+            });
+
+            return response.data;
+        }).catch(function (error) {
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.log(error.response.data);
+                toast.error(error.response.data.message)
+            } else if (error.request) {
+                // The request was made but no response was received
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+            }
+            console.log(error.config);
+        });
+    }
     handleNextClick() {
         this.getNextPage();
     }
     getNextPage() {
-        // Send GET request
+        // Send GET request with parameter page
         const next_page_url = this.state.next_page;
 
-        if (next_page_url === 'None'){
+        if (next_page_url === 'None') {
             return toast.info("There are no shoppinglist in next page");
         }
         const url = 'https://shoppinglist-restful-api.herokuapp.com' + next_page_url;
@@ -288,10 +334,10 @@ class ShoppinglistPage extends Component {
         });
     }
 
-    handleLimitShoppinglists(limitValue){
+    handleLimitShoppinglists(limitValue) {
         this.limitShoppinglists(limitValue);
     }
-    limitShoppinglists(limitValue){
+    limitShoppinglists(limitValue) {
         // Send GET request with limit parameter
         const url = 'https://shoppinglist-restful-api.herokuapp.com/shoppinglists/?limit=' + limitValue;
         axios({
@@ -361,6 +407,7 @@ class NextPreviousPage extends Component {
     constructor(props) {
         super(props);
         this.handleNextClick = this.handleNextClick.bind(this);
+        this.handlePrevClick = this.handlePrevClick.bind(this);
     }
     handlePrevClick(evt) {
         evt.preventDefault();
@@ -374,7 +421,7 @@ class NextPreviousPage extends Component {
         return (
             <Row>
                 <Col xs="8" xs-offset="2" md="8" md-offset="2">
-                    <Button className='orange' waves='light' size="small" >Previous Page</Button>
+                    <Button className='orange' waves='light' size="small" onClick={this.handlePrevClick}>Previous Page</Button>
                     <Button className='orange space' waves='light' size="small" onClick={this.handleNextClick}>Next Page</Button>
                 </Col>
             </Row>
@@ -417,7 +464,7 @@ class ToggleableShoppingForm extends Component {
     handleLimitOpen() {
         this.setState({ isLimitOpen: true });
     }
-    handleLimit(limitValue){
+    handleLimit(limitValue) {
         this.props.onLimitSubmit(limitValue);
         this.setState({ isLimitOpen: false });
     }
@@ -439,8 +486,8 @@ class ToggleableShoppingForm extends Component {
             );
         } else if (isLimitOpen) {
             return (
-                <LimitShoppinglists 
-                onLimitSubmit = {this.handleLimit}/>
+                <LimitShoppinglists
+                    onLimitSubmit={this.handleLimit} />
             );
         }
         else {
@@ -449,7 +496,7 @@ class ToggleableShoppingForm extends Component {
                     <Col xs="8" xs-offset="2" md="8" md-offset="2">
                         <div>
                             <Button floating large className='orange' waves='light' icon='add' onClick={this.handleFormOpen} />
-                            <Button floating large className='orange' waves='light' icon='filter_list' onClick={this.handleLimitOpen} />
+                            <Button floating large className='orange centeritem' waves='light' icon='filter_list' onClick={this.handleLimitOpen} />
                             <Button floating large className='orange space' waves='light' icon='search' onClick={this.handleSearchOpen} />
                         </div>
                     </Col>
@@ -644,20 +691,20 @@ class SearchShoppinglist extends Component {
     }
 }
 class LimitShoppinglists extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
-        this.state = { limit : ''}
+        this.state = { limit: '' }
         this.onLimitInputChange = this.onLimitInputChange.bind(this);
         this.handleLimit = this.handleLimit.bind(this);
     }
-    componentDidMount(){
-        this.setState ({ limit: this.state.limit })
+    componentDidMount() {
+        this.setState({ limit: this.state.limit })
     }
-    onLimitInputChange(evt){
+    onLimitInputChange(evt) {
         evt.preventDefault();
-        this.setState ({ limit: evt.target.value })
+        this.setState({ limit: evt.target.value })
     }
-    handleLimit(evt){
+    handleLimit(evt) {
         evt.preventDefault();
         this.props.onLimitSubmit(this.state.limit);
     }
@@ -665,11 +712,11 @@ class LimitShoppinglists extends Component {
         return (
             <Row>
                 <Col xs="8" xs-offset="2" md="8" md-offset="2">
-                <div>
-                    <Form onSubmit={this.handleLimit}>
-                        <Input label="Limit value" floatingLabel={true} name='limit' value={this.state.limit} onChange={this.onLimitInputChange} type="number"></Input>
-                    </Form>
-                </div>
+                    <div>
+                        <Form onSubmit={this.handleLimit}>
+                            <Input label="Limit value" floatingLabel={true} name='limit' value={this.state.limit} onChange={this.onLimitInputChange} type="number"></Input>
+                        </Form>
+                    </div>
                 </Col>
             </Row>
         );
