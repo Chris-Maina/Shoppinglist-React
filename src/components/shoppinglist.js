@@ -440,6 +440,7 @@ class ToggleableShoppingForm extends Component {
         this.handleSearchClose = this.handleSearchClose.bind(this);
         this.handleLimitOpen = this.handleLimitOpen.bind(this);
         this.handleLimit = this.handleLimit.bind(this);
+        this.handleLimitClose = this.handleLimitClose.bind(this);
     }
     handleFormSubmit(shoppinglistname) {
         this.props.formSubmit(shoppinglistname);
@@ -464,6 +465,9 @@ class ToggleableShoppingForm extends Component {
     handleLimitOpen() {
         this.setState({ isLimitOpen: true });
     }
+    handleLimitClose() {
+        this.setState({ isLimitOpen: false });
+    }
     handleLimit(limitValue) {
         this.props.onLimitSubmit(limitValue);
         this.setState({ isLimitOpen: false });
@@ -487,7 +491,8 @@ class ToggleableShoppingForm extends Component {
         } else if (isLimitOpen) {
             return (
                 <LimitShoppinglists
-                    onLimitSubmit={this.handleLimit} />
+                    onLimitSubmit={this.handleLimit}
+                    onCancelClick={this.handleLimitClose} />
             );
         }
         else {
@@ -495,7 +500,7 @@ class ToggleableShoppingForm extends Component {
                 <Row>
                     <Col xs="8" xs-offset="2" md="8" md-offset="2">
                         <div>
-                            <Button floating large className='orange' waves='light' icon='add' onClick={this.handleFormOpen} />
+                            <Button floating large className='orange' waves='light' icon='add' onClick={this.handleFormOpen} tooltip="Create shopping list"/>
                             <Button floating large className='orange centeritem' waves='light' icon='filter_list' onClick={this.handleLimitOpen} />
                             <Button floating large className='orange space' waves='light' icon='search' onClick={this.handleSearchOpen} />
                         </div>
@@ -696,6 +701,7 @@ class LimitShoppinglists extends Component {
         this.state = { limit: '' }
         this.onLimitInputChange = this.onLimitInputChange.bind(this);
         this.handleLimit = this.handleLimit.bind(this);
+        this.handleCancelClick = this.handleCancelClick.bind(this);
     }
     componentDidMount() {
         this.setState({ limit: this.state.limit })
@@ -708,13 +714,18 @@ class LimitShoppinglists extends Component {
         evt.preventDefault();
         this.props.onLimitSubmit(this.state.limit);
     }
+    handleCancelClick(evt){
+        evt.preventDefault();
+        this.props.onCancelClick();
+    }
     render() {
         return (
             <Row>
                 <Col xs="8" xs-offset="2" md="8" md-offset="2">
                     <div>
                         <Form onSubmit={this.handleLimit}>
-                            <Input label="Limit value" floatingLabel={true} name='limit' value={this.state.limit} onChange={this.onLimitInputChange} type="number"></Input>
+                            <Input  label="Limit value" floatingLabel={true} name='limit' value={this.state.limit} onChange={this.onLimitInputChange} type="number"></Input>
+                            <Button  className="red" size="small" onClick={this.handleCancelClick}>Cancel</Button>
                         </Form>
                     </div>
                 </Col>
