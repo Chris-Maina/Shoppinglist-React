@@ -30,6 +30,8 @@ class ShoppingItemsPage extends Component {
         this.limitShoppingItems = this.limitShoppingItems.bind(this);
         this.handleNextClick = this.handleNextClick.bind(this);
         this.getNextPage = this.getNextPage.bind(this);
+        this.handlePrevClick = this.handlePrevClick.bind(this);
+        this.getPreviousPage = this.getPreviousPage.bind(this);
     }
     componentDidMount() {
         this.getShoppinglistsItems();
@@ -312,6 +314,54 @@ class ShoppingItemsPage extends Component {
             console.log(response.data);
             this.setState({
                 shoppinglists: response.data.shopping_items,
+                next_page: response.data.next_page,
+                previous_page: response.data.previous_page
+            });
+
+            return response.data;
+        }).catch(function (error) {
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.log(error.response.data);
+                toast.error(error.response.data.message)
+            } else if (error.request) {
+                // The request was made but no response was received
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+            }
+            console.log(error.config);
+        });
+    }
+
+    handlePrevClick() {
+        this.getPreviousPage();
+    }
+    getPreviousPage() {
+        // Send GET request with parameter page
+        const prev_page_url = this.state.previous_page;
+
+        if (prev_page_url === 'None') {
+            return toast.info("There are no shoppingitems in previous page");
+        }
+        const url = 'https://shoppinglist-restful-api.herokuapp.com' + prev_page_url;
+        axios({
+            method: "get",
+            url: url,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + window.localStorage.getItem('token')
+            }
+        }).then((response) => {
+            if (!response.statusText === 'OK') {
+                toast.error(response.data.message)
+            }
+
+            console.log(response.data);
+            this.setState({
+                shoppinglists: response.data.shopping_lists,
                 next_page: response.data.next_page,
                 previous_page: response.data.previous_page
             });
