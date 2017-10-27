@@ -265,7 +265,7 @@ class ShoppingItemsPage extends Component {
 
             console.log(response.data);
             this.setState({
-                shoppinglists: response.data.shopping_items,
+                shoppingitems: response.data.shopping_items,
                 next_page: response.data.next_page,
                 previous_page: response.data.previous_page
             });
@@ -749,21 +749,22 @@ class SearchShoppingItem extends Component {
 class LimitShoppingItems extends Component {
     constructor(props) {
         super(props);
-        this.state = { limit: '' };
+        this.state = { limit_shoppingitem: '' };
         this.onLimitInputChange = this.onLimitInputChange.bind(this);
-        this.handleLimit = this.handleLimit.bind(this);
+        this.handleLimitItems = this.handleLimitItems.bind(this);
         this.handleCancelClick = this.handleCancelClick.bind(this);
     }
     componentDidMount() {
-        this.setState({ limit: this.state.limit })
+        this.setState({ limit: this.state.limit_shoppingitem })
     }
     onLimitInputChange(evt) {
         evt.preventDefault();
-        this.setState({ limit: evt.target.value })
+        this.setState({ limit_shoppingitem: evt.target.value })
     }
-    handleLimit(evt) {
+    handleLimitItems(evt) {
         evt.preventDefault();
-        this.props.onLimitSubmit(this.state.limit);
+        console.log(this.state.limit_shoppingitem);
+        this.props.onLimitSubmit(this.state.limit_shoppingitem);
     }
     handleCancelClick(evt) {
         evt.preventDefault();
@@ -774,8 +775,9 @@ class LimitShoppingItems extends Component {
             <Row>
                 <Col xs="8" xs-offset="2" md="8" md-offset="2">
                     <div>
-                        <Form onSubmit={this.handleLimit}>
-                            <Input label="Limit value" floatingLabel={true} name='limit' value={this.state.limit} onChange={this.onLimitInputChange} type="number"></Input>
+                        <Form onSubmit={this.handleLimitItems}>
+                            <Input label="Limit value" floatingLabel={true} name='limit' value={this.state.limit_shoppingitem} onChange={this.onLimitInputChange} type="number"></Input>
+                            <Button  size="small" onClick={this.handleLimitItems}>Limit</Button>&nbsp;&nbsp;&nbsp;&nbsp;
                             <Button className="red" size="small" onClick={this.handleCancelClick}>Cancel</Button>
                         </Form>
                     </div>
