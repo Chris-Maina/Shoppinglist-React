@@ -725,6 +725,7 @@ class LimitShoppinglists extends Component {
                     <div>
                         <Form onSubmit={this.handleLimit}>
                             <Input  label="Limit value" floatingLabel={true} name='limit' value={this.state.limit} onChange={this.onLimitInputChange} type="number"></Input>
+                            <Button  size="small" onClick={this.handleLimit}>Limit</Button>&nbsp;&nbsp;&nbsp;&nbsp;
                             <Button  className="red" size="small" onClick={this.handleCancelClick}>Cancel</Button>
                         </Form>
                     </div>
