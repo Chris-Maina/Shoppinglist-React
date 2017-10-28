@@ -133,9 +133,6 @@ class ShoppinglistPage extends Component {
             },
             data: data
         }).then((response) => {
-            if (!response.statusText === 'OK') {
-                toast.error(response.data.message)
-            }
             console.log(response.data);
             toast.success("Shoppinglist edited to " + response.data.name);
             return response.data;
