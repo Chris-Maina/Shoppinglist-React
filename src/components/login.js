@@ -11,26 +11,11 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 
-class LoginPage extends Component {
-    render() {
-        return (
-            <div className="pagecontent">
-                <ToastContainer />
-                <Row>
-                    <Col xs="6" xs-offset="3" md="6" md-offset="3">
-                        <LoginForm
-                            title="Login"
-                            buttonClass="btn-login" />
-                    </Col>
-                </Row>
-            </div>
-        );
-    }
-}
 class LoginForm extends Component {
     constructor(props) {
         super(props);
-        this.state = { email: '', password: '', redirect: false };
+        this.state = { email: '', password: '' };
+        this.state = { isLoggedIn: false};
         this.handelsubmit = this.handelsubmit.bind(this);
         this.onInputChange = this.onInputChange.bind(this);
         this.sendRequest = this.sendRequest.bind(this);
@@ -42,15 +27,16 @@ class LoginForm extends Component {
         fields[evt.target.name] = evt.target.value;
         this.setState(fields);
     }
+
     handelsubmit(evt) {
         evt.preventDefault();
         // Send to server/API
         this.sendRequest(this.state.email, this.state.password)
         this.setState({ email: '', password: '' });
     }
+
     sendRequest(email, password) {
-        var data = { "email": email, "password": password }
-        // const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+        var data = { "email": email, "password": password };
         const url = 'https://shoppinglist-restful-api.herokuapp.com/auth/login/';
         axios({
             method: "post",
@@ -60,58 +46,60 @@ class LoginForm extends Component {
             },
             data: data
         }).then(function (response) {
-            if (!response.statusText === 'OK') {
-                toast.error(response.data.message)
-            }
-            //console.log(response.data);
             // Load access token in local storage
             window.localStorage.setItem('token', response.data.access_token);
             toast.success(response.data.message);
-            this.setState({ redirect: true });
+            this.setState({ isLoggedIn: true});            
             return response.data;
         }).catch(function (error) {
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
                 console.log(error.response.data);
-                toast.error(error.response.data.message)
+                toast.error(error.response.data.message);
             } else if (error.request) {
                 // The request was made but no response was received
                 console.log(error.request);
             } else {
                 // Something happened in setting up the request that triggered an Error
-                console.log('Error', error.message);
+                console.log('Error', JSON.stringify(error.message));
             }
             console.log(error.config);
         });
     }
     render() {
-        if (this.state.redirect) {
+        const isLoggedIn = this.state.isLoggedIn
+        if (isLoggedIn) {
             return (
-                <Redirect to="/shoppinglists/"  />
+                <Redirect to="/shoppinglists/" />
             );
         }
         return (
-            <div>
-                <Panel className="panel-login RegisterForm">
-                    <div className="panel-heading">
-                        <h5 className="mui--text-title">Login</h5>
-                        <hr />
-                    </div>
-                    <Form onSubmit={this.handelsubmit}>
-                        <Input label=' Email ' name="email" value={this.state.email} onChange={this.onInputChange} floatingLabel={true} type="email" ></Input>
+            <div className="pagecontent">
+                <ToastContainer />
+                <Row>
+                    <Col xs="6" xs-offset="3" md="6" md-offset="3">
+                        <Panel className="panel-login RegisterForm">
+                            <div className="panel-heading">
+                                <h5 className="mui--text-title">Login</h5>
+                                <hr />
+                            </div>
+                            <Form onSubmit={this.handelsubmit}>
+                                <Input label=' Email ' name="email" value={this.state.email} onChange={this.onInputChange} floatingLabel={true} type="email" ></Input>
 
-                        <Input label=' Password ' name="password" value={this.state.password} onChange={this.onInputChange} floatingLabel={true} type="password"></Input>
+                                <Input label=' Password ' name="password" value={this.state.password} onChange={this.onInputChange} floatingLabel={true} type="password"></Input>
 
-                        <Button variant="raised" large className="btn-login"  >{this.props.title}</Button>
-                        <div className="mui--text-center">
-                            <Link to="/auth/register" class="forgot-password">Don't have an account?Register</Link>
-                        </div>
-                    </Form>
+                                <Button variant="raised" large className="btn-login"  >Login</Button>
+                                <div className="mui--text-center">
+                                    <Link to="/auth/register" class="forgot-password">Don't have an account?Register</Link>
+                                </div>
+                            </Form>
 
-                </Panel>
+                        </Panel>
+                    </Col>
+                </Row>
             </div>
         );
     }
 }
-export default LoginPage;
+export default LoginForm;
