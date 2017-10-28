@@ -25,7 +25,7 @@ class Navigation extends Component {
           <Dropdown trigger={
             <NavItem >User</NavItem>
           }>
-            <NavItem href='#'>Profile</NavItem>
+            <NavItem href='/user'>Profile</NavItem>
             <NavItem  onClick={this.handleLogoutClick}>logout</NavItem>
           </Dropdown>
         </Navbar>
