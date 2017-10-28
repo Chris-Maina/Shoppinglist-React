@@ -35,7 +35,6 @@ class RegisterForm extends Component {
         this.onInputChange = this.onInputChange.bind(this);
         this.validate = this.validate.bind(this);
     }
-
     onInputChange(evt) {
         evt.preventDefault();
         let fields = {};
@@ -83,7 +82,6 @@ class RegisterForm extends Component {
             if (!response.statusText === 'OK') {
                 toast.error(response.data.message)
             }
-            console.log(response.data);
             toast.success(response.data.message);
             this.setState({ redirect: true })
             return response.data;
@@ -104,7 +102,8 @@ class RegisterForm extends Component {
         });
     }
     render() {
-        if (this.state.redirect) {
+        const redirect = this.state.redirect;
+        if (redirect) {
             return <Redirect to="/auth/login/" />
         }
         return (
