@@ -78,7 +78,7 @@ class RegisterForm extends Component {
                 'Content-Type': 'application/json',
             },
             data: data
-        }).then(function (response) {
+        }).then((response)=> {
             if (!response.statusText === 'OK') {
                 toast.error(response.data.message)
             }
