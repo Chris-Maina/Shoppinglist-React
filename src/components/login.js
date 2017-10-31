@@ -14,8 +14,7 @@ import 'react-toastify/dist/ReactToastify.min.css';
 class LoginForm extends Component {
     constructor(props) {
         super(props);
-        this.state = { email: '', password: '' };
-        this.state = { isLoggedIn: false};
+        this.state = { email: '', password: '', isLoggedIn: false };
         this.handelsubmit = this.handelsubmit.bind(this);
         this.onInputChange = this.onInputChange.bind(this);
         this.sendRequest = this.sendRequest.bind(this);
@@ -45,7 +44,7 @@ class LoginForm extends Component {
                 'Content-Type': 'application/json',
             },
             data: data
-        }).then(function (response) {
+        }).then((response) => {
             // Load access token in local storage
             window.localStorage.setItem('token', response.data.access_token);
             toast.success(response.data.message);
@@ -69,6 +68,7 @@ class LoginForm extends Component {
     }
     render() {
         const isLoggedIn = this.state.isLoggedIn
+        console.log('this is logged in', isLoggedIn)
         if (isLoggedIn) {
             return (
                 <Redirect to="/shoppinglists/" />
