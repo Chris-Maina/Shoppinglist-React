@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import './register.css';
 import Form from 'muicss/lib/react/form';
 import Row from 'muicss/lib/react/row';
@@ -11,7 +11,7 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 
-class RegisterPage extends Component {
+export class RegisterPage extends Component {
 
     render() {
         return (
@@ -27,7 +27,7 @@ class RegisterPage extends Component {
         );
     }
 }
-class RegisterForm extends Component {
+export class RegisterForm extends Component {
     constructor(props) {
         super(props);
         this.state = { username: '', email: '', password: '', cpassword: '', errors: '', redirect: false };
@@ -59,13 +59,19 @@ class RegisterForm extends Component {
             errors = "Password mismatch";
             return errors;
         }
+        if (username.length === 0) {
+            errors = "Please provide a username";
+            return errors;
+        }else{
         // Regular expression to check for special characters
-        var re = /[a-z]|[A-Z]|[0-9]|_/;
+        var re = /^[a-zA-Z0-9_]+$/;
         // console.log(re.test(username))
         if (!re.test(username)) {
             errors = "Username cannot have special characters";
             return errors;
-        }
+        }}
+        
+        
     }
     sendRequest(email, password) {
         var data = { "email": email, "password": password }
@@ -122,9 +128,9 @@ class RegisterForm extends Component {
 
                         <Input label=' Confirm password ' name="cpassword" value={this.state.cpassword} onChange={this.onInputChange} floatingLabel={true} type="password" required></Input>
 
-                        <Button variant="raised" large className="btn-register"  >{this.props.title}</Button>
+                        <Button variant="raised" className="btn-register"  >{this.props.title}</Button>
                         <div className="mui--text-center">
-                            <Link to="/auth/login" class="forgot-password">Already have an account?Login</Link>
+                            <a href="/auth/login">Already have an account?Login</a>
                         </div>
                     </Form>
 
@@ -134,4 +140,3 @@ class RegisterForm extends Component {
 
     }
 }
-export default RegisterPage;
