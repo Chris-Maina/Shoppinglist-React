@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Button, Row, Col, Input, Icon, Card } from 'react-materialize';
 import Form from 'muicss/lib/react/form';
 import { ToastContainer, toast } from 'react-toastify';
-import LoginForm from './login';
+import {LoginForm }from './login';
 import './forgot_password.css';
 
 class ForgotPassword extends Component {
