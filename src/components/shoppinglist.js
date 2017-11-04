@@ -497,7 +497,7 @@ class ToggleableShoppingForm extends Component {
                 <Row>
                     <Col xs="8" xs-offset="2" md="8" md-offset="2">
                         <div>
-                            <Button floating large className='orange' waves='light' icon='add' onClick={this.handleFormOpen} tooltip="Create shopping list"/>
+                            <Button floating large className='orange' waves='light' icon='add' onClick={this.handleFormOpen}/>
                             <Button floating large className='orange centeritem' waves='light' icon='filter_list' onClick={this.handleLimitOpen} />
                             <Button floating large className='orange space' waves='light' icon='search' onClick={this.handleSearchOpen} />
                         </div>
