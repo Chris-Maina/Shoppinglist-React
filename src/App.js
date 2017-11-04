@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Route, Switch} from 'react-router-dom';
 /** Import all pages components */
 import { RegisterPage } from './components/register';
-import LoginForm from './components/login';
+import { LoginForm } from './components/login';
 import ShoppinglistPage from './components/shoppinglist';
 import Home from './components/home';
 import ShoppingItemsPage from './components/shoppingitem';
