@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Chris-Maina/Shoppinglist-React.svg?branch=develop)](https://travis-ci.org/Chris-Maina/Shoppinglist-React)
+[![Build Status](https://travis-ci.org/Chris-Maina/Shoppinglist-React.svg?branch=feature-change-password-152374386)](https://travis-ci.org/Chris-Maina/Shoppinglist-React)
 [![Coverage Status](https://coveralls.io/repos/github/Chris-Maina/Shoppinglist-React/badge.svg?branch=develop)](https://coveralls.io/github/Chris-Maina/Shoppinglist-React?branch=develop)
 
 ## Shoppinglist React Application.
