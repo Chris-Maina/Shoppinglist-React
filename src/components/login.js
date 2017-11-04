@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './register.css';
-import { Link, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import Form from 'muicss/lib/react/form';
 import Row from 'muicss/lib/react/row';
 import Col from 'muicss/lib/react/col';
@@ -11,7 +11,7 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 
-class LoginForm extends Component {
+export class LoginForm extends Component {
     constructor(props) {
         super(props);
         this.state = { email: '', password: '', isLoggedIn: false };
@@ -68,7 +68,6 @@ class LoginForm extends Component {
     }
     render() {
         const isLoggedIn = this.state.isLoggedIn
-        console.log('this is logged in', isLoggedIn)
         if (isLoggedIn) {
             return (
                 <Redirect to="/shoppinglists/" />
@@ -89,9 +88,9 @@ class LoginForm extends Component {
 
                                 <Input label=' Password ' name="password" value={this.state.password} onChange={this.onInputChange} floatingLabel={true} type="password"></Input>
 
-                                <Button variant="raised" large className="btn-login"  >Login</Button>
+                                <Button variant="raised" className="btn-login"  >Login</Button>
                                 <div className="mui--text-center">
-                                    <Link to="/auth/register" class="forgot-password">Don't have an account?Register</Link>
+                                    <a href="/auth/register">Don't have an account?Register</a>
                                 </div>
                             </Form>
 
@@ -102,4 +101,3 @@ class LoginForm extends Component {
         );
     }
 }
-export default LoginForm;
