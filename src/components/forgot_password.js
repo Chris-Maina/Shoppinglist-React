@@ -68,15 +68,15 @@ class ForgotPassword extends Component {
                     <Row>
                         <Col s={12} m={8} offset="m2">
                             <Card
-                                className="mui--text-center card_forgot_password blue-grey darken-1"
-                                textClassName='white-text'
-                                actions={<Button size="small" className="red yellow-text">THANK YOU</Button>}>
+                                className="mui--text-center card_forgot_password "
+                                textClassName='yellow-text'
+                                actions={<Button size="small" >THANK YOU</Button>}>
                                 <Row>
                                     <h4>Forgot Password?</h4>
-                                    <span className="white-text">Not to worry, we got you! Let's get you a new password ! Just provide your email address below</span><br />
+                                    <span className="black-text">Not to worry, we got you! Let's get you a new password ! Just provide your email address below</span><br />
                                     <Form onSubmit={this.handleSubmit}>
-                                        <Input s={6} label="Email" className="white-text" validate type='email' name="email" onChange={this.handleInputChange}><Icon>email</Icon></Input><br/>
-                                        <Button s={6} size="small" className="red" waves='light'>Submit </Button>
+                                        <Input s={6} label="Email" className="black-text" validate type='email' name="email" onChange={this.handleInputChange}><Icon>email</Icon></Input><br/>
+                                        <Button s={6} size="small" waves='light'>Submit </Button>
                                     </Form> 
                                 </Row>
 
