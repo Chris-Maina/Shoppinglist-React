@@ -129,4 +129,20 @@ describe('Form Validation in Register page', () => {
         pageForm.simulate('submit')
         expect(RegisterForm.prototype.validate.calledOnce).toEqual(true);
     });
+    it('Changes password state when on change event is called', () => {
+        const register = mount(<RegisterForm/>);
+        const inputEmail = register.find("input[name='password']");
+        const event = {
+            target: {
+                name: 'password',
+                value: 'chris12345'
+            },
+            preventDefault: () => {
+                return true
+            }
+        }
+        inputEmail.simulate('change', event);
+        expect(register.state().password).toBe(event.target.value);
+        
+    })
 });
