@@ -13,7 +13,7 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import Navigation from './navbar';
 
 
-class ShoppinglistPage extends Component {
+export class ShoppinglistPage extends Component {
     constructor(props) {
         super(props);
         this.state = { shoppinglists: [], next_page: '', previous_page: '' };
@@ -400,7 +400,7 @@ class ShoppinglistPage extends Component {
         );
     }
 }
-class NextPreviousPage extends Component {
+export class NextPreviousPage extends Component {
     constructor(props) {
         super(props);
         this.handleNextClick = this.handleNextClick.bind(this);
@@ -425,7 +425,7 @@ class NextPreviousPage extends Component {
         );
     }
 }
-class ToggleableShoppingForm extends Component {
+export class ToggleableShoppingForm extends Component {
     constructor(props) {
         super(props);
         this.state = { isOpen: false, isSearchOpen: false, isLimitOpen: false };
@@ -508,7 +508,7 @@ class ToggleableShoppingForm extends Component {
     }
 }
 
-class AllShoppinglists extends Component {
+export class AllShoppinglists extends Component {
     render() {
         if (typeof (this.props.shopping_lists) === 'string') {
             return (
@@ -534,7 +534,7 @@ class AllShoppinglists extends Component {
         );
     }
 }
-class EditableShoppinglist extends Component {
+export class EditableShoppinglist extends Component {
     constructor(props) {
         super(props);
         this.state = { editForm: false }
@@ -590,7 +590,7 @@ class EditableShoppinglist extends Component {
     }
 
 }
-class Shoppinglist extends Component {
+export class Shoppinglist extends Component {
     render() {
         return (
             <div>
@@ -612,7 +612,7 @@ class Shoppinglist extends Component {
     }
 }
 
-class ShoppinglistForm extends Component {
+export class ShoppinglistForm extends Component {
     constructor(props) {
         super(props);
         this.state = { name: '' };
@@ -652,7 +652,7 @@ class ShoppinglistForm extends Component {
         );
     }
 }
-class SearchShoppinglist extends Component {
+export class SearchShoppinglist extends Component {
     constructor(props) {
         super(props);
         this.state = { searchText: '' };
@@ -692,7 +692,7 @@ class SearchShoppinglist extends Component {
         );
     }
 }
-class LimitShoppinglists extends Component {
+export class LimitShoppinglists extends Component {
     constructor(props) {
         super(props);
         this.state = { limit: '' };
@@ -731,5 +731,3 @@ class LimitShoppinglists extends Component {
         );
     }
 }
-
-export default ShoppinglistPage;
