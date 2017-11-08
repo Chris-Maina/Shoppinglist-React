@@ -48,7 +48,7 @@ export class LoginForm extends Component {
             // Load access token in local storage
             window.localStorage.setItem('token', response.data.access_token);
             toast.success(response.data.message);
-            this.setState({ isLoggedIn: true});            
+            this.setState({ isLoggedIn: true });
             return response.data;
         }).catch(function (error) {
             if (error.response) {
@@ -89,11 +89,14 @@ export class LoginForm extends Component {
                                 <Input label=' Password ' name="password" value={this.state.password} onChange={this.onInputChange} floatingLabel={true} type="password"></Input>
 
                                 <Button variant="raised" className="btn-login"  >Login</Button>
-                                <div className="mui--text-center">
-                                    <a href="/auth/register">Don't have an account?Register</a>
-                                </div>
-                            </Form>
 
+                            </Form>
+                            <div className="mui--text-center">
+                                <a href="/user/reset">Forgot Password?</a>
+                            </div>
+                            <div className="mui--text-center">
+                                <a href="/auth/register">Don't have an account?Register</a>
+                            </div>
                         </Panel>
                     </Col>
                 </Row>
