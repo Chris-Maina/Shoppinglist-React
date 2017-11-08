@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Navbar, NavItem , Dropdown} from 'react-materialize';
 // Navigation bar
-class Navigation extends Component {
+export class Navigation extends Component {
   constructor(props){
     super(props);
     this.state = {redirect: false};
@@ -33,4 +33,3 @@ class Navigation extends Component {
     );
   }
 }
-export default Navigation;
