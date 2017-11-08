@@ -10,7 +10,7 @@ import './shoppinglist.css';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
-import Navigation from './navbar';
+import {Navigation} from './navbar';
 
 
 export class ShoppinglistPage extends Component {
@@ -497,9 +497,11 @@ export class ToggleableShoppingForm extends Component {
                 <Row>
                     <Col xs="8" xs-offset="2" md="8" md-offset="2">
                         <div>
-                            <Button floating large className='orange' waves='light' icon='add' onClick={this.handleFormOpen}/>
-                            <Button floating large className='orange centeritem' waves='light' icon='filter_list' onClick={this.handleLimitOpen} />
-                            <Button floating large className='orange space' waves='light' icon='search' onClick={this.handleSearchOpen} />
+                            <Button floating fab='vertical' icon='mode_edit' className='red' large style={{ bottom: '45px', right: '24px' }}>
+                                <Button floating icon='add'className='blue' waves='light'  onClick={this.handleFormOpen} />
+                                <Button floating icon='filter_list' className='green' waves='light' onClick={this.handleLimitOpen} />
+                                <Button floating icon='search' className='orange' waves='light'  onClick={this.handleSearchOpen} />
+                            </Button>
                         </div>
                     </Col>
                 </Row>
@@ -711,7 +713,7 @@ export class LimitShoppinglists extends Component {
         evt.preventDefault();
         this.props.onLimitSubmit(this.state.limit);
     }
-    handleCancelClick(evt){
+    handleCancelClick(evt) {
         evt.preventDefault();
         this.props.onCancelClick();
     }
@@ -721,9 +723,9 @@ export class LimitShoppinglists extends Component {
                 <Col xs="8" xs-offset="2" md="8" md-offset="2">
                     <div>
                         <Form onSubmit={this.handleLimit}>
-                            <Input  label="Limit value" floatingLabel={true} name='limit' value={this.state.limit} onChange={this.onLimitInputChange} type="number"></Input>
-                            <Button  size="small" onClick={this.handleLimit}>Limit</Button>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <Button  className="red" size="small" onClick={this.handleCancelClick}>Cancel</Button>
+                            <Input label="Limit value" floatingLabel={true} name='limit' value={this.state.limit} onChange={this.onLimitInputChange} type="number"></Input>
+                            <Button size="small" onClick={this.handleLimit}>Limit</Button>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <Button className="red" size="small" onClick={this.handleCancelClick}>Cancel</Button>
                         </Form>
                     </div>
                 </Col>
