@@ -525,9 +525,12 @@ class ToggleShoppingItem extends Component {
                 <Row>
                     <Col xs="18" md="12">
                         <div>
-                            <Button floating large className='orange' waves='light' icon='add' onClick={this.handleFormOpen} />
-                            <Button floating large className='orange centeritem' waves='light' icon='filter_list' onClick={this.handleLimitOpen} />
-                            <Button floating large className='orange space' waves='light' icon='search' onClick={this.handleSearchOpen} />
+
+                            <Button floating fab='vertical' icon='mode_edit' className='red' large style={{ bottom: '45px', right: '24px' }}>
+                                <Button floating icon='add' className='blue' waves='light' onClick={this.handleFormOpen} />
+                                <Button floating icon='filter_list' className='green ' waves='light'  onClick={this.handleLimitOpen} />
+                                <Button floating icon='search' className='orange' waves='light'  onClick={this.handleSearchOpen} />
+                            </Button>
                         </div>
                     </Col>
                 </Row>
@@ -777,7 +780,7 @@ class LimitShoppingItems extends Component {
                     <div>
                         <Form onSubmit={this.handleLimitItems}>
                             <Input label="Limit value" floatingLabel={true} name='limit' value={this.state.limit_shoppingitem} onChange={this.onLimitInputChange} type="number"></Input>
-                            <Button  size="small" onClick={this.handleLimitItems}>Limit</Button>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <Button size="small" onClick={this.handleLimitItems}>Limit</Button>&nbsp;&nbsp;&nbsp;&nbsp;
                             <Button className="red" size="small" onClick={this.handleCancelClick}>Cancel</Button>
                         </Form>
                     </div>
