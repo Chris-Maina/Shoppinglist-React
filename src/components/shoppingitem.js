@@ -10,7 +10,7 @@ import './shoppinglist.css';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
-import Navigation from './navbar';
+import {Navigation} from './navbar';
 
 class ShoppingItemsPage extends Component {
     constructor(props) {
@@ -313,7 +313,7 @@ class ShoppingItemsPage extends Component {
 
             console.log(response.data);
             this.setState({
-                shoppinglists: response.data.shopping_items,
+                shoppingitems: response.data.shopping_items,
                 next_page: response.data.next_page,
                 previous_page: response.data.previous_page
             });
@@ -355,13 +355,10 @@ class ShoppingItemsPage extends Component {
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             }
         }).then((response) => {
-            if (!response.statusText === 'OK') {
-                toast.error(response.data.message)
-            }
 
             console.log(response.data);
             this.setState({
-                shoppinglists: response.data.shopping_lists,
+                shoppingitems: response.data.shopping_items,
                 next_page: response.data.next_page,
                 previous_page: response.data.previous_page
             });
