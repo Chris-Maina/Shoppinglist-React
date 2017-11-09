@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import Container from 'muicss/lib/react/container';
 import Row from 'muicss/lib/react/row';
 import Col from 'muicss/lib/react/col';
@@ -498,9 +497,9 @@ export class ToggleableShoppingForm extends Component {
                     <Col xs="8" xs-offset="2" md="8" md-offset="2">
                         <div>
                             <Button floating fab='vertical' icon='mode_edit' className='red' large style={{ bottom: '45px', right: '24px' }}>
-                                <Button floating icon='add'className='blue' waves='light'  onClick={this.handleFormOpen} />
-                                <Button floating icon='filter_list' className='green' waves='light' onClick={this.handleLimitOpen} />
-                                <Button floating icon='search' className='orange' waves='light'  onClick={this.handleSearchOpen} />
+                                <Button floating icon='add' id="add" className='blue' waves='light'  onClick={this.handleFormOpen} />
+                                <Button floating icon='filter_list'id="filter" className='green' waves='light' onClick={this.handleLimitOpen} />
+                                <Button floating icon='search' id="search" className='orange' waves='light'  onClick={this.handleSearchOpen} />
                             </Button>
                         </div>
                     </Col>
@@ -600,11 +599,11 @@ export class Shoppinglist extends Component {
                     <Col xs="8" xs-offset="2" md="8" md-offset="2">
                         <div>
                             <Card className='blue-grey darken-1' textClassName='white-text' title={this.props.name}
-                                actions={[<Link to={`/shoppinglists/${this.props.sl_id}/items`}>Add Item</Link>]}>
+                                actions={[<a href={`/shoppinglists/${this.props.sl_id}/items`}>Add Item</a>]}>
 
                                 <br />
-                                <Button color="primary" size="small" onClick={this.props.onEditSubmit}>Edit</Button>&nbsp;&nbsp;&nbsp;&nbsp;
-                                <Button className="red" size="small" onClick={this.props.onDeleteSubmit}>Delete</Button>
+                                <Button color="primary" id="edit" size="small" onClick={this.props.onEditSubmit}>Edit</Button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <Button className="red" id="delete" size="small" onClick={this.props.onDeleteSubmit}>Delete</Button>
                             </Card>
                         </div>
                     </Col>
@@ -644,9 +643,9 @@ export class ShoppinglistForm extends Component {
                 <Col xs="8" xs-offset="2" md="8" md-offset="2">
                     <div>
                         <Form onSubmit={this.handelsubmit}>
-                            <Input label='Shoppinglist name' name='shoppinglistname' value={this.state.name} onChange={this.onInputChange} floatingLabel={true} type="text" required></Input>
+                            <Input label="Shoppinglist name" name="shoppinglistname" value={this.state.name} onChange={this.onInputChange} floatingLabel={true} type="text" required></Input>
                             <Button color="primary" size="large" onClick={this.handleSubmit}>{submittext}</Button>
-                            <Button className="red" size="large" onClick={this.handleCancelClick}>Cancel</Button>
+                            <Button className="red" id="cancel" size="large" onClick={this.handleCancelClick}>Cancel</Button>
                         </Form>
                     </div>
                 </Col>
