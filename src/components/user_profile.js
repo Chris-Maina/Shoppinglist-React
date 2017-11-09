@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Card, Col, Button, Row, CardTitle, Modal, Input, Icon } from 'react-materialize';
 import Form from 'muicss/lib/react/form';
 import "./user_profile.css";
-import Navigation from './navbar';
+import {Navigation} from './navbar';
 import Container from 'muicss/lib/react/container';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
