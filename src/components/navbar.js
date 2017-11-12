@@ -21,6 +21,8 @@ export class Navigation extends Component {
     return (
       <div>
         <Navbar brand='SHOPPINGLIST' right>
+        <NavItem href='/auth/register/'>Register</NavItem>
+        <NavItem href='/auth/login/'>Login</NavItem>
           <NavItem href='/shoppinglists/'>My Lists</NavItem>
           <Dropdown trigger={
             <NavItem >User</NavItem>
