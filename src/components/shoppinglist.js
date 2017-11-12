@@ -644,7 +644,7 @@ export class ShoppinglistForm extends Component {
                     <div>
                         <Form onSubmit={this.handelsubmit}>
                             <Input label="Shoppinglist name" name="shoppinglistname" value={this.state.name} onChange={this.onInputChange} floatingLabel={true} type="text" required></Input>
-                            <Button color="primary" size="large" onClick={this.handleSubmit}>{submittext}</Button>
+                            <Button color="primary" id="update_create" size="large" onClick={this.handleSubmit}>{submittext}</Button>
                             <Button className="red" id="cancel" size="large" onClick={this.handleCancelClick}>Cancel</Button>
                         </Form>
                     </div>
@@ -723,8 +723,8 @@ export class LimitShoppinglists extends Component {
                     <div>
                         <Form onSubmit={this.handleLimit}>
                             <Input label="Limit value" floatingLabel={true} name='limit' value={this.state.limit} onChange={this.onLimitInputChange} type="number"></Input>
-                            <Button size="small" onClick={this.handleLimit}>Limit</Button>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <Button className="red" size="small" onClick={this.handleCancelClick}>Cancel</Button>
+                            <Button size="small" id='limit' onClick={this.handleLimit}>Limit</Button>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <Button className="red" id='limitCancel' size="small" onClick={this.handleCancelClick}>Cancel</Button>
                         </Form>
                     </div>
                 </Col>
