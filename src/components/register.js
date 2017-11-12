@@ -9,13 +9,17 @@ import Button from 'muicss/lib/react/button';
 import Panel from 'muicss/lib/react/panel';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import {Navigation} from './navbar';
 import 'react-toastify/dist/ReactToastify.min.css';
 
 export class RegisterPage extends Component {
 
     render() {
         return (
+            <div>
+                <Navigation />
             <div className="pagecontent">
+                
                 <ToastContainer />
                 <Row>
                     <Col xs="6" xs-offset="3" md="6" md-offset="3">
@@ -23,6 +27,7 @@ export class RegisterPage extends Component {
                             title="Register" />
                     </Col>
                 </Row>
+            </div>
             </div>
         );
     }
