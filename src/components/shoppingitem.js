@@ -5,12 +5,12 @@ import Col from 'muicss/lib/react/col';
 import Panel from 'muicss/lib/react/panel';
 import Form from 'muicss/lib/react/form';
 import Input from 'muicss/lib/react/input';
-import { Button, Card } from 'react-materialize';
+import { Button } from 'react-materialize';
 import './shoppinglist.css';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
-import {Navigation} from './navbar';
+import { Navigation } from './navbar';
 
 class ShoppingItemsPage extends Component {
     constructor(props) {
@@ -382,43 +382,28 @@ class ShoppingItemsPage extends Component {
     }
 
     render() {
-        if (typeof (this.state.shoppingitems) === 'string') {
-            return (
-                <div>
-                    <Navigation />
-                    <div className="pagecontent">
-                        <Container >
-                            <ToggleShoppingItem
-                                formSubmit={this.handleShoppingItemCreate} />
-                            <Card textClassName='white-text' title={this.state.shoppingitems}>
-                            </Card>
-                        </Container>
-                    </div>
+        return (
+            <div>
+                <Navigation />
+                <div className="pagecontent">
+                    <Container >
+                        <ToastContainer />
+                        <ToggleShoppingItem
+                            formSubmit={this.handleShoppingItemCreate}
+                            onSearchSubmit={this.handleShoppingItemSearch}
+                            onLimitSubmit={this.handleShoppingItemsLimit} />
+                        <ShoppingItemTable
+                            items={this.state.shoppingitems}
+                            onUpdateSubmit={this.handleUpdateItem}
+                            onDeleteClick={this.handleDeleteItem} />
+                        <NextPreviousPage
+                            onPrevClick={this.handlePrevClick}
+                            onNextClick={this.handleNextClick} />
+                    </Container>
                 </div>
-            );
-        } else {
-            return (
-                <div>
-                    <Navigation />
-                    <div className="pagecontent">
-                        <Container >
-                            <ToastContainer />
-                            <ToggleShoppingItem
-                                formSubmit={this.handleShoppingItemCreate}
-                                onSearchSubmit={this.handleShoppingItemSearch}
-                                onLimitSubmit={this.handleShoppingItemsLimit} />
-                            <ShoppingItemTable
-                                items={this.state.shoppingitems}
-                                onUpdateSubmit={this.handleUpdateItem}
-                                onDeleteClick={this.handleDeleteItem} />
-                            <NextPreviousPage
-                                onPrevClick={this.handlePrevClick}
-                                onNextClick={this.handleNextClick} />
-                        </Container>
-                    </div>
-                </div>
-            );
-        }
+            </div>
+        );
+
 
     }
 }
@@ -525,8 +510,8 @@ class ToggleShoppingItem extends Component {
 
                             <Button floating fab='vertical' icon='mode_edit' className='red' large style={{ bottom: '45px', right: '24px' }}>
                                 <Button floating icon='add' className='blue' waves='light' onClick={this.handleFormOpen} />
-                                <Button floating icon='filter_list' className='green ' waves='light'  onClick={this.handleLimitOpen} />
-                                <Button floating icon='search' className='orange' waves='light'  onClick={this.handleSearchOpen} />
+                                <Button floating icon='filter_list' className='green ' waves='light' onClick={this.handleLimitOpen} />
+                                <Button floating icon='search' className='orange' waves='light' onClick={this.handleSearchOpen} />
                             </Button>
                         </div>
                     </Col>
@@ -555,8 +540,8 @@ class ShoppingItemTable extends Component {
                 </Col>
             </Row>
         );
-
     }
+
 }
 class TableHead extends Component {
     render() {
@@ -575,6 +560,14 @@ class TableHead extends Component {
 }
 class TableBody extends Component {
     render() {
+
+        if (typeof (this.props.items) === 'string') {
+            return (
+                <EditableShoppingItem
+                    items={this.props.items} />
+            );
+        }
+
         const shoppingitems = this.props.items.map((item) =>
             <EditableShoppingItem
                 key={item.id}
@@ -619,6 +612,17 @@ class EditableShoppingItem extends Component {
 
     }
     render() {
+        if (this.props.items) {
+            return (
+                <tbody>
+                    <tr>
+                        <td>
+                            {this.props.items}
+                        </td>
+                    </tr>
+                </tbody>
+            );
+        }
         if (this.state.editForm) {
             return (
                 <ShoppingItemForm
