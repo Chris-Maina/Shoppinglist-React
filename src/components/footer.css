@@ -6,3 +6,7 @@ footer {
     width: 100%;
     overflow:hidden;
 }
+#left_navigation_links {
+	float: left;
+    padding: 10px;
+}
