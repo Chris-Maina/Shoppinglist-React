@@ -3,12 +3,14 @@ import { Button } from 'react-materialize';
 import { Link } from 'react-router-dom';
 import Footer from './footer';
 import './home.css';
+import {Navigation} from './navbar';
 
 // Home
 class Home extends Component {
   render() {
     return (
       <div>
+        <Navigation />
         <header>
           <div className="header-content">
             <div className="header-content-inner">
