@@ -9,6 +9,7 @@ import Button from 'muicss/lib/react/button';
 import Panel from 'muicss/lib/react/panel';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import {Navigation} from './navbar';
 import 'react-toastify/dist/ReactToastify.min.css';
 
 export class LoginForm extends Component {
@@ -74,6 +75,8 @@ export class LoginForm extends Component {
             );
         }
         return (
+            <div>
+            <Navigation />
             <div className="pagecontent">
                 <ToastContainer />
                 <Row>
@@ -100,6 +103,7 @@ export class LoginForm extends Component {
                         </Panel>
                     </Col>
                 </Row>
+            </div>
             </div>
         );
     }
