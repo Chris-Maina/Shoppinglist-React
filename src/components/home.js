@@ -22,8 +22,8 @@ class Home extends Component {
               <Button waves='orange' className="btn-primary" id="register"> <Link to="/auth/register/">Register</Link></Button>
             </div>
           </div>
-          <Footer />
         </header>
+        <Footer />
       </div>
     );
   }
