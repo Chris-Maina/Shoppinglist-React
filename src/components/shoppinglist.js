@@ -682,10 +682,10 @@ export class SearchShoppinglist extends Component {
                 <Col xs="8" xs-offset="2" md="8" md-offset="2">
                     <div>
                         <Form onSubmit={this.handleSearch}>
-                            <Input label="Search shoppinglist" floatingLabel={true} type="text" name='searchtext' value={this.state.searchText} onChange={this.onSearchInputChange}></Input>
-                            <Button color="primary" size="small" onClick={this.handleSearch}>Search</Button>
+                            <Input label="Search shoppinglist" floatingLabel={true} type="text" id='searchtext' name='searchtext' value={this.state.searchText} onChange={this.onSearchInputChange}></Input>
+                            <Button color="primary" id='searchBtn' size="small" onClick={this.handleSearch}>Search</Button>
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <Button className="red" size="small" onClick={this.handleCancelClick}>Cancel</Button>
+                            <Button className="red" id='searchCancelBtn' size="small" onClick={this.handleCancelClick}>Cancel</Button>
                         </Form>
                     </div>
                 </Col>
