@@ -1,10 +1,9 @@
 footer {
-    position: relative;
+    position: absolute;
     left: 0;
     bottom: 0;
     height: 50px;
     width: 100%;
-    overflow:hidden;
 }
 #left_navigation_links {
 	float: left;
