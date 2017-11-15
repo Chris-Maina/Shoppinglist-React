@@ -125,13 +125,13 @@ export class RegisterForm extends Component {
                         <hr />
                     </div>
                     <Form onSubmit={this.handelsubmit}>
-                        <Input label=' Username ' name="username" value={this.state.username} onChange={this.onInputChange} floatingLabel={true} required ></Input>
+                        <Input label=' Username ' name="username" value={this.state.username} onChange={this.onInputChange} floatingLabel={true}  ></Input>
 
                         <Input label=' Email ' name="email" value={this.state.email} onChange={this.onInputChange} floatingLabel={true} type="email" ></Input>
 
                         <Input label=' Password ' name="password" value={this.state.password} onChange={this.onInputChange} floatingLabel={true} type="password"  ></Input>
 
-                        <Input label=' Confirm password ' name="cpassword" value={this.state.cpassword} onChange={this.onInputChange} floatingLabel={true} type="password" required></Input>
+                        <Input label=' Confirm password ' name="cpassword" value={this.state.cpassword} onChange={this.onInputChange} floatingLabel={true} type="password" ></Input>
 
                         <Button variant="raised" className="btn-register"  >{this.props.title}</Button>
                         <div className="mui--text-center">
