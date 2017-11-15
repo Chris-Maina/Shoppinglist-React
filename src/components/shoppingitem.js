@@ -48,11 +48,7 @@ class ShoppingItemsPage extends Component {
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             }
         }).then((response) => {
-            if (!response.statusText === 'OK') {
-                toast.error(response.data.message)
-            }
-
-            console.log(response.data.shopping_items);
+            // console.log(response.data.shopping_items);
             this.setState({
                 shoppingitems: response.data.shopping_items,
                 next_page: response.data.next_page,
@@ -96,10 +92,7 @@ class ShoppingItemsPage extends Component {
             },
             data: data
         }).then((response) => {
-            if (!response.statusText === 'OK') {
-                toast.error(response.data.message)
-            }
-            console.log(response.data);
+            // console.log(response.data);
             toast.success("Shoppingitem " + response.data.name + " created");
             // Get all shopping items
             this.getShoppinglistsItems();
@@ -141,10 +134,7 @@ class ShoppingItemsPage extends Component {
             },
             data: data
         }).then((response) => {
-            if (!response.statusText === 'OK') {
-                toast.error(response.data.message)
-            }
-            console.log(response.data);
+            // console.log(response.data);
             toast.success("Successfully edited shopping item ");
             // Get all shopping items
             this.getShoppinglistsItems();
@@ -181,10 +171,7 @@ class ShoppingItemsPage extends Component {
             },
             data: data
         }).then((response) => {
-            if (!response.statusText === 'OK') {
-                toast.error(response.data.message)
-            }
-            console.log(response.data);
+            // console.log(response.data);
             toast.success(response.data.message);
             // Get all shopping items
             this.getShoppinglistsItems();
@@ -219,11 +206,7 @@ class ShoppingItemsPage extends Component {
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             }
         }).then((response) => {
-            if (!response.statusText === 'OK') {
-                toast.error(response.data.message)
-            }
-
-            console.log(response.data);
+            // console.log(response.data);
             this.setState({
                 shoppingitems: response.data
             });
@@ -259,11 +242,7 @@ class ShoppingItemsPage extends Component {
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             }
         }).then((response) => {
-            if (!response.statusText === 'OK') {
-                toast.error(response.data.message)
-            }
-
-            console.log(response.data);
+            // console.log(response.data);
             this.setState({
                 shoppingitems: response.data.shopping_items,
                 next_page: response.data.next_page,
@@ -307,11 +286,7 @@ class ShoppingItemsPage extends Component {
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             }
         }).then((response) => {
-            if (!response.statusText === 'OK') {
-                toast.error(response.data.message)
-            }
-
-            console.log(response.data);
+            // console.log(response.data);
             this.setState({
                 shoppingitems: response.data.shopping_items,
                 next_page: response.data.next_page,
@@ -323,7 +298,7 @@ class ShoppingItemsPage extends Component {
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
-                console.log(error.response.data);
+                // console.log(error.response.data);
                 toast.error(error.response.data.message)
             } else if (error.request) {
                 // The request was made but no response was received
@@ -355,20 +330,17 @@ class ShoppingItemsPage extends Component {
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             }
         }).then((response) => {
-
-            console.log(response.data);
             this.setState({
                 shoppingitems: response.data.shopping_items,
                 next_page: response.data.next_page,
                 previous_page: response.data.previous_page
             });
-
             return response.data;
         }).catch(function (error) {
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
-                console.log(error.response.data);
+                // console.log(error.response.data);
                 toast.error(error.response.data.message)
             } else if (error.request) {
                 // The request was made but no response was received
@@ -426,8 +398,8 @@ class NextPreviousPage extends Component {
         return (
             <Row>
                 <Col xs="8" xs-offset="2" md="8" md-offset="2">
-                    <Button className='orange' waves='light' size="small" onClick={this.handlePrevClick}>Previous Page</Button>
-                    <Button className='orange space' waves='light' size="small" onClick={this.handleNextClick}>Next Page</Button>
+                    <Button className='teal' waves='light' size="small" onClick={this.handlePrevClick}>Previous Page</Button>
+                    <Button className='teal space' waves='light' size="small" onClick={this.handleNextClick}>Next Page</Button>
                 </Col>
             </Row>
         );
@@ -438,43 +410,34 @@ class ToggleShoppingItem extends Component {
     constructor(props) {
         super(props);
         this.state = { isOpen: false, isSearchOpen: false, isLimitOpen: false };
-        this.handleFormOpen = this.handleFormOpen.bind(this);
-        this.handleFormClose = this.handleFormClose.bind(this);
-        this.handleCreateSubmit = this.handleCreateSubmit.bind(this);
-        this.handleSearchOpen = this.handleSearchOpen.bind(this);
-        this.handleSearch = this.handleSearch.bind(this);
-        this.handleSearchClose = this.handleSearchClose.bind(this);
-        this.handleLimitOpen = this.handleLimitOpen.bind(this);
-        this.handleLimit = this.handleLimit.bind(this);
-        this.handleLimitClose = this.handleLimitClose.bind(this);
     }
-    handleFormOpen() {
+    handleFormOpen = () => {
         this.setState({ isOpen: true });
     }
-    handleFormClose() {
+    handleFormClose = () => {
         this.setState({ isOpen: false });
     }
-    handleCreateSubmit(item) {
+    handleCreateSubmit = (item) => {
         this.props.formSubmit(item);
         this.setState({ isOpen: false });
     }
-    handleSearchOpen() {
+    handleSearchOpen = () => {
         this.setState({ isSearchOpen: true });
     }
-    handleSearchClose() {
+    handleSearchClose = () => {
         this.setState({ isSearchOpen: false });
     }
-    handleSearch(searchText) {
+    handleSearch = (searchText) => {
         this.props.onSearchSubmit(searchText);
         this.setState({ isSearchOpen: false });
     }
-    handleLimitOpen() {
+    handleLimitOpen = () => {
         this.setState({ isLimitOpen: true });
     }
-    handleLimitClose() {
+    handleLimitClose = () => {
         this.setState({ isLimitOpen: false });
     }
-    handleLimit(limitValue) {
+    handleLimit = (limitValue) => {
         this.props.onLimitSubmit(limitValue);
         this.setState({ isLimitOpen: false });
     }
@@ -508,7 +471,7 @@ class ToggleShoppingItem extends Component {
                     <Col xs="18" md="12">
                         <div>
 
-                            <Button floating fab='vertical' icon='mode_edit' className='red' large style={{ bottom: '45px', right: '24px' }}>
+                            <Button floating fab='vertical' icon='expand_less' className='red' large style={{ bottom: '45px', right: '24px' }}>
                                 <Button floating icon='add' className='blue' waves='light' onClick={this.handleFormOpen} />
                                 <Button floating icon='filter_list' className='green ' waves='light' onClick={this.handleLimitOpen} />
                                 <Button floating icon='search' className='orange' waves='light' onClick={this.handleSearchOpen} />
@@ -528,7 +491,7 @@ class ShoppingItemTable extends Component {
                 <Col xs="18" md="12">
                     <div>
                         <Panel className="panel-login">
-                            <table class="mui-table mui-table--bordered">
+                            <table className="mui-table mui-table--bordered">
                                 <TableHead />
                                 <TableBody
                                     items={this.props.items}
@@ -591,23 +554,19 @@ class EditableShoppingItem extends Component {
     constructor(props) {
         super(props);
         this.state = { editForm: false }
-        this.handelFormOpen = this.handelFormOpen.bind(this);
-        this.handleFormClose = this.handleFormClose.bind(this);
-        this.handleUpdateSubmit = this.handleUpdateSubmit.bind(this);
-        this.handleDeleteClick = this.handleDeleteClick.bind(this);
     }
 
-    handelFormOpen() {
+    handelFormOpen = () => {
         this.setState({ editForm: true });
     }
-    handleFormClose() {
+    handleFormClose = () => {
         this.setState({ editForm: false });
     }
-    handleUpdateSubmit(item) {
+    handleUpdateSubmit = (item) => {
         this.props.formSubmit(item);
         this.setState({ editForm: false });
     }
-    handleDeleteClick() {
+    handleDeleteClick = () => {
         this.props.onDeleteClick(this.props.name, this.props.item_id);
 
     }
@@ -653,8 +612,8 @@ class ShoppingItem extends Component {
                 <td> {this.props.name} </td>
                 <td> {this.props.quantity} </td>
                 <td> {this.props.price} </td>
-                <td><Button color="primary" size="small" variant="raised" onClick={this.props.onEditClick}>Edit</Button></td>
-                <td><Button color="primary" size="small" variant="raised" onClick={this.props.onDeleteClick}>Delete</Button></td>
+                <td><Button floating className="teal" icon='mode_edit' size="small" onClick={this.props.onEditClick}></Button></td>
+                <td><Button floating className="red" icon='delete' size="small" onClick={this.props.onDeleteClick}></Button></td>
             </tr>
         );
     }
@@ -663,20 +622,17 @@ class ShoppingItemForm extends Component {
     constructor(props) {
         super(props);
         this.state = { shoppingitemname: '', price: '', quantity: '' }
-        this.onInputChange = this.onInputChange.bind(this);
-        this.handelsubmit = this.handelsubmit.bind(this);
-        this.handleCancelClick = this.handleCancelClick.bind(this);
     }
     componentDidMount() {
         this.setState({ shoppingitemname: this.props.name, price: this.props.price, quantity: this.props.quantity });
     }
-    onInputChange(evt) {
+    onInputChange = (evt) => {
         evt.preventDefault();
         let fields = {};
         fields[evt.target.name] = evt.target.value;
         this.setState(fields);
     }
-    handelsubmit(evt) {
+    handelsubmit = (evt) => {
         evt.preventDefault();
         this.props.formSubmit({
             item_id: this.props.item_id,
@@ -686,7 +642,7 @@ class ShoppingItemForm extends Component {
         });
 
     }
-    handleCancelClick(evt) {
+    handleCancelClick = (evt) => {
         evt.preventDefault();
         this.props.onCancelClick();
     }
@@ -694,16 +650,16 @@ class ShoppingItemForm extends Component {
         const submittext = this.props.name ? 'Update' : 'Create';
         return (
             <Row>
-                <Col xs="18" md="12">
-                    <div>
-                        <Form onSubmit={this.handelsubmit}>
-                            <Input label='Item name' name='shoppingitemname' type="text" value={this.state.shoppingitemname} onChange={this.onInputChange}></Input>
-                            <Input label='Price' name='price' type="number" value={this.state.price} onChange={this.onInputChange}></Input>
-                            <Input label='Quantity' name='quantity' type="number" value={this.state.quantity} onChange={this.onInputChange}></Input>
-                            <Button color="primary" size="small" onClick={this.handleSubmit}>{submittext}</Button>&nbsp;&nbsp;&nbsp;&nbsp;
+                <Col xs="8" xs-offset="2" md="8" md-offset="2">
+
+                    <Form onSubmit={this.handelsubmit}>
+                        <Input label="Item name" name="shoppingitemname" value={this.state.shoppingitemname} type="text" onChange={this.onInputChange}></Input>
+                        <Input label="Price" name="price" value={this.state.price} type="number" onChange={this.onInputChange}></Input>
+                        <Input label="Quantity" name="quantity" value={this.state.quantity} type="number" onChange={this.onInputChange}></Input>
+                        <Button color="primary" size="small" onClick={this.handleSubmit}>{submittext}</Button>&nbsp;&nbsp;&nbsp;&nbsp;
                             <Button className="red" size="small" onClick={this.handleCancelClick}>Cancel</Button>
-                        </Form>
-                    </div>
+                    </Form>
+
                 </Col>
             </Row>
         );
@@ -720,15 +676,15 @@ class SearchShoppingItem extends Component {
     componentDidMount() {
         this.setState({ searchText: this.props.searchText });
     }
-    onSearchInputChange(evt) {
+    onSearchInputChange = (evt) => {
         evt.preventDefault();
         this.setState({ searchText: evt.target.value });
     }
-    handleSearch(evt) {
+    handleSearch = (evt) => {
         evt.preventDefault();
         this.props.onSearchSubmit(this.state.searchText);
     }
-    handleCancelClick(evt) {
+    handleCancelClick = (evt) => {
         evt.preventDefault();
         this.props.onCancelClick();
     }
@@ -754,23 +710,20 @@ class LimitShoppingItems extends Component {
     constructor(props) {
         super(props);
         this.state = { limit_shoppingitem: '' };
-        this.onLimitInputChange = this.onLimitInputChange.bind(this);
-        this.handleLimitItems = this.handleLimitItems.bind(this);
-        this.handleCancelClick = this.handleCancelClick.bind(this);
     }
     componentDidMount() {
         this.setState({ limit: this.state.limit_shoppingitem })
     }
-    onLimitInputChange(evt) {
+    onLimitInputChange = (evt) => {
         evt.preventDefault();
         this.setState({ limit_shoppingitem: evt.target.value })
     }
-    handleLimitItems(evt) {
+    handleLimitItems = (evt) => {
         evt.preventDefault();
         console.log(this.state.limit_shoppingitem);
         this.props.onLimitSubmit(this.state.limit_shoppingitem);
     }
-    handleCancelClick(evt) {
+    handleCancelClick = (evt) => {
         evt.preventDefault();
         this.props.onCancelClick();
     }
