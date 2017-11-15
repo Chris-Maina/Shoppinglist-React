@@ -1,34 +1,41 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import { Navbar, NavItem , Dropdown} from 'react-materialize';
+import { Navbar, NavItem, Dropdown } from 'react-materialize';
 // Navigation bar
 export class Navigation extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
-    this.state = {redirect: false};
+    this.state = { redirect: false };
     this.handleLogoutClick = this.handleLogoutClick.bind(this);
   }
-  handleLogoutClick(){
+  handleLogoutClick() {
     window.localStorage.removeItem('token');
-    this.setState({redirect: true});
+    this.setState({ redirect: true });
   }
   render() {
-    if(this.state.redirect){
-      return(
-        <Redirect to="/auth/login/"/>
+    if (this.state.redirect) {
+      return (
+        <Redirect to="/auth/login/" />
+      );
+    }
+    var token = window.localStorage.getItem('token')
+    if (!token) {
+      return (
+        <Navbar brand='SHOPPINGLIST' className='amber accent-4' right>
+          <NavItem href='/auth/register/'>Register</NavItem>
+          <NavItem href='/auth/login/'>Login</NavItem>
+        </Navbar>
       );
     }
     return (
       <div>
-        <Navbar brand='SHOPPINGLIST' right>
-        <NavItem href='/auth/register/'>Register</NavItem>
-        <NavItem href='/auth/login/'>Login</NavItem>
-          <NavItem href='/shoppinglists/'>My Lists</NavItem>
+        <Navbar brand='SHOPPINGLIST' className='amber accent-4' right>
+          <NavItem  href='/shoppinglists/'>My Lists</NavItem>
           <Dropdown trigger={
-            <NavItem >User</NavItem>
+            <NavItem className="space-between">User</NavItem>
           }>
             <NavItem href='/user'>Profile</NavItem>
-            <NavItem  onClick={this.handleLogoutClick}>logout</NavItem>
+            <NavItem onClick={this.handleLogoutClick}>logout</NavItem>
           </Dropdown>
         </Navbar>
       </div>
