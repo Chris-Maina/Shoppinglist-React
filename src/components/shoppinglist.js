@@ -9,33 +9,18 @@ import './shoppinglist.css';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
-import {Navigation} from './navbar';
+import { Navigation } from './navbar';
 
 
 export class ShoppinglistPage extends Component {
     constructor(props) {
         super(props);
         this.state = { shoppinglists: [], next_page: '', previous_page: '' };
-        this.getShoppinglists = this.getShoppinglists.bind(this);
-        this.handelShoppinglistNameSubmit = this.handelShoppinglistNameSubmit.bind(this);
-        this.handleDeleteShoppinglist = this.handleDeleteShoppinglist.bind(this);
-        this.deleteShoppinglist = this.deleteShoppinglist.bind(this);
-        this.handleEditShoppinglist = this.handleEditShoppinglist.bind(this);
-        this.editShoppinglist = this.editShoppinglist.bind(this);
-        this.searchShoppinglist = this.searchShoppinglist.bind(this);
-        this.handleSearchShoppinglist = this.handleSearchShoppinglist.bind(this);
-        this.getNextPage = this.getNextPage.bind(this);
-        this.handleNextClick = this.handleNextClick.bind(this);
-        this.getPreviousPage = this.getPreviousPage.bind(this);
-        this.handlePrevClick = this.handlePrevClick.bind(this);
-        this.handleLimitShoppinglists = this.handleLimitShoppinglists.bind(this);
-        this.limitShoppinglists = this.limitShoppinglists.bind(this);
-
     }
     componentDidMount() {
         this.getShoppinglists();
     }
-    getShoppinglists() {
+    getShoppinglists = () => {
         // Send GET request
         const url = 'https://shoppinglist-restful-api.herokuapp.com/shoppinglists/';
         axios({
@@ -73,11 +58,11 @@ export class ShoppinglistPage extends Component {
             console.log(error.config);
         });
     }
-    handleDeleteShoppinglist(shoppinglistname, sl_id) {
+    handleDeleteShoppinglist = (shoppinglistname, sl_id) => {
         // DELETE request
         this.deleteShoppinglist(shoppinglistname, sl_id);
     }
-    deleteShoppinglist(shoppinglistname, sl_id) {
+    deleteShoppinglist = (shoppinglistname, sl_id) => {
         // DELETE
         var data = { name: shoppinglistname };
         const url = 'https://shoppinglist-restful-api.herokuapp.com/shoppinglists/' + sl_id;
@@ -115,11 +100,11 @@ export class ShoppinglistPage extends Component {
         });
     }
 
-    handleEditShoppinglist(shoppinglistname, sl_id) {
+    handleEditShoppinglist = (shoppinglistname, sl_id) => {
         // PUT request
         this.editShoppinglist(shoppinglistname, sl_id);
     }
-    editShoppinglist(shoppinglistname, sl_id) {
+    editShoppinglist = (shoppinglistname, sl_id) => {
         // PUT
         var data = { name: shoppinglistname };
         const url = 'https://shoppinglist-restful-api.herokuapp.com/shoppinglists/' + sl_id;
@@ -153,12 +138,12 @@ export class ShoppinglistPage extends Component {
         // Get ALL shopping list
         this.getShoppinglists();
     }
-    handelShoppinglistNameSubmit(shoppinglistname) {
+    handelShoppinglistNameSubmit = (shoppinglistname) => {
         // POST request
         this.postShoppinglist(shoppinglistname);
 
     };
-    postShoppinglist(shoppinglistname) {
+    postShoppinglist = (shoppinglistname) => {
         // Send POST request
         var data = { name: shoppinglistname };
         const url = 'https://shoppinglist-restful-api.herokuapp.com/shoppinglists/';
@@ -195,10 +180,10 @@ export class ShoppinglistPage extends Component {
             console.log(error.config);
         });
     }
-    handleSearchShoppinglist(searchText) {
+    handleSearchShoppinglist = (searchText) => {
         this.searchShoppinglist(searchText);
     }
-    searchShoppinglist(searchText) {
+    searchShoppinglist = (searchText) => {
         // Send GET request
         const url = 'https://shoppinglist-restful-api.herokuapp.com/shoppinglists/?q=' + searchText;
         axios({
@@ -235,10 +220,10 @@ export class ShoppinglistPage extends Component {
             console.log(error.config);
         });
     }
-    handlePrevClick() {
+    handlePrevClick = () => {
         this.getPreviousPage();
     }
-    getPreviousPage() {
+    getPreviousPage = () => {
         // Send GET request with parameter page
         const prev_page_url = this.state.previous_page;
 
@@ -282,10 +267,10 @@ export class ShoppinglistPage extends Component {
             console.log(error.config);
         });
     }
-    handleNextClick() {
+    handleNextClick = () => {
         this.getNextPage();
     }
-    getNextPage() {
+    getNextPage = () => {
         // Send GET request with parameter page
         const next_page_url = this.state.next_page;
 
@@ -330,10 +315,10 @@ export class ShoppinglistPage extends Component {
         });
     }
 
-    handleLimitShoppinglists(limitValue) {
+    handleLimitShoppinglists = (limitValue) => {
         this.limitShoppinglists(limitValue);
     }
-    limitShoppinglists(limitValue) {
+    limitShoppinglists = (limitValue) => {
         // Send GET request with limit parameter
         const url = 'https://shoppinglist-restful-api.herokuapp.com/shoppinglists/?limit=' + limitValue;
         axios({
@@ -405,11 +390,11 @@ export class NextPreviousPage extends Component {
         this.handleNextClick = this.handleNextClick.bind(this);
         this.handlePrevClick = this.handlePrevClick.bind(this);
     }
-    handlePrevClick(evt) {
+    handlePrevClick = (evt) => {
         evt.preventDefault();
         this.props.onPrevClick();
     }
-    handleNextClick(evt) {
+    handleNextClick = (evt) => {
         evt.preventDefault();
         this.props.onNextClick();
     }
@@ -428,43 +413,34 @@ export class ToggleableShoppingForm extends Component {
     constructor(props) {
         super(props);
         this.state = { isOpen: false, isSearchOpen: false, isLimitOpen: false };
-        this.handleFormOpen = this.handleFormOpen.bind(this);
-        this.handleFormClose = this.handleFormClose.bind(this);
-        this.handleFormSubmit = this.handleFormSubmit.bind(this);
-        this.handleSearchOpen = this.handleSearchOpen.bind(this);
-        this.handleSearch = this.handleSearch.bind(this);
-        this.handleSearchClose = this.handleSearchClose.bind(this);
-        this.handleLimitOpen = this.handleLimitOpen.bind(this);
-        this.handleLimit = this.handleLimit.bind(this);
-        this.handleLimitClose = this.handleLimitClose.bind(this);
     }
-    handleFormSubmit(shoppinglistname) {
+    handleFormSubmit = (shoppinglistname) => {
         this.props.formSubmit(shoppinglistname);
         this.setState({ isOpen: false });
     }
-    handleFormClose() {
+    handleFormClose = () => {
         this.setState({ isOpen: false });
     }
-    handleFormOpen() {
+    handleFormOpen = () => {
         this.setState({ isOpen: true });
     }
-    handleSearchOpen() {
+    handleSearchOpen = () => {
         this.setState({ isSearchOpen: true });
     }
-    handleSearchClose() {
+    handleSearchClose = () => {
         this.setState({ isSearchOpen: false });
     }
-    handleSearch(searchText) {
+    handleSearch = (searchText) => {
         this.props.onSearchSubmit(searchText);
         this.setState({ isSearchOpen: false });
     }
-    handleLimitOpen() {
+    handleLimitOpen = () => {
         this.setState({ isLimitOpen: true });
     }
-    handleLimitClose() {
+    handleLimitClose = () => {
         this.setState({ isLimitOpen: false });
     }
-    handleLimit(limitValue) {
+    handleLimit = (limitValue) => {
         this.props.onLimitSubmit(limitValue);
         this.setState({ isLimitOpen: false });
     }
@@ -497,9 +473,9 @@ export class ToggleableShoppingForm extends Component {
                     <Col xs="8" xs-offset="2" md="8" md-offset="2">
                         <div>
                             <Button floating fab='vertical' icon='mode_edit' className='red' large style={{ bottom: '45px', right: '24px' }}>
-                                <Button floating icon='add' id="add" className='blue' waves='light'  onClick={this.handleFormOpen} />
-                                <Button floating icon='filter_list'id="filter" className='green' waves='light' onClick={this.handleLimitOpen} />
-                                <Button floating icon='search' id="search" className='orange' waves='light'  onClick={this.handleSearchOpen} />
+                                <Button floating icon='add' id="add" className='blue' waves='light' onClick={this.handleFormOpen} />
+                                <Button floating icon='filter_list' id="filter" className='green' waves='light' onClick={this.handleLimitOpen} />
+                                <Button floating icon='search' id="search" className='orange' waves='light' onClick={this.handleSearchOpen} />
                             </Button>
                         </div>
                     </Col>
@@ -539,22 +515,18 @@ export class EditableShoppinglist extends Component {
     constructor(props) {
         super(props);
         this.state = { editForm: false }
-        this.handelEditBtnClick = this.handelEditBtnClick.bind(this);
-        this.handleFormSubmit = this.handleFormSubmit.bind(this);
-        this.handleDeleteBtnClick = this.handleDeleteBtnClick.bind(this);
-        this.handleFormClose = this.handleFormClose.bind(this);
     }
-    handelEditBtnClick() {
+    handelEditBtnClick = () => {
         this.setState({ editForm: true });
     }
-    handleDeleteBtnClick() {
+    handleDeleteBtnClick = () => {
         this.props.deleteSubmit(this.props.name, this.props.sl_id);
     }
-    handleFormSubmit(shoppinglistname) {
-        this.props.editFormSubmit(shoppinglistname, this.props.sl_id);
+    handleFormSubmit = (shoppinglistname, sl_id) => {
+        this.props.editFormSubmit(shoppinglistname, sl_id);
         this.setState({ editForm: false });
     }
-    handleFormClose() {
+    handleFormClose = () => {
         this.setState({ editForm: false });
     }
     render() {
@@ -616,23 +588,20 @@ export class Shoppinglist extends Component {
 export class ShoppinglistForm extends Component {
     constructor(props) {
         super(props);
-        this.state = { name: '' };
-        this.onInputChange = this.onInputChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleCancelClick = this.handleCancelClick.bind(this);
+        this.state = { name: '', id: '' };
     };
     componentDidMount() {
-        this.setState({ name: this.props.name });
+        this.setState({ name: this.props.name, id: this.props.sl_id });
     }
-    onInputChange(evt) {
+    onInputChange = (evt) => {
         evt.preventDefault();
         this.setState({ name: evt.target.value });
     }
-    handleSubmit(evt) {
+    handleSubmit = (evt) => {
         evt.preventDefault();
-        this.props.onFormSubmit(this.state.name);
+        this.props.onFormSubmit(this.state.name, this.state.id);
     };
-    handleCancelClick(evt) {
+    handleCancelClick = (evt) => {
         evt.preventDefault();
         this.props.onFormClose();
     }
@@ -657,22 +626,19 @@ export class SearchShoppinglist extends Component {
     constructor(props) {
         super(props);
         this.state = { searchText: '' };
-        this.handleSearch = this.handleSearch.bind(this);
-        this.onSearchInputChange = this.onSearchInputChange.bind(this);
-        this.handleCancelClick = this.handleCancelClick.bind(this);
     }
     componentDidMount() {
         this.setState({ searchText: this.props.searchText });
     }
-    onSearchInputChange(evt) {
+    onSearchInputChange = (evt) => {
         evt.preventDefault();
         this.setState({ searchText: evt.target.value });
     }
-    handleSearch(evt) {
+    handleSearch = (evt) => {
         evt.preventDefault();
         this.props.onSearchSubmit(this.state.searchText);
     }
-    handleCancelClick(evt) {
+    handleCancelClick = (evt) => {
         evt.preventDefault();
         this.props.onCancelClick();
     }
@@ -697,22 +663,19 @@ export class LimitShoppinglists extends Component {
     constructor(props) {
         super(props);
         this.state = { limit: '' };
-        this.onLimitInputChange = this.onLimitInputChange.bind(this);
-        this.handleLimit = this.handleLimit.bind(this);
-        this.handleCancelClick = this.handleCancelClick.bind(this);
     }
     componentDidMount() {
         this.setState({ limit: this.state.limit })
     }
-    onLimitInputChange(evt) {
+    onLimitInputChange = (evt) => {
         evt.preventDefault();
         this.setState({ limit: evt.target.value })
     }
-    handleLimit(evt) {
+    handleLimit = (evt) => {
         evt.preventDefault();
         this.props.onLimitSubmit(this.state.limit);
     }
-    handleCancelClick(evt) {
+    handleCancelClick = (evt) => {
         evt.preventDefault();
         this.props.onCancelClick();
     }
