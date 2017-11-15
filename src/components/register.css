@@ -74,7 +74,7 @@
 	border-color: #1CA347;
 }
 .btn-login {
-	background-color: #59B2E0;
+	background-color: #1CB94E;
 	outline: none;
 	color: #fff;
 	font-size: 14px;
@@ -83,11 +83,11 @@
 	font-weight: normal;
 	padding: 10px 0;
 	text-transform: uppercase;
-	border-color: #59B2E6;
+	border-color: #1CB94A;
 }
 .btn-login:hover,
 .btn-login:focus {
 	color: #fff;
-	background-color: #53A3CD;
-	border-color: #53A3CD;
+	background-color: #1CA347;
+	border-color: #1CA347;
 }
