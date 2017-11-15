@@ -48,7 +48,8 @@ header .header-content .header-content-inner h1 {
   text-transform: uppercase;
   margin-top: 0;
   margin-bottom: 0;
-  font-size: 30px;
+  font-size: 42px;
+  font-family: cursive;
 }
 header .header-content .header-content-inner hr {
   margin: 25px auto;
@@ -56,8 +57,8 @@ header .header-content .header-content-inner hr {
 header .header-content .header-content-inner p{
   font-weight: 300;
   color: rgba(255, 255, 255, 0.7);
-  font-size: 16px;
-  margin-bottom: 60px;
+  font-size: 22px;
+  margin-bottom: 60px; 
 }
 
 
@@ -72,8 +73,6 @@ header .header-content .header-content-inner p{
 }
 .btn-primary {
   color: white;
-  background-color: #F05F40;
-  border-color: #F05F40;
   -webkit-transition: all 0.35s;
   -moz-transition: all 0.35s;
   transition: all 0.35s;
@@ -81,6 +80,4 @@ header .header-content .header-content-inner p{
 .btn-primary:hover,
 .btn-primary:focus{
   color: white;
-  background-color: #ee4b28;
-  border-color: #ed431f;
 }
