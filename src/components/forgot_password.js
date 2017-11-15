@@ -6,6 +6,7 @@ import Form from 'muicss/lib/react/form';
 import { ToastContainer, toast } from 'react-toastify';
 import {LoginForm }from './login';
 import './forgot_password.css';
+import {Navigation} from './navbar';
 
 class ForgotPassword extends Component {
     constructor(props) {
@@ -62,6 +63,8 @@ class ForgotPassword extends Component {
             );
         }
         return (
+            <div>
+                <Navigation />
             <div className="page_content">
                 <Container fluid={true} >
                     <ToastContainer />
@@ -70,10 +73,10 @@ class ForgotPassword extends Component {
                             <Card
                                 className="mui--text-center card_forgot_password "
                                 textClassName='yellow-text'
-                                actions={<Button size="small" >THANK YOU</Button>}>
+                                >
                                 <Row>
                                     <h4>Forgot Password?</h4>
-                                    <span className="black-text">Not to worry, we got you! Let's get you a new password ! Just provide your email address below</span><br />
+                                    <span className="black-text">Let's get you a new password ! Just provide your email address below</span><br />
                                     <Form onSubmit={this.handleSubmit}>
                                         <Input s={6} label="Email" className="black-text" validate type='email' name="email" onChange={this.handleInputChange}><Icon>email</Icon></Input><br/>
                                         <Button s={6} size="small" waves='light'>Submit </Button>
@@ -84,6 +87,7 @@ class ForgotPassword extends Component {
                         </Col>
                     </Row>
                 </Container>
+            </div>
             </div>
         );
     }
