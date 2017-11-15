@@ -402,8 +402,8 @@ export class NextPreviousPage extends Component {
         return (
             <Row>
                 <Col xs="8" xs-offset="2" md="8" md-offset="2">
-                    <Button className='orange' waves='light' size="small" onClick={this.handlePrevClick}>Previous Page</Button>
-                    <Button className='orange space' waves='light' size="small" onClick={this.handleNextClick}>Next Page</Button>
+                    <Button className='teal' waves='light' size="small" onClick={this.handlePrevClick}>Previous Page</Button>
+                    <Button className='teal space' waves='light' size="small" onClick={this.handleNextClick}>Next Page</Button>
                 </Col>
             </Row>
         );
@@ -472,7 +472,7 @@ export class ToggleableShoppingForm extends Component {
                 <Row>
                     <Col xs="8" xs-offset="2" md="8" md-offset="2">
                         <div>
-                            <Button floating fab='vertical' icon='mode_edit' className='red' large style={{ bottom: '45px', right: '24px' }}>
+                            <Button floating fab='vertical' icon='expand_less' className='red' large style={{ bottom: '45px', right: '24px' }}>
                                 <Button floating icon='add' id="add" className='blue' waves='light' onClick={this.handleFormOpen} />
                                 <Button floating icon='filter_list' id="filter" className='green' waves='light' onClick={this.handleLimitOpen} />
                                 <Button floating icon='search' id="search" className='orange' waves='light' onClick={this.handleSearchOpen} />
@@ -570,12 +570,13 @@ export class Shoppinglist extends Component {
                 <Row>
                     <Col xs="8" xs-offset="2" md="8" md-offset="2">
                         <div>
-                            <Card className='blue-grey darken-1' textClassName='white-text' title={this.props.name}
-                                actions={[<a href={`/shoppinglists/${this.props.sl_id}/items`}>Add Item</a>]}>
+                            <Card className='blue-grey darken-1 white-text' title={this.props.name}
+                                actions={[<a href={`/shoppinglists/${this.props.sl_id}/items`}>Add Item</a>]} 
+                                >
 
                                 <br />
-                                <Button color="primary" id="edit" size="small" onClick={this.props.onEditSubmit}>Edit</Button>&nbsp;&nbsp;&nbsp;&nbsp;
-                                <Button className="red" id="delete" size="small" onClick={this.props.onDeleteSubmit}>Delete</Button>
+                                <Button floating className="teal" icon='mode_edit' id="edit" size="small"  onClick={this.props.onEditSubmit}></Button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <Button floating className="red" icon='delete' id="delete" size="small" onClick={this.props.onDeleteSubmit}>Delete</Button>
                             </Card>
                         </div>
                     </Col>
