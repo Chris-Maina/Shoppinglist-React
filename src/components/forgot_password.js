@@ -72,7 +72,7 @@ class ForgotPassword extends Component {
                         <Col s={12} m={8} offset="m2">
                             <Card
                                 className="mui--text-center card_forgot_password "
-                                textClassName='yellow-text'
+                                textClassName='teal-text'
                                 >
                                 <Row>
                                     <h4>Forgot Password?</h4>
