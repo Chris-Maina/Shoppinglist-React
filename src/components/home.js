@@ -19,7 +19,7 @@ class Home extends Component {
               <p>Shopping list application helps you record all items you wish to buy. It allows you to record and share things you want to spend money on, meeting your needs and
 				        keeping track of your shopping lists. Register to get started!!!
 			      </p>
-              <Button waves='orange' className="btn-primary" id="register"> <Link to="/auth/register/">Register</Link></Button>
+              <Button  className="btn-primary amber accent-4" id="register"> <Link to="/auth/register/">Register</Link></Button>
             </div>
           </div>
         </header>
