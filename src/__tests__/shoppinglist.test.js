@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow, mount, render } from 'enzyme';
 import ReactDOM from 'react-dom';
-import { ShoppinglistPage, Shoppinglist, ShoppinglistForm, ToggleableShoppingForm, SearchShoppinglist, LimitShoppinglists } from '../components/shoppinglist';
+import { ShoppinglistPage, Shoppinglist, ShoppinglistForm, ToggleableShoppingForm, EditableShoppinglist, SearchShoppinglist, LimitShoppinglists } from '../components/shoppinglist';
 import sinon from 'sinon';
 import moxios from 'moxios';
 import axios from 'axios';
@@ -62,22 +62,22 @@ describe('<ShoppinglistPage/> components', () => {
         const baseProps = {
             onFormSubmit: jest.fn(),
         }
-        const shoppingFormComponent = shallow(<ShoppinglistForm {...baseProps}/>)
+        const shoppingFormComponent = shallow(<ShoppinglistForm {...baseProps} />)
         axios.post('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/', {
             name: 'market'
         })
         const editBtn = shoppingFormComponent.find("#update_create")
 
-        shoppingFormComponent.setState({ name: 'Soko'})
+        shoppingFormComponent.setState({ name: 'Soko' })
 
-        editBtn.simulate('click', { preventDefault () {} })
+        editBtn.simulate('click', { preventDefault() { } })
         moxios.wait(function () {
             let request = moxios.request.mostRecent()
             request.respondWith({
                 status: 200,
                 respondText: { name: "Soko", id: 1 }
             }).then(function () {
-                expect(<Shoppinglist/>).toHaveLength(1)
+                expect(<Shoppinglist />).toHaveLength(1)
                 expect(shoppingFormComponent.contains('Soko')).to.equal(true)
 
             })
@@ -87,8 +87,8 @@ describe('<ShoppinglistPage/> components', () => {
         const baseProps = {
             onFormSubmit: jest.fn(),
         }
-        const shoppingFormComponent = shallow(<ShoppinglistForm {...baseProps}/>)
-        const toastContainer = shallow(<ToastContainer/>)
+        const shoppingFormComponent = shallow(<ShoppinglistForm {...baseProps} />)
+        const toastContainer = shallow(<ToastContainer />)
         axios.post('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/', {
             name: 'market'
         })
@@ -97,16 +97,16 @@ describe('<ShoppinglistPage/> components', () => {
         })
         const editBtn = shoppingFormComponent.find("#update_create")
 
-        shoppingFormComponent.setState({ name: 'soko'})
+        shoppingFormComponent.setState({ name: 'soko' })
 
-        editBtn.simulate('click', { preventDefault () {} })
+        editBtn.simulate('click', { preventDefault() { } })
         moxios.wait(function () {
             let request = moxios.request.mostRecent()
             request.respondWith({
                 status: 200,
-                respondText: { name:"Error"}
+                respondText: { name: "Error" }
             }).then(function () {
-                expect(<Shoppinglist/>).toHaveLength(1)
+                expect(<Shoppinglist />).toHaveLength(1)
                 expect(toastContainer.contains('List name already exists. Please use different name')).to.equal(true)
 
             })
@@ -133,8 +133,8 @@ describe('<ShoppinglistPage/> components', () => {
     it('Limits shoppinglist', () => {
         const baseProps = {
             onLimitSubmit: jest.fn(),
-          };
-        const limitComponent = shallow(<LimitShoppinglists {...baseProps}/>)
+        };
+        const limitComponent = shallow(<LimitShoppinglists {...baseProps} />)
         axios.post('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/', {
             name: 'market'
         })
@@ -143,7 +143,7 @@ describe('<ShoppinglistPage/> components', () => {
         })
         limitComponent.setState({ limit: 1 })
         const limitBtn = limitComponent.find('#limit')
-        
+
         limitBtn.simulate('click', { preventDefault() { } })
 
         moxios.wait(function () {
@@ -182,25 +182,21 @@ describe('ToggleShoppingForm component icon click tests', () => {
 
     })
 })
+describe('EditableShoppinglist component test cases', () => {
+    it('Shows the ShoppinglistForm when editForm state is true', () => {
+        const editableShoppinglistComponent = shallow(<EditableShoppinglist />)
+        editableShoppinglistComponent.setState({ editForm: true })
+        expect(editableShoppinglistComponent.find('ShoppinglistForm')).toHaveLength(1);
+    })
+})
 describe('ShoppingListForm component test cases', () => {
-    // it('Closes the component on cancel button click ', () => {
-    //     // sinon.spy(ToggleableShoppingForm.prototype, 'handleFormClose')
-    //     const baseProps = {
-    //         onFormClose: jest.fn(),
-    //       };
-    //     const shoppingFormComponent = shallow(<ShoppinglistForm {...baseProps}/>)
-    //     const toggleComponent = shallow(<ToggleableShoppingForm/>)
-    //     toggleComponent.setState({ isOpen: true})
-    //     const cancelButton = shoppingFormComponent.find('#cancel')
-    //     const event = {
-    //         onFormClose: baseProps,
-    //         preventDefault: () => {
-    //             return true
-    //         }
-    //     }
-    //     cancelButton.simulate('click', event)
-    //     expect(toggleComponent.instance().state.isOpen).toBe(false)
-    // })
+    it('Closes the component on cancel button click ', () => {
+        const onFormCloseSpy = jest.fn();
+        const shoppingFormComponent = shallow(<ShoppinglistForm onFormClose={onFormCloseSpy}/>)
+        const cancelButton = shoppingFormComponent.find('#cancel')
+        cancelButton.simulate('click', { preventDefault() {} })
+        expect(onFormCloseSpy).toHaveBeenCalled();
+    })
     it('Changes name state when on change event is called', () => {
         const shoppingFormComponent = shallow(<ShoppinglistForm />)
         const inputName = shoppingFormComponent.find("Input[name='shoppinglistname']")
@@ -219,4 +215,61 @@ describe('ShoppingListForm component test cases', () => {
         editBtn.simulate('click');
         expect(ShoppinglistForm).toHaveLength(1);
     })
+
+})
+describe('LimitShoppinglist Component', () => {
+    it('Changes state when change event is called', () => {
+        const limitShoppinglistComponent = shallow(<LimitShoppinglists />)
+        const inputLimit = limitShoppinglistComponent.find("Input[name='limit']")
+        const event = {
+            target: {
+                value: 1
+            },
+            preventDefault: () => { }
+        }
+        inputLimit.simulate('change', event);
+        expect(limitShoppinglistComponent.instance().state.limit).toBe(1);
+    })
+    it('Calls the onCancelClick prop function on cancel click', () => {
+        const onCancelClickSpy = jest.fn();
+        const limitShoppinglistComponent = shallow(<LimitShoppinglists onCancelClick={onCancelClickSpy}/>);
+        const cancelButton = limitShoppinglistComponent.find('#limitCancel');
+        cancelButton.simulate('click', { preventDefault () {} });
+        expect(onCancelClickSpy).toHaveBeenCalled();
+    })
+})
+describe('SearchShoppinglist component', () => {
+    it('Renders the SearchShoppinglist component', () => {
+        const searchShoppinglistComponent = shallow(<SearchShoppinglist />);
+        expect(searchShoppinglistComponent).toHaveLength(1);
+    })
+    it('Calls onCancelClick prop function ', () => {
+        const onCancelClickSpy = jest.fn();
+        const searchShoppinglistComponent = shallow(<SearchShoppinglist onCancelClick={onCancelClickSpy} />);
+        const cancelButton = searchShoppinglistComponent.find('#searchCancelBtn')
+        cancelButton.simulate('click', { preventDefault() { } })
+        expect(onCancelClickSpy).toHaveBeenCalled();
+
+    })
+    it('Changes state of searchtext when user types', () => {
+        const searchShoppinglistComponent = shallow(<SearchShoppinglist />);
+        const event = {
+            target: {
+                value: 'Soko'
+            },
+            preventDefault: () => { }
+        };
+        const inputSearchText = searchShoppinglistComponent.find("Input[name='searchtext']");
+        inputSearchText.simulate('change', event);
+        expect(searchShoppinglistComponent.instance().state.searchText).toBe('Soko');
+    })
+    it('Calls the onSearchSubmit prop function', () => {
+        const onSearchSubmitSpy = jest.fn();
+        const searchShoppinglistComponent = shallow(<SearchShoppinglist onSearchSubmit={onSearchSubmitSpy} />);
+        const searchForm = searchShoppinglistComponent.find('Form');
+        searchForm.simulate('submit', { preventDefault() { } });
+        expect(onSearchSubmitSpy).toHaveBeenCalled();
+
+    })
+
 })
