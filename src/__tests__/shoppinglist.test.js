@@ -186,6 +186,11 @@ describe('ToggleShoppingForm component icon click tests', () => {
 //     it('', ()=> {})
 // })
 describe('EditableShoppinglist component test cases', () => {
+    it('Renders EditableShoppinglist component with', () => {
+        const message = "You have no shoppinglist";
+        const editableShoppinglistComponent = shallow(<EditableShoppinglist shoppinglist={message}/>)
+        expect(editableShoppinglistComponent.find('Card')).toBeDefined();
+    })
     it('Shows the ShoppinglistForm when editForm state is true', () => {
         const editableShoppinglistComponent = shallow(<EditableShoppinglist />)
         editableShoppinglistComponent.setState({ editForm: true })
