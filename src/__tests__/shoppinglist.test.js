@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow, mount, render } from 'enzyme';
 import ReactDOM from 'react-dom';
-import { ShoppinglistPage, Shoppinglist, ShoppinglistForm, ToggleableShoppingForm, EditableShoppinglist, SearchShoppinglist, LimitShoppinglists } from '../components/shoppinglist';
+import { ShoppinglistPage, Shoppinglist, ShoppinglistForm, ToggleableShoppingForm, EditableShoppinglist, SearchShoppinglist, LimitShoppinglists, AllShoppinglists } from '../components/shoppinglist';
 import sinon from 'sinon';
 import moxios from 'moxios';
 import axios from 'axios';
@@ -167,6 +167,14 @@ describe('ToggleShoppingForm component icon click tests', () => {
         expect(ShoppinglistForm).toHaveLength(1)
 
     })
+    it('Changes state of isLimitOpen on calling handleLimit', () => {
+        // Spy onLimitSubmit prop function
+        const onLimitSubmitSpy = jest.fn();
+        const toggleComponent = shallow(<ToggleableShoppingForm onLimitSubmit={onLimitSubmitSpy}/>);
+        toggleComponent.setState({isLimitOpen: true});
+        toggleComponent.instance().handleLimit(4);
+        expect(toggleComponent.instance().state.isLimitOpen).toBe(false);
+    })
     it('It opens up SearchShoppinglist when search button is clicked', () => {
         const toggleComponent = shallow(<ToggleableShoppingForm />)
         const addButton = toggleComponent.find('#search')
@@ -182,9 +190,19 @@ describe('ToggleShoppingForm component icon click tests', () => {
 
     })
 })
-// describe('AllShoppinglists component test cases', () => {
-//     it('', ()=> {})
-// })
+describe('AllShoppinglists component test cases', () => {
+    it('Returns 3 EditableShoppinglist containing shoppinglists on receivng the props shopping_list', ()=> {
+        const shoppinglists = [{id:2, name:'Graduation'}, {id:6, name:'Soko'}, {id:7, name:'Furniture'}]
+        const allShoppinglistComponent = shallow(<AllShoppinglists shopping_lists={shoppinglists}/>)
+        expect(allShoppinglistComponent.find('EditableShoppinglist')).toHaveLength(3);
+    })
+    it('Returns a div containing string on receivng the props shopping_list', ()=> {
+        const shoppinglists = "You have no shoppinglist"
+        const allShoppinglistComponent = shallow(<AllShoppinglists shopping_lists={shoppinglists}/>)
+        console.log(allShoppinglistComponent.html())
+        expect(allShoppinglistComponent.dive().text()).toEqual("<Row />");
+    })
+})
 describe('EditableShoppinglist component test cases', () => {
     it('Renders EditableShoppinglist component with', () => {
         const message = "You have no shoppinglist";
