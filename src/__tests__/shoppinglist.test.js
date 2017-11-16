@@ -182,11 +182,47 @@ describe('ToggleShoppingForm component icon click tests', () => {
 
     })
 })
+// describe('AllShoppinglists component test cases', () => {
+//     it('', ()=> {})
+// })
 describe('EditableShoppinglist component test cases', () => {
     it('Shows the ShoppinglistForm when editForm state is true', () => {
         const editableShoppinglistComponent = shallow(<EditableShoppinglist />)
         editableShoppinglistComponent.setState({ editForm: true })
         expect(editableShoppinglistComponent.find('ShoppinglistForm')).toHaveLength(1);
+    })
+    it('Changes state of editForm on calling handleFormSubmit', () => {
+        // Create a spy method for editFormSubmit 
+        const editFormSubmit = jest.fn();
+        // Pass the prop on the parent
+        const editableShoppinglistComponent = shallow(<EditableShoppinglist editFormSubmit={editFormSubmit}/>);
+        // Set the state of editForm to true
+        editableShoppinglistComponent.setState({editForm: true});
+        // Call the method handleFormSubmit with arguments
+        editableShoppinglistComponent.instance().handleFormSubmit('Furniture',2);
+        expect(editableShoppinglistComponent.instance().state.editForm).toEqual(false);
+    })
+    it('Calls the props function', () => {
+        // Create a spy for props function,deleteSubmit
+        const deleteSubmitSpy = jest.fn();
+        // Pass the prop on the parent
+        const editableShoppinglistComponent = shallow(<EditableShoppinglist deleteSubmit={deleteSubmitSpy}/>);
+        // Call the wrapper method
+        editableShoppinglistComponent.instance().handleDeleteBtnClick();
+        expect(deleteSubmitSpy).toHaveBeenCalled();
+
+    })
+    it('Changes state of editForm when handleEditBtnClick method is called',() => {
+        const editableShoppinglistComponent = shallow(<EditableShoppinglist/>);
+        editableShoppinglistComponent.instance().handelEditBtnClick();
+        expect(editableShoppinglistComponent.instance().state.editForm).toEqual(true);
+    })
+    it('Changes state of editForm when handleFormClose method is called',() => {
+        const editableShoppinglistComponent = shallow(<EditableShoppinglist/>);
+        // Set the state of editForm to true
+        editableShoppinglistComponent.setState({editForm: true});
+        editableShoppinglistComponent.instance().handleFormClose();
+        expect(editableShoppinglistComponent.instance().state.editForm).toEqual(false);
     })
 })
 describe('ShoppingListForm component test cases', () => {
