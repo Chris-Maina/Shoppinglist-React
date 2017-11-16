@@ -167,14 +167,6 @@ describe('ToggleShoppingForm component icon click tests', () => {
         expect(ShoppinglistForm).toHaveLength(1)
 
     })
-    it('Changes state of isLimitOpen on calling handleLimit', () => {
-        // Spy onLimitSubmit prop function
-        const onLimitSubmitSpy = jest.fn();
-        const toggleComponent = shallow(<ToggleableShoppingForm onLimitSubmit={onLimitSubmitSpy}/>);
-        toggleComponent.setState({isLimitOpen: true});
-        toggleComponent.instance().handleLimit(4);
-        expect(toggleComponent.instance().state.isLimitOpen).toBe(false);
-    })
     it('It opens up SearchShoppinglist when search button is clicked', () => {
         const toggleComponent = shallow(<ToggleableShoppingForm />)
         const addButton = toggleComponent.find('#search')
@@ -189,6 +181,47 @@ describe('ToggleShoppingForm component icon click tests', () => {
         expect(LimitShoppinglists).toHaveLength(1)
 
     })
+    it('Changes state of isLimitOpen on calling handleLimit', () => {
+        // Spy onLimitSubmit prop function
+        const onLimitSubmitSpy = jest.fn();
+        const toggleComponent = shallow(<ToggleableShoppingForm onLimitSubmit={onLimitSubmitSpy}/>);
+        toggleComponent.setState({isLimitOpen: true});
+        toggleComponent.instance().handleLimit(4);
+        expect(toggleComponent.instance().state.isLimitOpen).toBe(false);
+    })
+    it('Changes state of isLimitOpen on calling handleLimitClose', () => {
+        const toggleComponent = shallow(<ToggleableShoppingForm />);
+        toggleComponent.setState({isLimitOpen: true});
+        toggleComponent.instance().handleLimitClose();
+        expect(toggleComponent.instance().state.isLimitOpen).toBe(false);
+    })
+    it('Changes state of isSearchOpen on calling handleSearch', () => {
+        // Spy onSearchSubmit prop function
+        const onSearchSubmitSpy = jest.fn();
+        const toggleComponent = shallow(<ToggleableShoppingForm onSearchSubmit={onSearchSubmitSpy}/>);
+        toggleComponent.setState({isSearchOpen: true});
+        toggleComponent.instance().handleSearch('Furniture');
+        expect(toggleComponent.instance().state.isSearchOpen).toBe(false);
+    })
+    it('Changes state of isSearchOpen on calling handleSearchClose', () => {
+        const toggleComponent = shallow(<ToggleableShoppingForm />);
+        toggleComponent.setState({isSearchOpen: true});
+        toggleComponent.instance().handleSearchClose();
+        expect(toggleComponent.instance().state.isSearchOpen).toBe(false);
+    })
+    it('Changes state of isOpen on calling handleFormClose', () => {
+        const toggleComponent = shallow(<ToggleableShoppingForm />);
+        toggleComponent.setState({isOpen: true});
+        toggleComponent.instance().handleFormClose();
+        expect(toggleComponent.instance().state.isOpen).toBe(false);
+    })
+    it('Changes state of isOpen on calling handleFormSubmit', () => {
+        const formSubmitSpy = jest.fn();
+        const toggleComponent = shallow(<ToggleableShoppingForm formSubmit={formSubmitSpy}/>);
+        toggleComponent.setState({isOpen: true});
+        toggleComponent.instance().handleFormSubmit();
+        expect(toggleComponent.instance().state.isOpen).toBe(false);
+    })
 })
 describe('AllShoppinglists component test cases', () => {
     it('Returns 3 EditableShoppinglist containing shoppinglists on receivng the props shopping_list', ()=> {
@@ -199,7 +232,6 @@ describe('AllShoppinglists component test cases', () => {
     it('Returns a div containing string on receivng the props shopping_list', ()=> {
         const shoppinglists = "You have no shoppinglist"
         const allShoppinglistComponent = shallow(<AllShoppinglists shopping_lists={shoppinglists}/>)
-        console.log(allShoppinglistComponent.html())
         expect(allShoppinglistComponent.dive().text()).toEqual("<Row />");
     })
 })
