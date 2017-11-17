@@ -116,49 +116,90 @@ describe('<ShoppinglistPage/> components', () => {
         })
     })
     it('Deletes a shoppinglist', () => {
-        const shoppingComponent = shallow(<Shoppinglist />)
-        axios.post('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/', {
-            name: 'market'
-        })
-        const deleteBtn = shoppingComponent.find("#delete")
-        expect(shoppingComponent).toHaveLength(1)
-        deleteBtn.simulate('click', { preventDefault() { } })
-        moxios.wait(function () {
-            let request = moxios.request.mostRecent()
-            request.respondWith({
-                status: 200,
-                respondText: "Successfully deleted"
-            }).then(function () {
-                expect(<Shoppinglist />).toHaveLength(0)
-            })
-        })
-    })
-    it('Limits shoppinglist', () => {
-        const baseProps = {
-            onLimitSubmit: jest.fn(),
-        };
-        const limitComponent = shallow(<LimitShoppinglists {...baseProps} />)
-        axios.post('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/', {
-            name: 'market'
-        })
-        axios.post('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/', {
-            name: 'soko'
-        })
-        limitComponent.setState({ limit: 1 })
-        const limitBtn = limitComponent.find('#limit')
+        const shoppinglistPageComponent = mount(<ShoppinglistPage />);
+        shoppinglistPageComponent.instance().deleteShoppinglist("Soko", 6);
 
-        limitBtn.simulate('click', { preventDefault() { } })
+        moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/6', {
+            status: 200
+        })
 
         moxios.wait(function () {
-            let request = moxios.request.mostRecent()
-            request.respondWith({
-                status: 200,
-                respondText: { name: "market", id: 1 }
-            }).then(function () {
-                expect(<Shoppinglist />).toHaveLength(1)
-            })
+            expect(shoppinglistPageComponent.find('ToastContainer').text()).toEqual("Shoppinglist Soko deleted.");
+            done();
         })
     })
+    it('Calls getPreviousPage when handlePrevClick is called', () => {
+        const getPreviousPageSpy = sinon.spy(ShoppinglistPage.prototype, 'getPreviousPage')
+        const shoppinglistPageComponent = mount(<ShoppinglistPage />);
+        shoppinglistPageComponent.instance().handlePrevClick();
+
+        moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/?limit=2', {
+            status: 200,
+            responseText: { next_page: "/shoppinglists/?limit=2&page=2", previous_page: "None", shopping_lists: [{id: 4, name: "Soko"},{id: 10, name: "Shagz"}] }
+        })
+        expect(getPreviousPageSpy.calledOnce).toEqual(true);
+    })
+    it('Calls getNextPage when handleNextClick is called', () => {
+        const getNextPageSpy = sinon.spy(ShoppinglistPage.prototype, 'getNextPage')
+        const shoppinglistPageComponent = mount(<ShoppinglistPage />);
+        shoppinglistPageComponent.instance().handleNextClick();
+
+        moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/?limit=2', {
+            status: 200,
+            responseText: { next_page: "/shoppinglists/?limit=2&page=2", previous_page: "None", shopping_lists: [{id: 4, name: "Soko"},{id: 10, name: "Shagz"}] }
+        })
+        expect(getNextPageSpy.calledOnce).toEqual(true);
+    })
+    it('toast has information message when next page = None', (done) => {
+        const shoppinglistPageComponent = mount(<ShoppinglistPage />);
+        shoppinglistPageComponent.setState({ next_page: 'None' });
+        shoppinglistPageComponent.instance().getNextPage();
+        console.log(shoppinglistPageComponent.find('ToastContainer').html())
+        expect(shoppinglistPageComponent.find('ToastContainer').text()).toContain('There are no shoppinglist in next page');
+
+    })
+    it('function getNext returns a response ', (done) => {
+        const shoppinglistPageComponent = mount(<ShoppinglistPage />);
+        shoppinglistPageComponent.setState({ next_page: "/shoppinglists/?limit=2&page=2"  });
+        shoppinglistPageComponent.instance().getNextPage();
+        moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/?limit=2&page=2', {
+            status: 200,
+            responseText: {next_page: "/shoppinglists/?limit=2&page=3", previous_page: "/shoppinglists/?limit=2&page=1", shopping_lists: [{id: 24, name: "Dinner"},{id: 26, name: "House party"}]}
+        })
+        moxios.wait(function () {
+            expect(shoppinglistPageComponent.instance().state.shoppinglists).toEqual([ { id: 24, name: 'Dinner' }, { id: 26, name: 'House party' } ])
+            done();
+        })
+
+    })
+    it('Calls limitShoppinglists when handleLimitShoppinglists is called', () => {
+        const limitShoppinglistsSpy = sinon.spy(ShoppinglistPage.prototype, 'limitShoppinglists')
+        const shoppinglistPageComponent = mount(<ShoppinglistPage />);
+        shoppinglistPageComponent.instance().handleLimitShoppinglists(2);
+
+        moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/?limit=2', {
+            status: 200,
+            responseText: { next_page: "/shoppinglists/?limit=2&page=2", previous_page: "None", shopping_lists: [{id: 4, name: "Soko"},{id: 10, name: "Shagz"}] }
+        })
+        expect(limitShoppinglistsSpy.calledOnce).toEqual(true);
+    })
+    it('limits a shoppinglists', (done) => {
+        const shoppinglistPageComponent = mount(<ShoppinglistPage />);
+        shoppinglistPageComponent.instance().limitShoppinglists(2);
+
+        moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/?limit=2', {
+            status: 200,
+            responseText: { next_page: "/shoppinglists/?limit=2&page=2", previous_page: "None", shopping_lists: [{id: 4, name: "Soko"},{id: 10, name: "Shagz"}] }
+        })
+
+        moxios.wait(function () {
+            // console.log(shoppinglistPageComponent.instance().state);
+            expect(shoppinglistPageComponent.instance().state.shoppinglists).toEqual([{id: 4, name: "Soko"},{id: 10, name: "Shagz"}]);
+            done();
+        })
+
+    })
+    
     it('Toast container has an error when calling limitShoppinglists', (done) => {
         const shoppinglistPageComponent = mount(<ShoppinglistPage />);
         shoppinglistPageComponent.instance().limitShoppinglists(-1);
@@ -169,7 +210,8 @@ describe('<ShoppinglistPage/> components', () => {
         })
 
         moxios.wait(function () {
-            expect(shoppinglistPageComponent.find('ToastContainer').text()).toEqual('Limit value must be positive integer✖');
+            // console.log(shoppinglistPageComponent.find('ToastContainer').text());
+            expect(shoppinglistPageComponent.find('ToastContainer').text()).toContain('Limit value must be positive integer');
             done();
         })
 
@@ -363,6 +405,13 @@ describe('LimitShoppinglist Component', () => {
         const cancelButton = limitShoppinglistComponent.find('#limitCancel');
         cancelButton.simulate('click', { preventDefault() { } });
         expect(onCancelClickSpy).toHaveBeenCalled();
+    })
+    it('Calls the onLimitSubmit prop function on limit click', () => {
+        const onLimitSubmitSpy = jest.fn();
+        const limitShoppinglistComponent = shallow(<LimitShoppinglists onLimitSubmit={onLimitSubmitSpy} />);
+        const cancelButton = limitShoppinglistComponent.find('#limit');
+        cancelButton.simulate('click', { preventDefault() { } });
+        expect(onLimitSubmitSpy).toHaveBeenCalled();
     })
 })
 describe('SearchShoppinglist component', () => {
