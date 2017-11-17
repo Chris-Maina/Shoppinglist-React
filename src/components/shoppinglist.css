@@ -10,3 +10,7 @@
 .centeritem {
     left: 35%;
 }
+.next_prev_btn {
+    width: 250px;
+    margin-bottom: 15px;
+}
