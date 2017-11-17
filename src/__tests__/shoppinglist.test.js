@@ -1,7 +1,10 @@
 import React from 'react';
 import { shallow, mount, render } from 'enzyme';
 import ReactDOM from 'react-dom';
-import { ShoppinglistPage, Shoppinglist, ShoppinglistForm, ToggleableShoppingForm, EditableShoppinglist, SearchShoppinglist, LimitShoppinglists, AllShoppinglists } from '../components/shoppinglist';
+import {
+    ShoppinglistPage, Shoppinglist, ShoppinglistForm, ToggleableShoppingForm, EditableShoppinglist,
+    SearchShoppinglist, LimitShoppinglists, AllShoppinglists, NextPreviousPage
+} from '../components/shoppinglist';
 import sinon from 'sinon';
 import moxios from 'moxios';
 import axios from 'axios';
@@ -156,8 +159,41 @@ describe('<ShoppinglistPage/> components', () => {
             })
         })
     })
+    it('Toast container has an error when calling limitShoppinglists', (done) => {
+        const shoppinglistPageComponent = mount(<ShoppinglistPage />);
+        shoppinglistPageComponent.instance().limitShoppinglists(-1);
+
+        moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/?limit=-1', {
+            status: 400,
+            responseText: { message: "Limit value must be positive integer" }
+        })
+
+        moxios.wait(function () {
+            expect(shoppinglistPageComponent.find('ToastContainer').text()).toEqual('Limit value must be positive integer✖');
+            done();
+        })
+
+    })
 
 
+})
+describe('NextPreviousPage component test cases', () => {
+    it('Calls onPrevClick prop when Next page button is clicked', () => {
+        // Spy on onPrevClick prop function
+        const onPrevClickSpy = jest.fn();
+        const nextPrevComponent = shallow(<NextPreviousPage onPrevClick={onPrevClickSpy} />)
+        nextPrevComponent.find('#prevBtn').simulate('click', { preventDefault() { } });
+        expect(onPrevClickSpy).toHaveBeenCalled();
+
+    })
+    it('Calls onNextClick prop when Next page button is clicked', () => {
+        // Spy on onNextClick prop function
+        const onNextClickSpy = jest.fn();
+        const nextPrevComponent = shallow(<NextPreviousPage onNextClick={onNextClickSpy} />)
+        nextPrevComponent.find('#nextBtn').simulate('click', { preventDefault() { } });
+        expect(onNextClickSpy).toHaveBeenCalled();
+
+    })
 })
 describe('ToggleShoppingForm component icon click tests', () => {
     it('It opens up ShoppingListForm when Add button is clicked', () => {
@@ -184,61 +220,61 @@ describe('ToggleShoppingForm component icon click tests', () => {
     it('Changes state of isLimitOpen on calling handleLimit', () => {
         // Spy onLimitSubmit prop function
         const onLimitSubmitSpy = jest.fn();
-        const toggleComponent = shallow(<ToggleableShoppingForm onLimitSubmit={onLimitSubmitSpy}/>);
-        toggleComponent.setState({isLimitOpen: true});
+        const toggleComponent = shallow(<ToggleableShoppingForm onLimitSubmit={onLimitSubmitSpy} />);
+        toggleComponent.setState({ isLimitOpen: true });
         toggleComponent.instance().handleLimit(4);
         expect(toggleComponent.instance().state.isLimitOpen).toBe(false);
     })
     it('Changes state of isLimitOpen on calling handleLimitClose', () => {
         const toggleComponent = shallow(<ToggleableShoppingForm />);
-        toggleComponent.setState({isLimitOpen: true});
+        toggleComponent.setState({ isLimitOpen: true });
         toggleComponent.instance().handleLimitClose();
         expect(toggleComponent.instance().state.isLimitOpen).toBe(false);
     })
     it('Changes state of isSearchOpen on calling handleSearch', () => {
         // Spy onSearchSubmit prop function
         const onSearchSubmitSpy = jest.fn();
-        const toggleComponent = shallow(<ToggleableShoppingForm onSearchSubmit={onSearchSubmitSpy}/>);
-        toggleComponent.setState({isSearchOpen: true});
+        const toggleComponent = shallow(<ToggleableShoppingForm onSearchSubmit={onSearchSubmitSpy} />);
+        toggleComponent.setState({ isSearchOpen: true });
         toggleComponent.instance().handleSearch('Furniture');
         expect(toggleComponent.instance().state.isSearchOpen).toBe(false);
     })
     it('Changes state of isSearchOpen on calling handleSearchClose', () => {
         const toggleComponent = shallow(<ToggleableShoppingForm />);
-        toggleComponent.setState({isSearchOpen: true});
+        toggleComponent.setState({ isSearchOpen: true });
         toggleComponent.instance().handleSearchClose();
         expect(toggleComponent.instance().state.isSearchOpen).toBe(false);
     })
     it('Changes state of isOpen on calling handleFormClose', () => {
         const toggleComponent = shallow(<ToggleableShoppingForm />);
-        toggleComponent.setState({isOpen: true});
+        toggleComponent.setState({ isOpen: true });
         toggleComponent.instance().handleFormClose();
         expect(toggleComponent.instance().state.isOpen).toBe(false);
     })
     it('Changes state of isOpen on calling handleFormSubmit', () => {
         const formSubmitSpy = jest.fn();
-        const toggleComponent = shallow(<ToggleableShoppingForm formSubmit={formSubmitSpy}/>);
-        toggleComponent.setState({isOpen: true});
+        const toggleComponent = shallow(<ToggleableShoppingForm formSubmit={formSubmitSpy} />);
+        toggleComponent.setState({ isOpen: true });
         toggleComponent.instance().handleFormSubmit();
         expect(toggleComponent.instance().state.isOpen).toBe(false);
     })
 })
 describe('AllShoppinglists component test cases', () => {
-    it('Returns 3 EditableShoppinglist containing shoppinglists on receivng the props shopping_list', ()=> {
-        const shoppinglists = [{id:2, name:'Graduation'}, {id:6, name:'Soko'}, {id:7, name:'Furniture'}]
-        const allShoppinglistComponent = shallow(<AllShoppinglists shopping_lists={shoppinglists}/>)
+    it('Returns 3 EditableShoppinglist containing shoppinglists on receivng the props shopping_list', () => {
+        const shoppinglists = [{ id: 2, name: 'Graduation' }, { id: 6, name: 'Soko' }, { id: 7, name: 'Furniture' }]
+        const allShoppinglistComponent = shallow(<AllShoppinglists shopping_lists={shoppinglists} />)
         expect(allShoppinglistComponent.find('EditableShoppinglist')).toHaveLength(3);
     })
-    it('Returns a div containing string on receivng the props shopping_list', ()=> {
+    it('Returns a div containing string on receivng the props shopping_list', () => {
         const shoppinglists = "You have no shoppinglist"
-        const allShoppinglistComponent = shallow(<AllShoppinglists shopping_lists={shoppinglists}/>)
+        const allShoppinglistComponent = shallow(<AllShoppinglists shopping_lists={shoppinglists} />)
         expect(allShoppinglistComponent.dive().text()).toEqual("<Row />");
     })
 })
 describe('EditableShoppinglist component test cases', () => {
     it('Renders EditableShoppinglist component with', () => {
         const message = "You have no shoppinglist";
-        const editableShoppinglistComponent = shallow(<EditableShoppinglist shoppinglist={message}/>)
+        const editableShoppinglistComponent = shallow(<EditableShoppinglist shoppinglist={message} />)
         expect(editableShoppinglistComponent.find('Card')).toBeDefined();
     })
     it('Shows the ShoppinglistForm when editForm state is true', () => {
@@ -250,32 +286,32 @@ describe('EditableShoppinglist component test cases', () => {
         // Create a spy method for editFormSubmit 
         const editFormSubmit = jest.fn();
         // Pass the prop on the parent
-        const editableShoppinglistComponent = shallow(<EditableShoppinglist editFormSubmit={editFormSubmit}/>);
+        const editableShoppinglistComponent = shallow(<EditableShoppinglist editFormSubmit={editFormSubmit} />);
         // Set the state of editForm to true
-        editableShoppinglistComponent.setState({editForm: true});
+        editableShoppinglistComponent.setState({ editForm: true });
         // Call the method handleFormSubmit with arguments
-        editableShoppinglistComponent.instance().handleFormSubmit('Furniture',2);
+        editableShoppinglistComponent.instance().handleFormSubmit('Furniture', 2);
         expect(editableShoppinglistComponent.instance().state.editForm).toEqual(false);
     })
     it('Calls the props function', () => {
         // Create a spy for props function,deleteSubmit
         const deleteSubmitSpy = jest.fn();
         // Pass the prop on the parent
-        const editableShoppinglistComponent = shallow(<EditableShoppinglist deleteSubmit={deleteSubmitSpy}/>);
+        const editableShoppinglistComponent = shallow(<EditableShoppinglist deleteSubmit={deleteSubmitSpy} />);
         // Call the wrapper method
         editableShoppinglistComponent.instance().handleDeleteBtnClick();
         expect(deleteSubmitSpy).toHaveBeenCalled();
 
     })
-    it('Changes state of editForm when handleEditBtnClick method is called',() => {
-        const editableShoppinglistComponent = shallow(<EditableShoppinglist/>);
+    it('Changes state of editForm when handleEditBtnClick method is called', () => {
+        const editableShoppinglistComponent = shallow(<EditableShoppinglist />);
         editableShoppinglistComponent.instance().handelEditBtnClick();
         expect(editableShoppinglistComponent.instance().state.editForm).toEqual(true);
     })
-    it('Changes state of editForm when handleFormClose method is called',() => {
-        const editableShoppinglistComponent = shallow(<EditableShoppinglist/>);
+    it('Changes state of editForm when handleFormClose method is called', () => {
+        const editableShoppinglistComponent = shallow(<EditableShoppinglist />);
         // Set the state of editForm to true
-        editableShoppinglistComponent.setState({editForm: true});
+        editableShoppinglistComponent.setState({ editForm: true });
         editableShoppinglistComponent.instance().handleFormClose();
         expect(editableShoppinglistComponent.instance().state.editForm).toEqual(false);
     })
@@ -283,9 +319,9 @@ describe('EditableShoppinglist component test cases', () => {
 describe('ShoppingListForm component test cases', () => {
     it('Closes the component on cancel button click ', () => {
         const onFormCloseSpy = jest.fn();
-        const shoppingFormComponent = shallow(<ShoppinglistForm onFormClose={onFormCloseSpy}/>)
+        const shoppingFormComponent = shallow(<ShoppinglistForm onFormClose={onFormCloseSpy} />)
         const cancelButton = shoppingFormComponent.find('#cancel')
-        cancelButton.simulate('click', { preventDefault() {} })
+        cancelButton.simulate('click', { preventDefault() { } })
         expect(onFormCloseSpy).toHaveBeenCalled();
     })
     it('Changes name state when on change event is called', () => {
@@ -323,9 +359,9 @@ describe('LimitShoppinglist Component', () => {
     })
     it('Calls the onCancelClick prop function on cancel click', () => {
         const onCancelClickSpy = jest.fn();
-        const limitShoppinglistComponent = shallow(<LimitShoppinglists onCancelClick={onCancelClickSpy}/>);
+        const limitShoppinglistComponent = shallow(<LimitShoppinglists onCancelClick={onCancelClickSpy} />);
         const cancelButton = limitShoppinglistComponent.find('#limitCancel');
-        cancelButton.simulate('click', { preventDefault () {} });
+        cancelButton.simulate('click', { preventDefault() { } });
         expect(onCancelClickSpy).toHaveBeenCalled();
     })
 })
