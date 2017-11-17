@@ -46,9 +46,6 @@ export class ShoppinglistPage extends Component {
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             }
         }).then((response) => {
-            if (!response.statusText === 'OK') {
-                toast.error(response.data.message)
-            }
             this.setState({
                 shoppinglists: response.data.shopping_lists,
                 next_page: response.data.next_page,
@@ -87,9 +84,6 @@ export class ShoppinglistPage extends Component {
             },
             data: data
         }).then((response) => {
-            if (!response.statusText === 'OK') {
-                toast.error(response.data.message)
-            }
             toast.success("Shoppinglist " + shoppinglistname + " deleted.");
             // Get ALL shopping list
             this.getShoppinglists();
@@ -205,13 +199,14 @@ export class ShoppinglistPage extends Component {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
                 toast.error(error.response.data.message)
-            } else if (error.request) {
-                // The request was made but no response was received
-                console.log(error.request);
-            } else {
-                // Something happened in setting up the request that triggered an Error
-                console.log('Error', error.message);
-            }
+            } 
+            // else if (error.request) {
+            //     // The request was made but no response was received
+            //     console.log(error.request);
+            // } else {
+            //     // Something happened in setting up the request that triggered an Error
+            //     console.log('Error', error.message);
+            // }
         });
     }
     handlePrevClick () {
@@ -278,22 +273,20 @@ export class ShoppinglistPage extends Component {
                 next_page: response.data.next_page,
                 previous_page: response.data.previous_page
             });
-
             return response.data;
         }).catch(function (error) {
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
-                console.log(error.response.data);
                 toast.error(error.response.data.message)
             } 
-            else if (error.request) {
-                // The request was made but no response was received
-                console.log(error.request);
-            } else {
-                // Something happened in setting up the request that triggered an Error
-                console.log('Error', error.message);
-            }
+            // else if (error.request) {
+            //     // The request was made but no response was received
+            //     console.log(error.request);
+            // } else {
+            //     // Something happened in setting up the request that triggered an Error
+            //     console.log('Error', error.message);
+            // }
         });
     }
 
@@ -324,13 +317,13 @@ export class ShoppinglistPage extends Component {
                 // that falls out of the range of 2xx
                 toast.error(error.response.data.message)
             } 
-            else if (error.request) {
-                // The request was made but no response was received
-                console.log(error.request);
-            } else {
-                // Something happened in setting up the request that triggered an Error
-                console.log('Error', error.message);
-            }
+            // else if (error.request) {
+            //     // The request was made but no response was received
+            //     console.log(error.request);
+            // } else {
+            //     // Something happened in setting up the request that triggered an Error
+            //     console.log('Error', error.message);
+            // }
         });
     }
     render() {
