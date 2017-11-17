@@ -49,7 +49,6 @@ export class ShoppinglistPage extends Component {
             if (!response.statusText === 'OK') {
                 toast.error(response.data.message)
             }
-            console.log(response.data);
             this.setState({
                 shoppinglists: response.data.shopping_lists,
                 next_page: response.data.next_page,
@@ -61,7 +60,6 @@ export class ShoppinglistPage extends Component {
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
-                console.log(error.response.data);
                 toast.error(error.response.data.message)
             } else if (error.request) {
                 // The request was made but no response was received
@@ -70,7 +68,6 @@ export class ShoppinglistPage extends Component {
                 // Something happened in setting up the request that triggered an Error
                 console.log('Error', JSON.stringify(error.message));
             }
-            console.log(error.config);
         });
     }
     handleDeleteShoppinglist (shoppinglistname, sl_id) {
@@ -93,7 +90,6 @@ export class ShoppinglistPage extends Component {
             if (!response.statusText === 'OK') {
                 toast.error(response.data.message)
             }
-            console.log(response.data);
             toast.success("Shoppinglist " + shoppinglistname + " deleted.");
             // Get ALL shopping list
             this.getShoppinglists();
@@ -102,7 +98,6 @@ export class ShoppinglistPage extends Component {
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
-                console.log(error.response.data);
                 toast.error(error.response.data.message)
             } else if (error.request) {
                 // The request was made but no response was received
@@ -111,7 +106,6 @@ export class ShoppinglistPage extends Component {
                 // Something happened in setting up the request that triggered an Error
                 console.log('Error', error.message);
             }
-            console.log(error.config);
         });
     }
 
@@ -132,7 +126,6 @@ export class ShoppinglistPage extends Component {
             },
             data: data
         }).then((response) => {
-            console.log(response.data);
             toast.success("Shoppinglist edited to " + response.data.name);
             return response.data;
         }).catch(function (error) {
@@ -148,7 +141,6 @@ export class ShoppinglistPage extends Component {
                 // Something happened in setting up the request that triggered an Error
                 console.log('Error', error.message);
             }
-            console.log(error.config);
         });
         // Get ALL shopping list
         this.getShoppinglists();
@@ -171,10 +163,6 @@ export class ShoppinglistPage extends Component {
             },
             data: data
         }).then((response) => {
-            if (!response.statusText === 'OK') {
-                toast.error(response.data.message)
-            }
-            console.log(response.data);
             toast.success("Shoppinglist " + response.data.name + " created");
             // Get ALL shopping list
             this.getShoppinglists();
@@ -183,7 +171,6 @@ export class ShoppinglistPage extends Component {
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
-                console.log(error.response.data);
                 toast.error(error.response.data.message)
             } else if (error.request) {
                 // The request was made but no response was received
@@ -192,7 +179,6 @@ export class ShoppinglistPage extends Component {
                 // Something happened in setting up the request that triggered an Error
                 console.log('Error', error.message);
             }
-            console.log(error.config);
         });
     }
     handleSearchShoppinglist (searchText) {
@@ -209,11 +195,6 @@ export class ShoppinglistPage extends Component {
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             }
         }).then((response) => {
-            if (!response.statusText === 'OK') {
-                toast.error(response.data.message)
-            }
-
-            console.log(response.data);
             this.setState({
                 shoppinglists: response.data,
             });
@@ -223,7 +204,6 @@ export class ShoppinglistPage extends Component {
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
-                console.log(error.response.data);
                 toast.error(error.response.data.message)
             } else if (error.request) {
                 // The request was made but no response was received
@@ -232,7 +212,6 @@ export class ShoppinglistPage extends Component {
                 // Something happened in setting up the request that triggered an Error
                 console.log('Error', error.message);
             }
-            console.log(error.config);
         });
     }
     handlePrevClick () {
@@ -254,11 +233,6 @@ export class ShoppinglistPage extends Component {
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             }
         }).then((response) => {
-            if (!response.statusText === 'OK') {
-                toast.error(response.data.message)
-            }
-
-            console.log(response.data);
             this.setState({
                 shoppinglists: response.data.shopping_lists,
                 next_page: response.data.next_page,
@@ -270,7 +244,6 @@ export class ShoppinglistPage extends Component {
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
-                console.log(error.response.data);
                 toast.error(error.response.data.message)
             } else if (error.request) {
                 // The request was made but no response was received
@@ -279,7 +252,6 @@ export class ShoppinglistPage extends Component {
                 // Something happened in setting up the request that triggered an Error
                 console.log('Error', error.message);
             }
-            console.log(error.config);
         });
     }
     handleNextClick () {
@@ -301,11 +273,6 @@ export class ShoppinglistPage extends Component {
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             }
         }).then((response) => {
-            if (!response.statusText === 'OK') {
-                toast.error(response.data.message)
-            }
-
-            console.log(response.data);
             this.setState({
                 shoppinglists: response.data.shopping_lists,
                 next_page: response.data.next_page,
@@ -319,14 +286,14 @@ export class ShoppinglistPage extends Component {
                 // that falls out of the range of 2xx
                 console.log(error.response.data);
                 toast.error(error.response.data.message)
-            } else if (error.request) {
+            } 
+            else if (error.request) {
                 // The request was made but no response was received
                 console.log(error.request);
             } else {
                 // Something happened in setting up the request that triggered an Error
                 console.log('Error', error.message);
             }
-            console.log(error.config);
         });
     }
 
@@ -344,11 +311,6 @@ export class ShoppinglistPage extends Component {
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             }
         }).then((response) => {
-            if (!response.statusText === 'OK') {
-                toast.error(response.data.message)
-            }
-
-            console.log(response.data);
             this.setState({
                 shoppinglists: response.data.shopping_lists,
                 next_page: response.data.next_page,
@@ -360,16 +322,15 @@ export class ShoppinglistPage extends Component {
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
-                console.log(error.response.data);
                 toast.error(error.response.data.message)
-            } else if (error.request) {
+            } 
+            else if (error.request) {
                 // The request was made but no response was received
                 console.log(error.request);
             } else {
                 // Something happened in setting up the request that triggered an Error
                 console.log('Error', error.message);
             }
-            console.log(error.config);
         });
     }
     render() {
@@ -416,9 +377,11 @@ export class NextPreviousPage extends Component {
     render() {
         return (
             <Row>
-                <Col xs="8" xs-offset="2" md="8" md-offset="2">
-                    <Button className='teal' waves='light' size="small" onClick={this.handlePrevClick}>Previous Page</Button>
-                    <Button className='teal space' waves='light' size="small" onClick={this.handleNextClick}>Next Page</Button>
+                <Col md="6" className="center">
+                    <Button className='teal next_prev_btn'id="prevBtn" waves='light' size="small" onClick={this.handlePrevClick}>Previous Page</Button>
+                </Col>
+                <Col md="6" className="center">
+                    <Button className='teal next_prev_btn' id="nextBtn" waves='light' size="small" onClick={this.handleNextClick}>Next Page</Button>
                 </Col>
             </Row>
         );
@@ -519,9 +482,9 @@ export class AllShoppinglists extends Component {
 
         }
         const shopping_lists = this.props.shopping_lists.map((oneshoppinglist) => (
-            <div>
+            <div
+            key={oneshoppinglist.id}>
                 <EditableShoppinglist
-                    key={oneshoppinglist.id}
                     sl_id={oneshoppinglist.id}
                     name={oneshoppinglist.name}
                     editFormSubmit={this.props.editFormSubmit}
@@ -599,12 +562,12 @@ export class Shoppinglist extends Component {
                     <Col xs="8" xs-offset="2" md="8" md-offset="2">
                         <div>
                             <Card className='blue-grey darken-1 white-text' title={this.props.name}
-                                actions={[<a href={`/shoppinglists/${this.props.sl_id}/items`}>Add Item</a>]}
+                                actions={[<a key={this.props.sl_id} href={`/shoppinglists/${this.props.sl_id}/items`}>Add Item</a>]}
                             >
 
                                 <br />
-                                <Button floating className="teal" icon='mode_edit' id="edit" size="small" onClick={this.props.onEditSubmit}></Button>&nbsp;&nbsp;&nbsp;&nbsp;
-                                <Button floating className="red" icon='delete' id="delete" size="small" onClick={this.props.onDeleteSubmit}>Delete</Button>
+                                <Button  floating className="teal" icon='mode_edit' id="edit" size="small" onClick={this.props.onEditSubmit}></Button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <Button  floating className="red" icon='delete' id="delete" size="small" onClick={this.props.onDeleteSubmit}>Delete</Button>
                             </Card>
                         </div>
                     </Col>
