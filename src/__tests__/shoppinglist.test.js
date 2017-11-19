@@ -115,6 +115,19 @@ describe('<ShoppinglistPage/> components', () => {
             })
         })
     })
+    it('Raises an error when search query contains an error message', (done) => {
+        const shoppinglistPageComponent = mount(<ShoppinglistPage />);
+        shoppinglistPageComponent.instance().handleSearchShoppinglist("Soko");
+        moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/?q=Soko', {
+            status: 400,
+            responseText: { message: "The searched name does not exists" }
+        })
+        moxios.wait(function () {
+            expect(shoppinglistPageComponent.find('ToastContainer').text()).toEqual("The searched name does not exists✖");
+            done();
+        })
+
+    })
     it('Deletes a shoppinglist', () => {
         const shoppinglistPageComponent = mount(<ShoppinglistPage />);
         shoppinglistPageComponent.instance().deleteShoppinglist("Soko", 6);
@@ -127,6 +140,27 @@ describe('<ShoppinglistPage/> components', () => {
             expect(shoppinglistPageComponent.find('ToastContainer').text()).toEqual("Shoppinglist Soko deleted.");
             done();
         })
+    })
+    // it('toast has an information message when state previous_page = None ', (done) => {
+    //     const shoppinglistPageComponent = mount(<ShoppinglistPage />);
+    //     shoppinglistPageComponent.setState({ previous_page: "None"  });
+    //     shoppinglistPageComponent.instance().getPreviousPage();
+    //     expect(shoppinglistPageComponent.find('ToastContainer')).toContain('There are no shoppinglist in previous page');
+
+    // })
+    it('function getPreviousPage returns a response ', (done) => {
+        const shoppinglistPageComponent = mount(<ShoppinglistPage />);
+        shoppinglistPageComponent.setState({ previous_page: "/shoppinglists/?limit=2&page=2"  });
+        shoppinglistPageComponent.instance().getPreviousPage();
+        moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/?limit=2&page=2', {
+            status: 200,
+            responseText: {next_page: "/shoppinglists/?limit=2&page=3", previous_page: "/shoppinglists/?limit=2&page=1", shopping_lists: [{id: 24, name: "Supper"},{id: 26, name: "Lunch"}]}
+        })
+        moxios.wait(function () {
+            expect(shoppinglistPageComponent.instance().state.shoppinglists).toEqual([ { id: 24, name: 'Supper' }, { id: 26, name: 'Lunch' } ])
+            done();
+        })
+
     })
     it('Calls getPreviousPage when handlePrevClick is called', () => {
         const getPreviousPageSpy = sinon.spy(ShoppinglistPage.prototype, 'getPreviousPage')
@@ -149,14 +183,6 @@ describe('<ShoppinglistPage/> components', () => {
             responseText: { next_page: "/shoppinglists/?limit=2&page=2", previous_page: "None", shopping_lists: [{id: 4, name: "Soko"},{id: 10, name: "Shagz"}] }
         })
         expect(getNextPageSpy.calledOnce).toEqual(true);
-    })
-    it('toast has information message when next page = None', (done) => {
-        const shoppinglistPageComponent = mount(<ShoppinglistPage />);
-        shoppinglistPageComponent.setState({ next_page: 'None' });
-        shoppinglistPageComponent.instance().getNextPage();
-        console.log(shoppinglistPageComponent.find('ToastContainer').html())
-        expect(shoppinglistPageComponent.find('ToastContainer').text()).toContain('There are no shoppinglist in next page');
-
     })
     it('function getNext returns a response ', (done) => {
         const shoppinglistPageComponent = mount(<ShoppinglistPage />);
