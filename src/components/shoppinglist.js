@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import Container from 'muicss/lib/react/container';
 import Row from 'muicss/lib/react/row';
 import Col from 'muicss/lib/react/col';
@@ -10,12 +11,14 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { Navigation } from './navbar';
+import requireLogin from './authenticate';
+import { Route} from 'react-router-dom';
 
 
 export class ShoppinglistPage extends Component {
     constructor(props) {
         super(props);
-        this.state = { shoppinglists: [], next_page: '', previous_page: '' };
+        this.state = { shoppinglists: [], next_page: '', previous_page: '', redirect: false };
         this.getShoppinglists = this.getShoppinglists.bind(this);
         this.handleDeleteShoppinglist = this.handleDeleteShoppinglist.bind(this);
         this.deleteShoppinglist = this.deleteShoppinglist.bind(this);
@@ -51,13 +54,16 @@ export class ShoppinglistPage extends Component {
                 next_page: response.data.next_page,
                 previous_page: response.data.previous_page
             });
-
             return response.data;
         }).catch(function (error) {
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
                 toast.error(error.response.data.message)
+                if(error.response.status === 408){
+                    window.localStorage.removeItem('token');
+                    return requireLogin(ShoppinglistPage)
+                }
             } else if (error.request) {
                 // The request was made but no response was received
                 console.log(error.request);
@@ -93,6 +99,10 @@ export class ShoppinglistPage extends Component {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
                 toast.error(error.response.data.message)
+                if(error.response.status === 408){
+                    window.localStorage.removeItem('token');
+                    return <Route exact ={true} path="/shoppinglists/" component={requireLogin(ShoppinglistPage)} />
+                }
             } else if (error.request) {
                 // The request was made but no response was received
                 console.log(error.request);
@@ -126,8 +136,11 @@ export class ShoppinglistPage extends Component {
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
-                console.log(error.response.data);
                 toast.error(error.response.data.message)
+                if(error.response.status === 408){
+                    window.localStorage.removeItem('token');
+                    return <Route exact ={true} path="/shoppinglists/" component={requireLogin(ShoppinglistPage)} />
+                }
             } else if (error.request) {
                 // The request was made but no response was received
                 console.log(error.request);
@@ -166,13 +179,18 @@ export class ShoppinglistPage extends Component {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
                 toast.error(error.response.data.message)
-            } else if (error.request) {
-                // The request was made but no response was received
-                console.log(error.request);
-            } else {
-                // Something happened in setting up the request that triggered an Error
-                console.log('Error', error.message);
-            }
+                if(error.response.status === 408){
+                    window.localStorage.removeItem('token');
+                    return <Route exact ={true} path="/shoppinglists/" component={requireLogin(ShoppinglistPage)} />
+                }
+            } 
+            // else if (error.request) {
+            //     // The request was made but no response was received
+            //     console.log(error.request);
+            // } else {
+            //     // Something happened in setting up the request that triggered an Error
+            //     console.log('Error', error.message);
+            // }
         });
     }
     handleSearchShoppinglist (searchText) {
@@ -189,6 +207,7 @@ export class ShoppinglistPage extends Component {
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             }
         }).then((response) => {
+            console.log(response.data)
             this.setState({
                 shoppinglists: response.data,
             });
@@ -198,7 +217,11 @@ export class ShoppinglistPage extends Component {
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
-                toast.error(error.response.data.message)
+                toast.error(error.response.data.message);
+                if(error.response.status === 408){
+                    window.localStorage.removeItem('token');
+                    return <Route exact ={true} path="/shoppinglists/" component={requireLogin(ShoppinglistPage)} />
+                }
             } 
             // else if (error.request) {
             //     // The request was made but no response was received
@@ -239,7 +262,11 @@ export class ShoppinglistPage extends Component {
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
-                toast.error(error.response.data.message)
+                toast.error(error.response.data.message);
+                if(error.response.status === 408){
+                    window.localStorage.removeItem('token');
+                    return <Route exact ={true} path="/shoppinglists/" component={requireLogin(ShoppinglistPage)} />
+                }
             } 
             // else if (error.request) {
             //     // The request was made but no response was received
@@ -279,7 +306,11 @@ export class ShoppinglistPage extends Component {
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
-                toast.error(error.response.data.message)
+                toast.error(error.response.data.message);
+                if(error.response.status === 408){
+                    window.localStorage.removeItem('token');
+                    return <Route exact ={true} path="/shoppinglists/" component={requireLogin(ShoppinglistPage)} />
+                }
             } 
             // else if (error.request) {
             //     // The request was made but no response was received
@@ -316,7 +347,11 @@ export class ShoppinglistPage extends Component {
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
-                toast.error(error.response.data.message)
+                toast.error(error.response.data.message);
+                if(error.response.status === 408){
+                    window.localStorage.removeItem('token');
+                    return <Route exact ={true} path="/shoppinglists/" component={requireLogin(ShoppinglistPage)} />
+                }
             } 
             // else if (error.request) {
             //     // The request was made but no response was received
@@ -328,6 +363,12 @@ export class ShoppinglistPage extends Component {
         });
     }
     render() {
+        const redirect = this.state.redirect;
+        if(redirect){
+            return(
+                <Redirect to="/auth/login/" />
+            );
+        }
         return (
             <div>
                 <Navigation />
