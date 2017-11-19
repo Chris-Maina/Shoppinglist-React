@@ -115,6 +115,61 @@ describe('<ShoppinglistPage/> components', () => {
             })
         })
     })
+
+    it('Shoppinglist is created when postShoppinglist is successful ', (done) => {
+        const shoppinglistPageComponent = mount(<ShoppinglistPage />);
+        shoppinglistPageComponent.instance().postShoppinglist("Soko");
+        moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/', {
+            status: 200,
+            responseText: { name: "Soko", id: 2 }
+        })
+        moxios.wait(function () {
+            expect(shoppinglistPageComponent.find('ToastContainer').text()).toContain("Shoppinglist Soko created");
+            done();
+        })
+
+    })
+    it('Raises an error when postShoppinglist contains an error message', (done) => {
+        const shoppinglistPageComponent = mount(<ShoppinglistPage />);
+        shoppinglistPageComponent.instance().postShoppinglist("Furniture");
+        moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/', {
+            status: 400,
+            responseText: { message: "Shoppinglist with the same name exists" }
+        })
+        moxios.wait(function () {
+            expect(shoppinglistPageComponent.find('ToastContainer').text()).toContain("Shoppinglist with the same name exists");
+            done();
+        })
+
+    })
+
+    // it('Returns searched shoppinglist when calling handleSearchShoppinglist ', (done) => {
+    //     const shoppinglistPageComponent = mount(<ShoppinglistPage />);
+    //     shoppinglistPageComponent.instance().handleSearchShoppinglist("Soko");
+    //     moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/?q=Soko', {
+    //         status: 200,
+    //         responseText: { name: "Soko", id: 2, created_by: 2 }
+    //     })
+    //     moxios.wait(function () {
+    //         console.log(shoppinglistPageComponent.find('Shoppinglist').text())
+    //         expect(shoppinglistPageComponent.find('Shoppinglist').html()).toContain( "Soko");
+    //         done();
+    //     })
+
+    // })
+    it('Changes state when search is successful ', (done) => {
+        const shoppinglistPageComponent = mount(<ShoppinglistPage />);
+        shoppinglistPageComponent.instance().handleSearchShoppinglist("Soko");
+        moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/?q=Soko', {
+            status: 200,
+            responseText: { name: "Soko", id: 2, created_by: 2 }
+        })
+        moxios.wait(function () {
+            expect(shoppinglistPageComponent.instance().state.shoppinglists).toEqual({ name: "Soko", id: 2, created_by: 2 });
+            done();
+        })
+
+    })
     it('Raises an error when search query contains an error message', (done) => {
         const shoppinglistPageComponent = mount(<ShoppinglistPage />);
         shoppinglistPageComponent.instance().handleSearchShoppinglist("Soko");
