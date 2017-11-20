@@ -13,7 +13,7 @@ class Home extends Component {
             <div className="header-content-inner">
               <h1 id="homeHeading"> Shoppinglist Application </h1>
               <hr />
-              <p>Shopping list application helps you record all items you wish to buy. It allows you to record and share things you want to spend money on, meeting your needs and
+              <p>Shopping list application helps you record all items you wish to buy. It allows you to record things you want to spend money on, meeting your needs and
 				        keeping track of your shopping lists.
 			      </p>
             <div>
