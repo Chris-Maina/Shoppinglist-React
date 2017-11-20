@@ -63,8 +63,9 @@ header .header-content .header-content-inner p{
 
 
 /* Home register/login buttons*/
-.home-buttons {
-	font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
+
+.btn-primary {
+  font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
   border: none;
   border-radius: 300px;
   font-weight: 700;
@@ -73,9 +74,6 @@ header .header-content .header-content-inner p{
   width: 200px;
   height: 50px;
   margin-right: 40px; 
-}
-
-.btn-primary {
   color: white;
   -webkit-transition: all 0.35s;
   -moz-transition: all 0.35s;

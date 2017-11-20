@@ -17,8 +17,8 @@ class Home extends Component {
 				        keeping track of your shopping lists.
 			      </p>
             <div>
-            <a href="/auth/register/"><Button className="btn-primary home-buttons amber accent-4"> Register</Button></a>
-            <a href="/auth/login/">  <Button className="btn-primary home-buttons amber accent-4" >Login</Button></a>
+            <a href="/auth/register/"><Button className="btn-primary amber accent-4"> Register</Button></a>
+            <a href="/auth/login/">  <Button className="btn-primary amber accent-4" >Login</Button></a>
             </div>
             </div>
           </div>
