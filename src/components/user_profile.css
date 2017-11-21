@@ -1,0 +1,11 @@
+.page_content{
+	color: #000;
+    justify-content: center;
+    align-items: center;
+    background: #D3D3D3 url(../images/gray-background.jpg) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    height: 100vh;
+}
