@@ -32,96 +32,131 @@ describe('<ShoppinglistPage/> components', () => {
         const wrapper = shallow(<ShoppinglistPage />);
         expect(testMountCall.calledOnce).toEqual(true);
     });
-
-    it('Posts a shoppinglist', () => {
-        const shoppinglist_page = shallow(<ShoppinglistForm />)
-        const form = shoppinglist_page.find('Form')
-        const inputName = shoppinglist_page.find("Input[name='shoppinglistname']")
-        const event = {
-            target: {
-                value: 'Back to school'
-            },
-            preventDefault: () => {
-                return true
-            }
-        }
-        inputName.simulate('change', event);
-        form.simulate('submit', { preventDefault() { } });
-
+    it('Calls deleteShoppinglist when handleDeleteShoppinglist is invoked', () => {
+        const deleteShoppinglistSpy = sinon.spy(ShoppinglistPage.prototype, 'deleteShoppinglist')
+        const shoppinglistPageComponent = mount(<ShoppinglistPage />);
+        shoppinglistPageComponent.instance().handleDeleteShoppinglist("House warming", 8);
+        moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/8', {
+            status: 200,
+            response: { name: "House warming", id: 8, created_by: 2 }
+        })
         moxios.wait(function () {
-            let request = moxios.request.mostRecent()
-            request.respondWith({
-                status: 200,
-                respondText: { name: "Back to school", id: 1 }
-            }).then(function () {
-                expect(shoppinglist_page.contains('Back to school')).to.equal(true)
-
-            })
+            expect(deleteShoppinglistSpy.calledOnce()).toEqual(true);
+            done();
         })
 
     })
-
-    it('Edits a shoppinglist', () => {
-        const baseProps = {
-            onFormSubmit: jest.fn(),
-        }
-        const shoppingFormComponent = shallow(<ShoppinglistForm {...baseProps} />)
-        axios.post('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/', {
-            name: 'market'
+    it('Redirects to login when session times out when calling getShoppinglists', () => {
+        const shoppinglistPageComponent = mount(<ShoppinglistPage />);
+        shoppinglistPageComponent.instance().getShoppinglists();
+        moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/', {
+            status: 408,
+            response: {message: "Invalid token. Please register or login"}
         })
-        const editBtn = shoppingFormComponent.find("#update_create")
-
-        shoppingFormComponent.setState({ name: 'Soko' })
-
-        editBtn.simulate('click', { preventDefault() { } })
         moxios.wait(function () {
-            let request = moxios.request.mostRecent()
-            request.respondWith({
-                status: 200,
-                respondText: { name: "Soko", id: 1 }
-            }).then(function () {
-                expect(<Shoppinglist />).toHaveLength(1)
-                expect(shoppingFormComponent.contains('Soko')).to.equal(true)
+            expect(shoppinglistPageComponent.toHaveLength(1)).toEqual(true);
+            done();
+        })
 
-            })
+    })
+    it('Redirects to login when status code/ response is 408', () => {
+        const shoppinglistPageComponent = mount(<ShoppinglistPage />);
+        shoppinglistPageComponent.instance().deleteShoppinglist("House warming", 8);
+        moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/8', {
+            status: 408,
+            response: {message: "Invalid token. Please register or login"}
+        })
+        moxios.wait(function () {
+            expect(shoppinglistPageComponent.find('ToastContainer').text()).toContain("Invalid token");
+            done();
+        })
+
+    })
+    it('Toast has an error when delete a shoppinglist', () => {
+        const shoppinglistPageComponent = mount(<ShoppinglistPage />);
+        shoppinglistPageComponent.instance().deleteShoppinglist("House warming", 8);
+        moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/8', {
+            status: 404,
+            response: {message: "No such shoppinglist"}
+        })
+        moxios.wait(function () {
+            expect(shoppinglistPageComponent.find('ToastContainer').text()).toContain("No such shoppinglist");
+            done();
+        })
+
+    })
+    it('Calls editShoppinglist when handleEditShoppinglist is invoked', () => {
+        const editShoppinglistSpy = sinon.spy(ShoppinglistPage.prototype, 'editShoppinglist')
+        const shoppinglistPageComponent = mount(<ShoppinglistPage />);
+        shoppinglistPageComponent.instance().handleEditShoppinglist("House warming", 8);
+        moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/8', {
+            status: 200,
+            response: { name: "House warming", id: 8, created_by: 2 }
+        })
+        moxios.wait(function () {
+            expect(editShoppinglistSpy.calledOnce()).toEqual(true);
+            done();
+        })
+
+    })
+    it(' Redirects to login when handleEditShoppinglist is invoked and session has timed out', () => {
+        const shoppinglistPageComponent = mount(<ShoppinglistPage />);
+        shoppinglistPageComponent.instance().handleEditShoppinglist("House warming", 8);
+        moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/8', {
+            status: 408,
+            response: {message: "Invalid token. Please register or login"}
+        })
+        moxios.wait(function () {
+            expect(shoppinglistPageComponent.find('ToastContainer').text()).toContain("Invalid token");
+            done();
+        })
+
+    })
+    
+    it('Toast has name of shoppinglist when succesfully edited', (done) => {
+        const shoppinglistPageComponent = mount(<ShoppinglistPage />);
+        shoppinglistPageComponent.instance().editShoppinglist("House warming", 8);
+        moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/8', {
+            status: 200,
+            response: { name: "House warming", id: 8, created_by: 2 }
+        })
+        moxios.wait(function () {
+            expect(shoppinglistPageComponent.find('ToastContainer').text()).toContain("House warming");
+            done();
         })
     })
-    it('Toast has an error when you submit a list that exists when editing', () => {
-        const baseProps = {
-            onFormSubmit: jest.fn(),
-        }
-        const shoppingFormComponent = shallow(<ShoppinglistForm {...baseProps} />)
-        const toastContainer = shallow(<ToastContainer />)
-        axios.post('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/', {
-            name: 'market'
+    it('Toast has an error message when there is an error in edit response', (done) => {
+        const shoppinglistPageComponent = mount(<ShoppinglistPage />);
+        shoppinglistPageComponent.instance().editShoppinglist('Furniture', 7);
+        moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/7', {
+            status: 409,
+            response: { message: "List name already exists" }
         })
-        axios.post('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/', {
-            name: 'soko'
-        })
-        const editBtn = shoppingFormComponent.find("#update_create")
-
-        shoppingFormComponent.setState({ name: 'soko' })
-
-        editBtn.simulate('click', { preventDefault() { } })
         moxios.wait(function () {
-            let request = moxios.request.mostRecent()
-            request.respondWith({
-                status: 200,
-                respondText: { name: "Error" }
-            }).then(function () {
-                expect(<Shoppinglist />).toHaveLength(1)
-                expect(toastContainer.contains('List name already exists. Please use different name')).to.equal(true)
-
-            })
+            expect(shoppinglistPageComponent.find('ToastContainer').text()).toContain("List name already exists");
+            done();
         })
     })
 
+    it('Calls postShoppinglist when running handelShoppinglistNameSubmit', (done) => {
+        const postShoppinglistSpy = sinon.spy(ShoppinglistPage.prototype, "postShoppinglist")
+        const shoppinglistPageComponent = mount(<ShoppinglistPage />);
+        shoppinglistPageComponent.instance().handelShoppinglistNameSubmit('Furniture');
+        moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/', {
+            status: 200,
+            response: { name: "Furniture", id: 7 }
+        })
+        moxios.wait(function () {
+            expect(postShoppinglistSpy.calledOnce).toEqual(true);
+            done();
+        })
+    })
     it('Shoppinglist is created when postShoppinglist is successful ', (done) => {
         const shoppinglistPageComponent = mount(<ShoppinglistPage />);
         shoppinglistPageComponent.instance().postShoppinglist("Soko");
         moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/', {
             status: 200,
-            responseText: { name: "Soko", id: 2 }
+            response: { name: "Soko", id: 2 }
         })
         moxios.wait(function () {
             expect(shoppinglistPageComponent.find('ToastContainer').text()).toContain("Shoppinglist Soko created");
@@ -134,7 +169,7 @@ describe('<ShoppinglistPage/> components', () => {
         shoppinglistPageComponent.instance().postShoppinglist("Furniture");
         moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/', {
             status: 400,
-            responseText: { message: "Shoppinglist with the same name exists" }
+            response: { message: "Shoppinglist with the same name exists" }
         })
         moxios.wait(function () {
             expect(shoppinglistPageComponent.find('ToastContainer').text()).toContain("Shoppinglist with the same name exists");
@@ -142,21 +177,6 @@ describe('<ShoppinglistPage/> components', () => {
         })
 
     })
-
-    // it('Returns searched shoppinglist when calling handleSearchShoppinglist ', (done) => {
-    //     const shoppinglistPageComponent = mount(<ShoppinglistPage />);
-    //     shoppinglistPageComponent.instance().handleSearchShoppinglist("Soko");
-    //     moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/?q=Soko', {
-    //         status: 200,
-    //         responseText: { name: "Soko", id: 2, created_by: 2 }
-    //     })
-    //     moxios.wait(function () {
-    //         console.log(shoppinglistPageComponent.find('Shoppinglist').text())
-    //         expect(shoppinglistPageComponent.find('Shoppinglist').html()).toContain( "Soko");
-    //         done();
-    //     })
-
-    // })
     it('Changes state when search is successful ', (done) => {
         const shoppinglistPageComponent = mount(<ShoppinglistPage />);
         shoppinglistPageComponent.instance().handleSearchShoppinglist("Soko");
@@ -196,23 +216,16 @@ describe('<ShoppinglistPage/> components', () => {
             done();
         })
     })
-    // it('toast has an information message when state previous_page = None ', (done) => {
-    //     const shoppinglistPageComponent = mount(<ShoppinglistPage />);
-    //     shoppinglistPageComponent.setState({ previous_page: "None"  });
-    //     shoppinglistPageComponent.instance().getPreviousPage();
-    //     expect(shoppinglistPageComponent.find('ToastContainer')).toContain('There are no shoppinglist in previous page');
-
-    // })
     it('function getPreviousPage returns a response ', (done) => {
         const shoppinglistPageComponent = mount(<ShoppinglistPage />);
-        shoppinglistPageComponent.setState({ previous_page: "/shoppinglists/?limit=2&page=2"  });
+        shoppinglistPageComponent.setState({ previous_page: "/shoppinglists/?limit=2&page=2" });
         shoppinglistPageComponent.instance().getPreviousPage();
         moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/?limit=2&page=2', {
             status: 200,
-            responseText: {next_page: "/shoppinglists/?limit=2&page=3", previous_page: "/shoppinglists/?limit=2&page=1", shopping_lists: [{id: 24, name: "Supper"},{id: 26, name: "Lunch"}]}
+            responseText: { next_page: "/shoppinglists/?limit=2&page=3", previous_page: "/shoppinglists/?limit=2&page=1", shopping_lists: [{ id: 24, name: "Supper" }, { id: 26, name: "Lunch" }] }
         })
         moxios.wait(function () {
-            expect(shoppinglistPageComponent.instance().state.shoppinglists).toEqual([ { id: 24, name: 'Supper' }, { id: 26, name: 'Lunch' } ])
+            expect(shoppinglistPageComponent.instance().state.shoppinglists).toEqual([{ id: 24, name: 'Supper' }, { id: 26, name: 'Lunch' }])
             done();
         })
 
@@ -224,7 +237,7 @@ describe('<ShoppinglistPage/> components', () => {
 
         moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/?limit=2', {
             status: 200,
-            responseText: { next_page: "/shoppinglists/?limit=2&page=2", previous_page: "None", shopping_lists: [{id: 4, name: "Soko"},{id: 10, name: "Shagz"}] }
+            responseText: { next_page: "/shoppinglists/?limit=2&page=2", previous_page: "None", shopping_lists: [{ id: 4, name: "Soko" }, { id: 10, name: "Shagz" }] }
         })
         expect(getPreviousPageSpy.calledOnce).toEqual(true);
     })
@@ -235,20 +248,20 @@ describe('<ShoppinglistPage/> components', () => {
 
         moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/?limit=2', {
             status: 200,
-            responseText: { next_page: "/shoppinglists/?limit=2&page=2", previous_page: "None", shopping_lists: [{id: 4, name: "Soko"},{id: 10, name: "Shagz"}] }
+            responseText: { next_page: "/shoppinglists/?limit=2&page=2", previous_page: "None", shopping_lists: [{ id: 4, name: "Soko" }, { id: 10, name: "Shagz" }] }
         })
         expect(getNextPageSpy.calledOnce).toEqual(true);
     })
     it('function getNext returns a response ', (done) => {
         const shoppinglistPageComponent = mount(<ShoppinglistPage />);
-        shoppinglistPageComponent.setState({ next_page: "/shoppinglists/?limit=2&page=2"  });
+        shoppinglistPageComponent.setState({ next_page: "/shoppinglists/?limit=2&page=2" });
         shoppinglistPageComponent.instance().getNextPage();
         moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/?limit=2&page=2', {
             status: 200,
-            responseText: {next_page: "/shoppinglists/?limit=2&page=3", previous_page: "/shoppinglists/?limit=2&page=1", shopping_lists: [{id: 24, name: "Dinner"},{id: 26, name: "House party"}]}
+            responseText: { next_page: "/shoppinglists/?limit=2&page=3", previous_page: "/shoppinglists/?limit=2&page=1", shopping_lists: [{ id: 24, name: "Dinner" }, { id: 26, name: "House party" }] }
         })
         moxios.wait(function () {
-            expect(shoppinglistPageComponent.instance().state.shoppinglists).toEqual([ { id: 24, name: 'Dinner' }, { id: 26, name: 'House party' } ])
+            expect(shoppinglistPageComponent.instance().state.shoppinglists).toEqual([{ id: 24, name: 'Dinner' }, { id: 26, name: 'House party' }])
             done();
         })
 
@@ -260,7 +273,7 @@ describe('<ShoppinglistPage/> components', () => {
 
         moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/?limit=2', {
             status: 200,
-            responseText: { next_page: "/shoppinglists/?limit=2&page=2", previous_page: "None", shopping_lists: [{id: 4, name: "Soko"},{id: 10, name: "Shagz"}] }
+            responseText: { next_page: "/shoppinglists/?limit=2&page=2", previous_page: "None", shopping_lists: [{ id: 4, name: "Soko" }, { id: 10, name: "Shagz" }] }
         })
         expect(limitShoppinglistsSpy.calledOnce).toEqual(true);
     })
@@ -270,17 +283,17 @@ describe('<ShoppinglistPage/> components', () => {
 
         moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/?limit=2', {
             status: 200,
-            responseText: { next_page: "/shoppinglists/?limit=2&page=2", previous_page: "None", shopping_lists: [{id: 4, name: "Soko"},{id: 10, name: "Shagz"}] }
+            responseText: { next_page: "/shoppinglists/?limit=2&page=2", previous_page: "None", shopping_lists: [{ id: 4, name: "Soko" }, { id: 10, name: "Shagz" }] }
         })
 
         moxios.wait(function () {
             // console.log(shoppinglistPageComponent.instance().state);
-            expect(shoppinglistPageComponent.instance().state.shoppinglists).toEqual([{id: 4, name: "Soko"},{id: 10, name: "Shagz"}]);
+            expect(shoppinglistPageComponent.instance().state.shoppinglists).toEqual([{ id: 4, name: "Soko" }, { id: 10, name: "Shagz" }]);
             done();
         })
 
     })
-    
+
     it('Toast container has an error when calling limitShoppinglists', (done) => {
         const shoppinglistPageComponent = mount(<ShoppinglistPage />);
         shoppinglistPageComponent.instance().limitShoppinglists(-1);
