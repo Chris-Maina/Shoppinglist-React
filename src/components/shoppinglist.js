@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
 import Container from 'muicss/lib/react/container';
 import Row from 'muicss/lib/react/row';
 import Col from 'muicss/lib/react/col';
@@ -18,7 +17,7 @@ import { Route} from 'react-router-dom';
 export class ShoppinglistPage extends Component {
     constructor(props) {
         super(props);
-        this.state = { shoppinglists: [], next_page: '', previous_page: '', redirect: false };
+        this.state = { shoppinglists: [], next_page: '', previous_page: '' };
         this.getShoppinglists = this.getShoppinglists.bind(this);
         this.handleDeleteShoppinglist = this.handleDeleteShoppinglist.bind(this);
         this.deleteShoppinglist = this.deleteShoppinglist.bind(this);
@@ -184,13 +183,13 @@ export class ShoppinglistPage extends Component {
                     return <Route exact ={true} path="/shoppinglists/" component={requireLogin(ShoppinglistPage)} />
                 }
             } 
-            // else if (error.request) {
-            //     // The request was made but no response was received
-            //     console.log(error.request);
-            // } else {
-            //     // Something happened in setting up the request that triggered an Error
-            //     console.log('Error', error.message);
-            // }
+            else if (error.request) {
+                // The request was made but no response was received
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+            }
         });
     }
     handleSearchShoppinglist (searchText) {
@@ -207,7 +206,6 @@ export class ShoppinglistPage extends Component {
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             }
         }).then((response) => {
-            console.log(response.data)
             this.setState({
                 shoppinglists: response.data,
             });
@@ -223,13 +221,13 @@ export class ShoppinglistPage extends Component {
                     return <Route exact ={true} path="/shoppinglists/" component={requireLogin(ShoppinglistPage)} />
                 }
             } 
-            // else if (error.request) {
-            //     // The request was made but no response was received
-            //     console.log(error.request);
-            // } else {
-            //     // Something happened in setting up the request that triggered an Error
-            //     console.log('Error', error.message);
-            // }
+            else if (error.request) {
+                // The request was made but no response was received
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+            }
         });
     }
     handlePrevClick () {
@@ -268,13 +266,13 @@ export class ShoppinglistPage extends Component {
                     return <Route exact ={true} path="/shoppinglists/" component={requireLogin(ShoppinglistPage)} />
                 }
             } 
-            // else if (error.request) {
-            //     // The request was made but no response was received
-            //     console.log(error.request);
-            // } else {
-            //     // Something happened in setting up the request that triggered an Error
-            //     console.log('Error', error.message);
-            // }
+            else if (error.request) {
+                // The request was made but no response was received
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+            }
         });
     }
     handleNextClick () {
@@ -312,13 +310,13 @@ export class ShoppinglistPage extends Component {
                     return <Route exact ={true} path="/shoppinglists/" component={requireLogin(ShoppinglistPage)} />
                 }
             } 
-            // else if (error.request) {
-            //     // The request was made but no response was received
-            //     console.log(error.request);
-            // } else {
-            //     // Something happened in setting up the request that triggered an Error
-            //     console.log('Error', error.message);
-            // }
+            else if (error.request) {
+                // The request was made but no response was received
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+            }
         });
     }
 
@@ -353,22 +351,16 @@ export class ShoppinglistPage extends Component {
                     return <Route exact ={true} path="/shoppinglists/" component={requireLogin(ShoppinglistPage)} />
                 }
             } 
-            // else if (error.request) {
-            //     // The request was made but no response was received
-            //     console.log(error.request);
-            // } else {
-            //     // Something happened in setting up the request that triggered an Error
-            //     console.log('Error', error.message);
-            // }
+            else if (error.request) {
+                // The request was made but no response was received
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+            }
         });
     }
     render() {
-        const redirect = this.state.redirect;
-        if(redirect){
-            return(
-                <Redirect to="/auth/login/" />
-            );
-        }
         return (
             <div>
                 <Navigation />
