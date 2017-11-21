@@ -11,6 +11,7 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { Navigation } from './navbar';
+import requireLogin from './authenticate';
 
 class ShoppingItemsPage extends Component {
     constructor(props) {
