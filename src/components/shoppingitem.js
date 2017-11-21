@@ -59,7 +59,11 @@ class ShoppingItemsPage extends Component {
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
-                toast.error(error.response.data.message)
+                toast.error(error.response.data.message);
+                if(error.response.status === 408){
+                    window.localStorage.removeItem('token');
+                    return requireLogin(ShoppingItemsPage)
+                }
             } else if (error.request) {
                 // The request was made but no response was received
                 console.log(error.request);
@@ -97,7 +101,11 @@ class ShoppingItemsPage extends Component {
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
-                toast.error(error.response.data.message)
+                toast.error(error.response.data.message);
+                if(error.response.status === 408){
+                    window.localStorage.removeItem('token');
+                    return requireLogin(ShoppingItemsPage)
+                }
             } else if (error.request) {
                 // The request was made but no response was received
                 console.log(error.request);
@@ -136,8 +144,11 @@ class ShoppingItemsPage extends Component {
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
-                console.log(error.response.data);
-                toast.error(error.response.data.message)
+                toast.error(error.response.data.message);
+                if(error.response.status === 408){
+                    window.localStorage.removeItem('token');
+                    return requireLogin(ShoppingItemsPage)
+                }
             } else if (error.request) {
                 // The request was made but no response was received
                 console.log(error.request);
@@ -171,7 +182,11 @@ class ShoppingItemsPage extends Component {
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
-                toast.error(error.response.data.message)
+                toast.error(error.response.data.message);
+                if(error.response.status === 408){
+                    window.localStorage.removeItem('token');
+                    return requireLogin(ShoppingItemsPage);
+                }
             } else if (error.request) {
                 // The request was made but no response was received
                 console.log(error.request);
@@ -205,7 +220,11 @@ class ShoppingItemsPage extends Component {
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
-                toast.error(error.response.data.message)
+                toast.error(error.response.data.message);
+                if(error.response.status === 408){
+                    window.localStorage.removeItem('token');
+                    return requireLogin(ShoppingItemsPage)
+                }
             } else if (error.request) {
                 // The request was made but no response was received
                 console.log(error.request);
@@ -240,7 +259,11 @@ class ShoppingItemsPage extends Component {
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
-                toast.error(error.response.data.message)
+                toast.error(error.response.data.message);
+                if(error.response.status === 408){
+                    window.localStorage.removeItem('token');
+                    return requireLogin(ShoppingItemsPage)
+                }
             } else if (error.request) {
                 // The request was made but no response was received
                 console.log(error.request);
@@ -282,7 +305,11 @@ class ShoppingItemsPage extends Component {
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
-                toast.error(error.response.data.message)
+                toast.error(error.response.data.message);
+                if(error.response.status === 408){
+                    window.localStorage.removeItem('token');
+                    return requireLogin(ShoppingItemsPage)
+                }
             } else if (error.request) {
                 // The request was made but no response was received
                 console.log(error.request);
@@ -322,7 +349,11 @@ class ShoppingItemsPage extends Component {
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
-                toast.error(error.response.data.message)
+                toast.error(error.response.data.message);
+                if(error.response.status === 408){
+                    window.localStorage.removeItem('token');
+                    return requireLogin(ShoppingItemsPage);
+                }
             } else if (error.request) {
                 // The request was made but no response was received
                 console.log(error.request);
