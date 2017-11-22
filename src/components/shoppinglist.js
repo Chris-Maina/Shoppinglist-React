@@ -34,7 +34,7 @@ export class ShoppinglistPage extends Component {
         this.handleLimitShoppinglists = this.handleLimitShoppinglists.bind(this);
         this.limitShoppinglists = this.limitShoppinglists.bind(this);
     }
-    componentDidMount() {
+    componentWillMount() {
         this.getShoppinglists();
     }
     getShoppinglists () {
@@ -61,7 +61,7 @@ export class ShoppinglistPage extends Component {
                 toast.error(error.response.data.message)
                 if(error.response.status === 408){
                     window.localStorage.removeItem('token');
-                    return requireLogin(ShoppinglistPage)
+                    return <Route exact ={true} path="/shoppinglists/" component={requireLogin(ShoppinglistPage)} />
                 }
             } else if (error.request) {
                 // The request was made but no response was received
