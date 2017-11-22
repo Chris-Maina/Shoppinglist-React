@@ -77,14 +77,12 @@ class UserProfile extends Component {
             },
             data: data
         }).then((response) => {
-            console.log(response.data);
             toast.success("Profile updated ");
             return response.data;
         }).catch(function (error) {
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
-                console.log(error.response.data);
                 toast.error(error.response.data.message)
             } else if (error.request) {
                 // The request was made but no response was received
@@ -113,12 +111,12 @@ class UserProfile extends Component {
                                                 trigger={<Button size="small" className="black yellow-text" waves='light' >
                                                     Update profile
                                     </Button>}
-                                                header={<h4 className="mui--text-center black-text">Change Email or Password</h4>}>
+                                                header={<h4 className="mui--text-center teal-text">Change Email or Password</h4>}>
                                                 <Row >
                                                     <Form onSubmit={this.handleSubmit}>
                                                         <Input label="Email" className="black-text" validate type='email' name="email" value={this.state.email} onChange={this.onInputChange} ><Icon>email</Icon></Input>
                                                         <Input label="Password" className="black-text" validate type='password' name="password" value={this.state.password} onChange={this.onInputChange} ><Icon>lock</Icon></Input><br />
-                                                        <Button size="small" className="red" waves='light'>Update </Button>
+                                                        <Button size="small" waves='light'>Update </Button>
                                                     </Form>
                                                 </Row>
                                             </Modal>
