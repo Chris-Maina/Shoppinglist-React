@@ -27,8 +27,8 @@ describe('<ShoppinglistPage/> components', () => {
         const shoppinglist = shallow(<Shoppinglist name="Furniture" />)
         expect(shoppinglist.instance().props.name).toEqual("Furniture");
     })
-    it('calls componentDidMount', () => {
-        const testMountCall = sinon.spy(ShoppinglistPage.prototype, 'componentDidMount');
+    it('calls componentWillMount', () => {
+        const testMountCall = sinon.spy(ShoppinglistPage.prototype, 'componentWillMount');
         const wrapper = shallow(<ShoppinglistPage />);
         expect(testMountCall.calledOnce).toEqual(true);
     });
