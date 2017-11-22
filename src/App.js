@@ -10,6 +10,7 @@ import UserProfile from './components/user_profile';
 import ForgotPassword from './components/forgot_password';
 import SubmitPassword from './components/submit_password';
 import requireLogin from './components/authenticate';
+import NoContent from './components/nocontent';
 import './App.css';
 
 class App extends Component {
@@ -28,7 +29,8 @@ class App extends Component {
         <Route path="/auth/login/" component={LoginForm} />
         <Route exact={true} path="/user" component={requireLogin(UserProfile)} />
         <Route exact ={true} path="/shoppinglists/" component={requireLogin(ShoppinglistPage)} />
-        <Route path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
+        <Route exact ={true} path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
+        <Route exact ={true} path="*" component={NoContent}/>
         </Switch>
       </div>
     );
