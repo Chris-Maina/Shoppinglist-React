@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Route} from 'react-router-dom';
 import Container from 'muicss/lib/react/container';
 import Row from 'muicss/lib/react/row';
 import Col from 'muicss/lib/react/col';
@@ -34,7 +35,7 @@ class ShoppingItemsPage extends Component {
         this.handlePrevClick = this.handlePrevClick.bind(this);
         this.getPreviousPage = this.getPreviousPage.bind(this);
     }
-    componentDidMount() {
+    componentWillMount() {
         this.getShoppinglistsItems();
     }
     getShoppinglistsItems() {
@@ -63,7 +64,7 @@ class ShoppingItemsPage extends Component {
                 toast.error(error.response.data.message);
                 if(error.response.status === 408){
                     window.localStorage.removeItem('token');
-                    return requireLogin(ShoppingItemsPage)
+                    return <Route path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
                 }
             } else if (error.request) {
                 // The request was made but no response was received
@@ -105,7 +106,7 @@ class ShoppingItemsPage extends Component {
                 toast.error(error.response.data.message);
                 if(error.response.status === 408){
                     window.localStorage.removeItem('token');
-                    return requireLogin(ShoppingItemsPage)
+                    return <Route path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
                 }
             } else if (error.request) {
                 // The request was made but no response was received
@@ -148,7 +149,7 @@ class ShoppingItemsPage extends Component {
                 toast.error(error.response.data.message);
                 if(error.response.status === 408){
                     window.localStorage.removeItem('token');
-                    return requireLogin(ShoppingItemsPage)
+                    return <Route path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
                 }
             } else if (error.request) {
                 // The request was made but no response was received
@@ -186,7 +187,7 @@ class ShoppingItemsPage extends Component {
                 toast.error(error.response.data.message);
                 if(error.response.status === 408){
                     window.localStorage.removeItem('token');
-                    return requireLogin(ShoppingItemsPage);
+                    return <Route path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
                 }
             } else if (error.request) {
                 // The request was made but no response was received
@@ -224,7 +225,7 @@ class ShoppingItemsPage extends Component {
                 toast.error(error.response.data.message);
                 if(error.response.status === 408){
                     window.localStorage.removeItem('token');
-                    return requireLogin(ShoppingItemsPage)
+                    return <Route path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
                 }
             } else if (error.request) {
                 // The request was made but no response was received
@@ -263,7 +264,7 @@ class ShoppingItemsPage extends Component {
                 toast.error(error.response.data.message);
                 if(error.response.status === 408){
                     window.localStorage.removeItem('token');
-                    return requireLogin(ShoppingItemsPage)
+                    return <Route path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
                 }
             } else if (error.request) {
                 // The request was made but no response was received
@@ -309,7 +310,7 @@ class ShoppingItemsPage extends Component {
                 toast.error(error.response.data.message);
                 if(error.response.status === 408){
                     window.localStorage.removeItem('token');
-                    return requireLogin(ShoppingItemsPage)
+                    return <Route path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
                 }
             } else if (error.request) {
                 // The request was made but no response was received
@@ -353,7 +354,7 @@ class ShoppingItemsPage extends Component {
                 toast.error(error.response.data.message);
                 if(error.response.status === 408){
                     window.localStorage.removeItem('token');
-                    return requireLogin(ShoppingItemsPage);
+                    return <Route path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
                 }
             } else if (error.request) {
                 // The request was made but no response was received
