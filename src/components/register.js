@@ -81,10 +81,9 @@ export class RegisterForm extends Component {
     sendRequest(email, password) {
         var data = { "email": email, "password": password }
         // const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-        const url = 'https://shoppinglist-restful-api.herokuapp.com/auth/register/';
         axios({
             method: "post",
-            url: url,
+            url: '/auth/register/',
             headers: {
                 'Content-Type': 'application/json',
             },

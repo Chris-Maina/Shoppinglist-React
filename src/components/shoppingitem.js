@@ -41,10 +41,9 @@ class ShoppingItemsPage extends Component {
     getShoppinglistsItems() {
         // Send GET request
         // this.props.match.url = /shoppinglists/4/items from shoppinglist file
-        const url = 'https://shoppinglist-restful-api.herokuapp.com' + this.props.match.url;
         axios({
             method: "get",
-            url: url,
+            url: this.props.match.url,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
@@ -85,10 +84,9 @@ class ShoppingItemsPage extends Component {
             price: item.price,
             quantity: item.quantity
         }
-        const url = 'https://shoppinglist-restful-api.herokuapp.com' + this.props.match.url;
         axios({
             method: "post",
-            url: url,
+            url: this.props.match.url,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
@@ -128,10 +126,9 @@ class ShoppingItemsPage extends Component {
             price: item.price,
             quantity: item.quantity
         }
-        const url = 'https://shoppinglist-restful-api.herokuapp.com' + this.props.match.url + '/' + item.item_id;
         axios({
             method: "put",
-            url: url,
+            url: this.props.match.url + '/' + item.item_id,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
@@ -166,10 +163,9 @@ class ShoppingItemsPage extends Component {
     }
     deleteItem(shoppingitem, item_id) {
         var data = { name: shoppingitem }
-        const url = 'https://shoppinglist-restful-api.herokuapp.com' + this.props.match.url + '/' + item_id;
         axios({
             method: "delete",
-            url: url,
+            url: this.props.match.url + '/' + item_id,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
@@ -203,10 +199,9 @@ class ShoppingItemsPage extends Component {
     }
     searchShoppingItem(searchtext) {
         // Send GET request
-        const url = 'https://shoppinglist-restful-api.herokuapp.com' + this.props.match.url + '?q=' + searchtext;
         axios({
             method: "get",
-            url: url,
+            url: this.props.match.url + '?q=' + searchtext,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
@@ -241,10 +236,9 @@ class ShoppingItemsPage extends Component {
     }
     limitShoppingItems(limitValue) {
         // Send GET request with limit parameter
-        const url = 'https://shoppinglist-restful-api.herokuapp.com' + this.props.match.url + '?limit=' + limitValue;
         axios({
             method: "get",
-            url: url,
+            url: this.props.match.url + '?limit=' + limitValue,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
@@ -286,10 +280,9 @@ class ShoppingItemsPage extends Component {
         if (next_page_url === 'None') {
             return toast.info("There are no shoppingitems in next page");
         }
-        const url = 'https://shoppinglist-restful-api.herokuapp.com' + next_page_url;
         axios({
             method: "get",
-            url: url,
+            url: next_page_url,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
@@ -332,10 +325,9 @@ class ShoppingItemsPage extends Component {
         if (prev_page_url === 'None') {
             return toast.info("There are no shoppingitems in previous page");
         }
-        const url = 'https://shoppinglist-restful-api.herokuapp.com' + prev_page_url;
         axios({
             method: "get",
-            url: url,
+            url: prev_page_url,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')

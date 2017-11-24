@@ -37,10 +37,9 @@ export class LoginForm extends Component {
 
     sendRequest(email, password) {
         var data = { "email": email, "password": password };
-        const url = 'https://shoppinglist-restful-api.herokuapp.com/auth/login/';
         axios({
             method: "post",
-            url: url,
+            url: `/auth/login/`,
             headers: {
                 'Content-Type': 'application/json',
             },

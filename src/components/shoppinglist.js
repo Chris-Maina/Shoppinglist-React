@@ -39,10 +39,9 @@ export class ShoppinglistPage extends Component {
     }
     getShoppinglists () {
         // Send GET request
-        const url = 'https://shoppinglist-restful-api.herokuapp.com/shoppinglists/';
         axios({
             method: "get",
-            url: url,
+            url: `/shoppinglists/`,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
@@ -79,10 +78,9 @@ export class ShoppinglistPage extends Component {
     deleteShoppinglist (shoppinglistname, sl_id) {
         // DELETE
         var data = { name: shoppinglistname };
-        const url = 'https://shoppinglist-restful-api.herokuapp.com/shoppinglists/' + sl_id;
         axios({
             method: "delete",
-            url: url,
+            url: `/shoppinglists/` + sl_id,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
@@ -119,10 +117,9 @@ export class ShoppinglistPage extends Component {
     editShoppinglist (shoppinglistname, sl_id) {
         // PUT
         var data = { name: shoppinglistname };
-        const url = 'https://shoppinglist-restful-api.herokuapp.com/shoppinglists/' + sl_id;
         axios({
             method: "put",
-            url: url,
+            url: `/shoppinglists/` + sl_id,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
@@ -159,10 +156,9 @@ export class ShoppinglistPage extends Component {
     postShoppinglist (shoppinglistname) {
         // Send POST request
         var data = { name: shoppinglistname };
-        const url = 'https://shoppinglist-restful-api.herokuapp.com/shoppinglists/';
         axios({
             method: "post",
-            url: url,
+            url: `/shoppinglists/`,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
@@ -197,10 +193,9 @@ export class ShoppinglistPage extends Component {
     }
     searchShoppinglist (searchText) {
         // Send GET request
-        const url = 'https://shoppinglist-restful-api.herokuapp.com/shoppinglists/?q=' + searchText;
         axios({
             method: "get",
-            url: url,
+            url: `/shoppinglists/?q=` + searchText,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
@@ -236,14 +231,12 @@ export class ShoppinglistPage extends Component {
     getPreviousPage () {
         // Send GET request with parameter page
         const prev_page_url = this.state.previous_page;
-
         if (prev_page_url === 'None') {
             return toast.info("There are no shoppinglist in previous page");
         }
-        const url = 'https://shoppinglist-restful-api.herokuapp.com' + prev_page_url;
         axios({
             method: "get",
-            url: url,
+            url: prev_page_url,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
@@ -285,10 +278,9 @@ export class ShoppinglistPage extends Component {
         if (next_page_url === 'None') {
             return toast.info("There are no shoppinglist in next page");
         }
-        const url = 'https://shoppinglist-restful-api.herokuapp.com' + next_page_url;
         axios({
             method: "get",
-            url: url,
+            url: next_page_url,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
@@ -325,10 +317,9 @@ export class ShoppinglistPage extends Component {
     }
     limitShoppinglists (limitValue) {
         // Send GET request with limit parameter
-        const url = 'https://shoppinglist-restful-api.herokuapp.com/shoppinglists/?limit=' + limitValue;
         axios({
             method: "get",
-            url: url,
+            url: `/shoppinglists/?limit=` + limitValue,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
