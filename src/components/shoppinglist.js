@@ -12,12 +12,13 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import { Navigation } from './navbar';
 import requireLogin from './authenticate';
 import { Route} from 'react-router-dom';
+import { Spinner } from './spinner';
 
 
 export class ShoppinglistPage extends Component {
     constructor(props) {
         super(props);
-        this.state = { shoppinglists: [], next_page: '', previous_page: '' };
+        this.state = { shoppinglists: [], next_page: '', previous_page: '', isLoading: false };
         this.getShoppinglists = this.getShoppinglists.bind(this);
         this.handleDeleteShoppinglist = this.handleDeleteShoppinglist.bind(this);
         this.deleteShoppinglist = this.deleteShoppinglist.bind(this);
@@ -35,6 +36,7 @@ export class ShoppinglistPage extends Component {
         this.limitShoppinglists = this.limitShoppinglists.bind(this);
     }
     componentWillMount() {
+        this.setState({ isLoading: true });
         this.getShoppinglists();
     }
     getShoppinglists () {
@@ -47,6 +49,7 @@ export class ShoppinglistPage extends Component {
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             }
         }).then((response) => {
+            this.setState({ isLoading: false });
             this.setState({
                 shoppinglists: response.data.shopping_lists,
                 next_page: response.data.next_page,
@@ -352,13 +355,14 @@ export class ShoppinglistPage extends Component {
         });
     }
     render() {
+        const isLoading = this.state.isLoading;
         return (
             <div>
                 <Navigation />
                 <div className="pagecontent">
+                { isLoading? <Spinner/>: 
                     <Container  >
                         <ToastContainer />
-
                         <ToggleableShoppingForm
                             formSubmit={this.handelShoppinglistNameSubmit}
                             onSearchSubmit={this.handleSearchShoppinglist}
@@ -373,6 +377,7 @@ export class ShoppinglistPage extends Component {
                             onPrevClick={this.handlePrevClick}
                             onNextClick={this.handleNextClick} />
                     </Container>
+                }
                 </div>
             </div>
         );
@@ -396,10 +401,12 @@ export class NextPreviousPage extends Component {
         return (
             <Row>
                 <Col md="6" className="center">
-                    <Button className='teal next_prev_btn'id="prevBtn" waves='light' size="small" onClick={this.handlePrevClick}>Previous Page</Button>
+                    { this.props.prev_page  === 'None'?'':
+                        <Button className='teal next_prev_btn'id="prevBtn" waves='light' size="small" onClick={this.handlePrevClick}>Previous Page</Button>}
                 </Col>
                 <Col md="6" className="center">
-                    <Button className='teal next_prev_btn' id="nextBtn" waves='light' size="small" onClick={this.handleNextClick}>Next Page</Button>
+                    { this.props.next_page === 'None'? '': 
+                         <Button className='teal next_prev_btn' id="nextBtn" waves='light' size="small" onClick={this.handleNextClick}>Next Page</Button>}
                 </Col>
             </Row>
         );

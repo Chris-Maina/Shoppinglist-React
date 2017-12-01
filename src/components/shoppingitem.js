@@ -13,13 +13,12 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { Navigation } from './navbar';
 import requireLogin from './authenticate';
+import { Spinner } from './spinner';
 
 class ShoppingItemsPage extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            shoppingitems: [], next_page: '', previous_page: ''
-        }
+        this.state = { shoppingitems: [], next_page: '', previous_page: '', isLoading: false }
         this.handleShoppingItemCreate = this.handleShoppingItemCreate.bind(this);
         this.createShoppingItem = this.createShoppingItem.bind(this);
         this.editShoppingItem = this.editShoppingItem.bind(this);
@@ -36,6 +35,7 @@ class ShoppingItemsPage extends Component {
         this.getPreviousPage = this.getPreviousPage.bind(this);
     }
     componentWillMount() {
+        this.setState({ isLoading: true });
         this.getShoppinglistsItems();
     }
     getShoppinglistsItems() {
@@ -49,6 +49,7 @@ class ShoppingItemsPage extends Component {
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             }
         }).then((response) => {
+            this.setState({ isLoading: false });
             this.setState({
                 shoppingitems: response.data.shopping_items,
                 next_page: response.data.next_page,
@@ -276,10 +277,6 @@ class ShoppingItemsPage extends Component {
     getNextPage() {
         // Send GET request with parameter page
         const next_page_url = this.state.next_page;
-
-        if (next_page_url === 'None') {
-            return toast.info("There are no shoppingitems in next page");
-        }
         axios({
             method: "get",
             url: next_page_url,
@@ -321,10 +318,6 @@ class ShoppingItemsPage extends Component {
     getPreviousPage() {
         // Send GET request with parameter page
         const prev_page_url = this.state.previous_page;
-
-        if (prev_page_url === 'None') {
-            return toast.info("There are no shoppingitems in previous page");
-        }
         axios({
             method: "get",
             url: prev_page_url,
@@ -359,10 +352,12 @@ class ShoppingItemsPage extends Component {
     }
 
     render() {
+        const isLoading = this.state.isLoading;
         return (
             <div>
                 <Navigation />
                 <div className="pagecontent">
+                { isLoading ? <Spinner/>: 
                     <Container >
                         <ToastContainer />
                         <ToggleShoppingItem
@@ -374,9 +369,12 @@ class ShoppingItemsPage extends Component {
                             onUpdateSubmit={this.handleUpdateItem}
                             onDeleteClick={this.handleDeleteItem} />
                         <NextPreviousPage
+                            next_page = {this.state.next_page}
+                            prev_page = {this.state.previous_page}
                             onPrevClick={this.handlePrevClick}
                             onNextClick={this.handleNextClick} />
                     </Container>
+                }
                 </div>
             </div>
         );
@@ -403,10 +401,12 @@ class NextPreviousPage extends Component {
         return (
             <Row>
                 <Col md="6" className="center">
-                    <Button className='teal next_prev_btn' waves='light' size="small" onClick={this.handlePrevClick}>Previous Page</Button>
+                { this.props.prev_page === 'None'? '':
+                    <Button className='teal next_prev_btn' waves='light' size="small" onClick={this.handlePrevClick}>Previous Page</Button>}
                 </Col>
                 <Col md="6" className="center">
-                    <Button className='teal next_prev_btn' waves='light' size="small" onClick={this.handleNextClick}>Next Page</Button>
+                {this.props.next_page === 'None'? '':
+                    <Button className='teal next_prev_btn' waves='light' size="small" onClick={this.handleNextClick}>Next Page</Button> }
                 </Col>
             </Row>
         );
