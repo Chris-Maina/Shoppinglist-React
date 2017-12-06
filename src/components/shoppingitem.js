@@ -64,7 +64,7 @@ class ShoppingItemsPage extends Component {
                 toast.error(error.response.data.message);
                 if(error.response.status === 408){
                     window.localStorage.removeItem('token');
-                    return <Route path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
+                    return <Route exact path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
                 }
             } else if (error.request) {
                 // The request was made but no response was received
@@ -80,7 +80,7 @@ class ShoppingItemsPage extends Component {
     }
     createShoppingItem(item) {
         // Send POST request
-        var data = {
+        let data = {
             name: item.shoppingitemname,
             price: item.price,
             quantity: item.quantity
@@ -105,7 +105,7 @@ class ShoppingItemsPage extends Component {
                 toast.error(error.response.data.message);
                 if(error.response.status === 408){
                     window.localStorage.removeItem('token');
-                    return <Route path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
+                    return <Route exact ={true} path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
                 }
             } else if (error.request) {
                 // The request was made but no response was received
@@ -147,7 +147,7 @@ class ShoppingItemsPage extends Component {
                 toast.error(error.response.data.message);
                 if(error.response.status === 408){
                     window.localStorage.removeItem('token');
-                    return <Route path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
+                    return <Route exact ={true} path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
                 }
             } else if (error.request) {
                 // The request was made but no response was received
@@ -184,7 +184,7 @@ class ShoppingItemsPage extends Component {
                 toast.error(error.response.data.message);
                 if(error.response.status === 408){
                     window.localStorage.removeItem('token');
-                    return <Route path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
+                    return <Route exact ={true} path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
                 }
             } else if (error.request) {
                 // The request was made but no response was received
@@ -208,7 +208,6 @@ class ShoppingItemsPage extends Component {
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             }
         }).then((response) => {
-            // console.log(response.data);
             this.setState({
                 shoppingitems: response.data
             });
@@ -221,7 +220,7 @@ class ShoppingItemsPage extends Component {
                 toast.error(error.response.data.message);
                 if(error.response.status === 408){
                     window.localStorage.removeItem('token');
-                    return <Route path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
+                    return <Route exact path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
                 }
             } else if (error.request) {
                 // The request was made but no response was received
@@ -259,7 +258,7 @@ class ShoppingItemsPage extends Component {
                 toast.error(error.response.data.message);
                 if(error.response.status === 408){
                     window.localStorage.removeItem('token');
-                    return <Route path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
+                    return <Route exact path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
                 }
             } else if (error.request) {
                 // The request was made but no response was received
@@ -300,7 +299,7 @@ class ShoppingItemsPage extends Component {
                 toast.error(error.response.data.message);
                 if(error.response.status === 408){
                     window.localStorage.removeItem('token');
-                    return <Route path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
+                    return <Route exact path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
                 }
             } else if (error.request) {
                 // The request was made but no response was received
@@ -339,7 +338,7 @@ class ShoppingItemsPage extends Component {
                 toast.error(error.response.data.message);
                 if(error.response.status === 408){
                     window.localStorage.removeItem('token');
-                    return <Route path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
+                    return <Route exact path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
                 }
             } else if (error.request) {
                 // The request was made but no response was received

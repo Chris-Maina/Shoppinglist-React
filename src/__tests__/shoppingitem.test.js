@@ -77,7 +77,7 @@ describe('ShoppingItemsPage component', () => {
     it('Creates a shopping item successfully', (done) => {
         const createItemSpy = sinon.spy(ShoppingItemsPage.prototype, 'createShoppingItem')
         const shoppingItemComponent = mount(<ShoppingItemsPage match={parentUrl} />);
-        let shoppingItem = {shoppingitemname:'Bread',price:20,quantity:2}
+        let shoppingItem = { shoppingitemname: 'Bread', price: 20, quantity: 2 }
         shoppingItemComponent.instance().handleShoppingItemCreate(shoppingItem);
         moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/1/items', {
             status: 200,
@@ -92,9 +92,9 @@ describe('ShoppingItemsPage component', () => {
             done();
         })
     })
-    it('Creates a shopping item successfully', (done) => {
+    it('Creates a shopping item unsuccessfully', (done) => {
         const shoppingItemComponent = mount(<ShoppingItemsPage match={parentUrl} />);
-        let shoppingItem = {shoppingitemname:'Bread!',price:20,quantity:2}
+        let shoppingItem = { shoppingitemname: 'Bread!', price: 20, quantity: 2 }
         shoppingItemComponent.instance().handleShoppingItemCreate(shoppingItem);
         moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/1/items', {
             status: 400,
@@ -107,4 +107,94 @@ describe('ShoppingItemsPage component', () => {
             done();
         })
     })
+});
+
+describe('Editing, delete test case scenarions', () => {
+    let shoppinglistPageComponent;
+    let parentUrl;
+    let shoppingItemComponent;
+    beforeEach(function () {
+        moxios.install();
+        // Create a shoppinglist
+        shoppinglistPageComponent = mount(<ShoppinglistPage />);
+        shoppinglistPageComponent.instance().handelShoppinglistNameSubmit('Furniture');
+        moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/', {
+            status: 200,
+            response: { name: "Furniture", id: 1 }
+        })
+        // URL for the shopping items page
+        parentUrl = { url: 'https://shoppinglist-restful-api.herokuapp.com/shoppinglists/1/items' };
+        // Mount the shopping items component
+        shoppingItemComponent = mount(<ShoppingItemsPage match={parentUrl} />);
+
+    });
+    afterEach(function () {
+        moxios.uninstall();
+    });
+    it('Updates/ edits a shopping item successfully', (done) => {
+        let editItemSpy = sinon.spy(ShoppingItemsPage.prototype, 'editShoppingItem')
+        const shoppingItemComponent = mount(<ShoppingItemsPage match={parentUrl} />);
+        let editedShoppingItem = { shoppingitemname: 'Milk', price: 20, quantity: 2, item_id: 8 }
+        shoppingItemComponent.instance().handleUpdateItem(editedShoppingItem);
+        moxios.stubRequest(parentUrl.url + '/' + editedShoppingItem.item_id, {
+            status: 200,
+            response: { message: "Successfully edited shopping item" }
+        })
+        shoppingItemComponent.setState({ isLoading: false });
+        moxios.wait(function () {
+            // Test method editShoppingItem is called
+            // Test toast message has the item name
+            expect(editItemSpy.calledOnce).toEqual(true);
+            expect(shoppingItemComponent.find('ToastContainer').text()).toContain("Successfully edited shopping item");
+            done();
+        })
+    });
+    it('Updates/edits a shopping item unsuccessfully', (done) => {
+        let editedShoppingItem = { shoppingitemname: 'Milk!', price: 20, quantity: 2, item_id: 8 }
+        shoppingItemComponent.instance().handleUpdateItem(editedShoppingItem);
+        moxios.stubRequest(parentUrl.url + '/' + editedShoppingItem.item_id, {
+            status: 400,
+            response: { message: "No special characters in name" }
+        })
+        shoppingItemComponent.setState({ isLoading: false });
+        moxios.wait(function () {
+            // Test toast message has an error message
+            expect(shoppingItemComponent.find('ToastContainer').text()).toContain("No special characters in name");
+            done();
+        })
+    });
+    it('Deletes a shopping item successfully', (done) => {
+        let deleteItemSpy = sinon.spy(ShoppingItemsPage.prototype, 'deleteItem')
+        const shoppingItemComponent = mount(<ShoppingItemsPage match={parentUrl} />);
+        shoppingItemComponent.instance().deleteItem('Bread', 8);
+        moxios.stubRequest(parentUrl.url + '/8', {
+            status: 200,
+            response: { message: "item Bread deleted" }
+        })
+        shoppingItemComponent.setState({ isLoading: false });
+        moxios.wait(function () {
+            // Test toast message has a success message
+            // Test method deleteItem is stored
+            expect(deleteItemSpy.calledOnce).toEqual(true);
+            expect(shoppingItemComponent.find('ToastContainer').text()).toContain("item Bread deleted");
+            done();
+        })
+    });
+    it('Searches for a shoppinglist successfully', (done) => {
+        let searchItemSpy = sinon.spy(ShoppingItemsPage.prototype, 'searchShoppingItem')
+        const shoppingItemComponent = mount(<ShoppingItemsPage match={parentUrl} />);
+        shoppingItemComponent.instance().searchShoppingItem('Bread');
+        moxios.stubRequest(parentUrl.url + '?q=Bread', {
+            status: 200,
+            response: { created_by: 2, id: 8, name: "Bread", price: 100, quantity: 9 }
+        })
+        shoppingItemComponent.setState({ isLoading: false });
+        moxios.wait(function () {
+            // Test state changes to contain data
+            expect(shoppingItemComponent.instance().state.shoppingitems).toEqual({ created_by: 2, id: 8, name: "Bread", price: 100, quantity: 9 });
+            done();
+        })
+
+    })
+
 });
