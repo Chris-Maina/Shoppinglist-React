@@ -2,7 +2,6 @@
   "name": "shoppinglist",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://shoppinglist-restful-api.herokuapp.com",
   "dependencies": {
     "axios": "^0.16.2",
     "es6-promise": "^4.1.1",
