@@ -8,7 +8,7 @@ import Form from 'muicss/lib/react/form';
 import Input from 'muicss/lib/react/input';
 import { Button } from 'react-materialize';
 import './shoppinglist.css';
-import axios from 'axios';
+import axiosConfig from './baseConfig';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { Navigation } from './navbar';
@@ -41,11 +41,10 @@ class ShoppingItemsPage extends Component {
     getShoppinglistsItems() {
         // Send GET request
         // this.props.match.url = /shoppinglists/4/items from shoppinglist file
-        axios({
+        axiosConfig.request({
             method: "get",
             url: this.props.match.url,
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             }
         }).then((response) => {
@@ -80,19 +79,17 @@ class ShoppingItemsPage extends Component {
     }
     createShoppingItem(item) {
         // Send POST request
-        let data = {
-            name: item.shoppingitemname,
-            price: item.price,
-            quantity: item.quantity
-        }
-        axios({
+        axiosConfig.request({
             method: "post",
             url: this.props.match.url,
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             },
-            data: data
+            data: {
+                name: item.shoppingitemname,
+                price: item.price,
+                quantity: item.quantity
+            }
         }).then((response) => {
             toast.success("Shoppingitem " + response.data.name + " created");
             // Get all shopping items
@@ -122,19 +119,17 @@ class ShoppingItemsPage extends Component {
     }
     editShoppingItem(item) {
         // send PUT request
-        var data = {
-            name: item.shoppingitemname,
-            price: item.price,
-            quantity: item.quantity
-        }
-        axios({
+        axiosConfig.request({
             method: "put",
-            url: this.props.match.url + '/' + item.item_id,
+            url: `${this.props.match.url}/${item.item_id}`,
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             },
-            data: data
+            data: {
+                name: item.shoppingitemname,
+                price: item.price,
+                quantity: item.quantity
+            }
         }).then((response) => {
             toast.success("Successfully edited shopping item ");
             // Get all shopping items
@@ -163,15 +158,13 @@ class ShoppingItemsPage extends Component {
         this.deleteItem(shoppingitem, item_id);
     }
     deleteItem(shoppingitem, item_id) {
-        var data = { name: shoppingitem }
-        axios({
+        axiosConfig.request({
             method: "delete",
-            url: this.props.match.url + '/' + item_id,
+            url: `${this.props.match.url}/${ item_id}`,
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             },
-            data: data
+            data: { name: shoppingitem }
         }).then((response) => {
             toast.success(response.data.message);
             // Get all shopping items
@@ -200,11 +193,10 @@ class ShoppingItemsPage extends Component {
     }
     searchShoppingItem(searchtext) {
         // Send GET request
-        axios({
+        axiosConfig.request({
             method: "get",
-            url: this.props.match.url + '?q=' + searchtext,
+            url: `${this.props.match.url}?q=${searchtext}`,
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             }
         }).then((response) => {
@@ -236,11 +228,10 @@ class ShoppingItemsPage extends Component {
     }
     limitShoppingItems(limitValue) {
         // Send GET request with limit parameter
-        axios({
+        axiosConfig.request({
             method: "get",
-            url: this.props.match.url + '?limit=' + limitValue,
+            url: `${this.props.match.url}?limit=${limitValue}`,
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             }
         }).then((response) => {
@@ -276,11 +267,10 @@ class ShoppingItemsPage extends Component {
     getNextPage() {
         // Send GET request with parameter page
         const next_page_url = this.state.next_page;
-        axios({
+        axiosConfig.request({
             method: "get",
             url: next_page_url,
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             }
         }).then((response) => {
@@ -317,11 +307,10 @@ class ShoppingItemsPage extends Component {
     getPreviousPage() {
         // Send GET request with parameter page
         const prev_page_url = this.state.previous_page;
-        axios({
+        axiosConfig.request({
             method: "get",
             url: prev_page_url,
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             }
         }).then((response) => {

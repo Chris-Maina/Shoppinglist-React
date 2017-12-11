@@ -7,11 +7,11 @@ import Col from 'muicss/lib/react/col';
 import Input from 'muicss/lib/react/input';
 import Button from 'muicss/lib/react/button';
 import Panel from 'muicss/lib/react/panel';
-import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import { Navigation } from './navbar';
 import { Spinner } from './spinner';
 import 'react-toastify/dist/ReactToastify.min.css';
+import axiosConfig from './baseConfig';
 
 export class LoginForm extends Component {
     constructor(props) {
@@ -39,7 +39,7 @@ export class LoginForm extends Component {
 
     sendRequest(email, password) {
         var data = { "email": email, "password": password };
-        axios({
+        axiosConfig.request({
             method: "post",
             url: `/auth/login/`,
             headers: {

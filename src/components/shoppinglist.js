@@ -6,13 +6,13 @@ import Input from 'muicss/lib/react/input';
 import { Card, Button } from 'react-materialize';
 import Form from 'muicss/lib/react/form';
 import './shoppinglist.css';
-import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { Navigation } from './navbar';
 import requireLogin from './authenticate';
 import { Route} from 'react-router-dom';
 import { Spinner } from './spinner';
+import axiosConfig from './baseConfig';
 
 
 export class ShoppinglistPage extends Component {
@@ -41,11 +41,10 @@ export class ShoppinglistPage extends Component {
     }
     getShoppinglists () {
         // Send GET request
-        axios({
+        axiosConfig.request({
             method: "get",
             url: `/shoppinglists/`,
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             }
         }).then((response) => {
@@ -80,15 +79,13 @@ export class ShoppinglistPage extends Component {
     }
     deleteShoppinglist (shoppinglistname, sl_id) {
         // DELETE
-        var data = { name: shoppinglistname };
-        axios({
+        axiosConfig.request({
             method: "delete",
             url: `/shoppinglists/` + sl_id,
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             },
-            data: data
+            data: { name: shoppinglistname }
         }).then((response) => {
             toast.success("Shoppinglist " + shoppinglistname + " deleted.");
             // Get ALL shopping list
@@ -98,7 +95,6 @@ export class ShoppinglistPage extends Component {
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
-                toast.error(error.response.data.message)
                 if(error.response.status === 408){
                     window.localStorage.removeItem('token');
                     return <Route exact ={true} path="/shoppinglists/" component={requireLogin(ShoppinglistPage)} />
@@ -119,15 +115,13 @@ export class ShoppinglistPage extends Component {
     }
     editShoppinglist (shoppinglistname, sl_id) {
         // PUT
-        var data = { name: shoppinglistname };
-        axios({
-            method: "put",
-            url: `/shoppinglists/` + sl_id,
+        axiosConfig.request({
+            method: 'PUT',
+            url: `/shoppinglists/${sl_id}` ,
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             },
-            data: data
+            data: { name: shoppinglistname }
         }).then((response) => {
             toast.success("Shoppinglist edited to " + response.data.name);
             return response.data;
@@ -158,15 +152,13 @@ export class ShoppinglistPage extends Component {
     };
     postShoppinglist (shoppinglistname) {
         // Send POST request
-        var data = { name: shoppinglistname };
-        axios({
+        axiosConfig.request({
             method: "post",
             url: `/shoppinglists/`,
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             },
-            data: data
+            data: { name: shoppinglistname }
         }).then((response) => {
             toast.success("Shoppinglist " + response.data.name + " created");
             // Get ALL shopping list
@@ -196,11 +188,10 @@ export class ShoppinglistPage extends Component {
     }
     searchShoppinglist (searchText) {
         // Send GET request
-        axios({
+        axiosConfig.request({
             method: "get",
             url: `/shoppinglists/?q=` + searchText,
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             }
         }).then((response) => {
@@ -237,11 +228,10 @@ export class ShoppinglistPage extends Component {
         if (prev_page_url === 'None') {
             return toast.info("There are no shoppinglist in previous page");
         }
-        axios({
+        axiosConfig.request({
             method: "get",
             url: prev_page_url,
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             }
         }).then((response) => {
@@ -281,11 +271,10 @@ export class ShoppinglistPage extends Component {
         if (next_page_url === 'None') {
             return toast.info("There are no shoppinglist in next page");
         }
-        axios({
+        axiosConfig.request({
             method: "get",
             url: next_page_url,
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             }
         }).then((response) => {
@@ -320,11 +309,10 @@ export class ShoppinglistPage extends Component {
     }
     limitShoppinglists (limitValue) {
         // Send GET request with limit parameter
-        axios({
+        axiosConfig.request({
             method: "get",
             url: `/shoppinglists/?limit=` + limitValue,
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             }
         }).then((response) => {
