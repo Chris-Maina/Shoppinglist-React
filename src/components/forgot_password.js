@@ -36,14 +36,12 @@ class ForgotPassword extends Component {
             },
             data: data
         }).then((response) => {
-            console.log(response.data);
             toast.success("Email sent successfully ");
             return response.data;
         }).catch(function (error) {
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
-                console.log(error.response.data);
                 toast.error(error.response.data.message)
             } else if (error.request) {
                 // The request was made but no response was received

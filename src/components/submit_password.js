@@ -25,7 +25,7 @@ export class SubmitPassword extends Component {
         var formError = '';
         formError = this.validate(this.state.newPassword, this.state.cNewPassword);
         if (formError) {
-            toast.error(formError);
+            return toast.error(formError);
         }
         this.resetPassword(this.state.newPassword)
     }
@@ -52,7 +52,7 @@ export class SubmitPassword extends Component {
             data: data
         }).then((response) => {
             toast.success(response.data.message);
-            this.setState({ redirect: true })
+            this.setState({ redirect: true });
             return response.data;
         }).catch(function (error) {
             if (error.response) {

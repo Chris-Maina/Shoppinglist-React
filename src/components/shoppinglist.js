@@ -12,12 +12,13 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import { Navigation } from './navbar';
 import requireLogin from './authenticate';
 import { Route} from 'react-router-dom';
+import { Spinner } from './spinner';
 
 
 export class ShoppinglistPage extends Component {
     constructor(props) {
         super(props);
-        this.state = { shoppinglists: [], next_page: '', previous_page: '' };
+        this.state = { shoppinglists: [], next_page: '', previous_page: '', isLoading: false };
         this.getShoppinglists = this.getShoppinglists.bind(this);
         this.handleDeleteShoppinglist = this.handleDeleteShoppinglist.bind(this);
         this.deleteShoppinglist = this.deleteShoppinglist.bind(this);
@@ -34,20 +35,21 @@ export class ShoppinglistPage extends Component {
         this.handleLimitShoppinglists = this.handleLimitShoppinglists.bind(this);
         this.limitShoppinglists = this.limitShoppinglists.bind(this);
     }
-    componentDidMount() {
+    componentWillMount() {
+        this.setState({ isLoading: true });
         this.getShoppinglists();
     }
     getShoppinglists () {
         // Send GET request
-        const url = 'https://shoppinglist-restful-api.herokuapp.com/shoppinglists/';
         axios({
             method: "get",
-            url: url,
+            url: `/shoppinglists/`,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             }
         }).then((response) => {
+            this.setState({ isLoading: false });
             this.setState({
                 shoppinglists: response.data.shopping_lists,
                 next_page: response.data.next_page,
@@ -61,7 +63,7 @@ export class ShoppinglistPage extends Component {
                 toast.error(error.response.data.message)
                 if(error.response.status === 408){
                     window.localStorage.removeItem('token');
-                    return requireLogin(ShoppinglistPage)
+                    return <Route exact ={true} path="/shoppinglists/" component={requireLogin(ShoppinglistPage)} />
                 }
             } else if (error.request) {
                 // The request was made but no response was received
@@ -79,10 +81,9 @@ export class ShoppinglistPage extends Component {
     deleteShoppinglist (shoppinglistname, sl_id) {
         // DELETE
         var data = { name: shoppinglistname };
-        const url = 'https://shoppinglist-restful-api.herokuapp.com/shoppinglists/' + sl_id;
         axios({
             method: "delete",
-            url: url,
+            url: `/shoppinglists/` + sl_id,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
@@ -119,10 +120,9 @@ export class ShoppinglistPage extends Component {
     editShoppinglist (shoppinglistname, sl_id) {
         // PUT
         var data = { name: shoppinglistname };
-        const url = 'https://shoppinglist-restful-api.herokuapp.com/shoppinglists/' + sl_id;
         axios({
             method: "put",
-            url: url,
+            url: `/shoppinglists/` + sl_id,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
@@ -159,10 +159,9 @@ export class ShoppinglistPage extends Component {
     postShoppinglist (shoppinglistname) {
         // Send POST request
         var data = { name: shoppinglistname };
-        const url = 'https://shoppinglist-restful-api.herokuapp.com/shoppinglists/';
         axios({
             method: "post",
-            url: url,
+            url: `/shoppinglists/`,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
@@ -197,10 +196,9 @@ export class ShoppinglistPage extends Component {
     }
     searchShoppinglist (searchText) {
         // Send GET request
-        const url = 'https://shoppinglist-restful-api.herokuapp.com/shoppinglists/?q=' + searchText;
         axios({
             method: "get",
-            url: url,
+            url: `/shoppinglists/?q=` + searchText,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
@@ -236,14 +234,12 @@ export class ShoppinglistPage extends Component {
     getPreviousPage () {
         // Send GET request with parameter page
         const prev_page_url = this.state.previous_page;
-
         if (prev_page_url === 'None') {
             return toast.info("There are no shoppinglist in previous page");
         }
-        const url = 'https://shoppinglist-restful-api.herokuapp.com' + prev_page_url;
         axios({
             method: "get",
-            url: url,
+            url: prev_page_url,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
@@ -285,10 +281,9 @@ export class ShoppinglistPage extends Component {
         if (next_page_url === 'None') {
             return toast.info("There are no shoppinglist in next page");
         }
-        const url = 'https://shoppinglist-restful-api.herokuapp.com' + next_page_url;
         axios({
             method: "get",
-            url: url,
+            url: next_page_url,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
@@ -325,10 +320,9 @@ export class ShoppinglistPage extends Component {
     }
     limitShoppinglists (limitValue) {
         // Send GET request with limit parameter
-        const url = 'https://shoppinglist-restful-api.herokuapp.com/shoppinglists/?limit=' + limitValue;
         axios({
             method: "get",
-            url: url,
+            url: `/shoppinglists/?limit=` + limitValue,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
@@ -361,13 +355,14 @@ export class ShoppinglistPage extends Component {
         });
     }
     render() {
+        const isLoading = this.state.isLoading;
         return (
             <div>
                 <Navigation />
                 <div className="pagecontent">
+                { isLoading? <Spinner/>: 
                     <Container  >
                         <ToastContainer />
-
                         <ToggleableShoppingForm
                             formSubmit={this.handelShoppinglistNameSubmit}
                             onSearchSubmit={this.handleSearchShoppinglist}
@@ -382,6 +377,7 @@ export class ShoppinglistPage extends Component {
                             onPrevClick={this.handlePrevClick}
                             onNextClick={this.handleNextClick} />
                     </Container>
+                }
                 </div>
             </div>
         );
@@ -405,10 +401,12 @@ export class NextPreviousPage extends Component {
         return (
             <Row>
                 <Col md="6" className="center">
-                    <Button className='teal next_prev_btn'id="prevBtn" waves='light' size="small" onClick={this.handlePrevClick}>Previous Page</Button>
+                    { this.props.prev_page  === 'None'?'':
+                        <Button className='teal next_prev_btn'id="prevBtn" waves='light' size="small" onClick={this.handlePrevClick}>Previous Page</Button>}
                 </Col>
                 <Col md="6" className="center">
-                    <Button className='teal next_prev_btn' id="nextBtn" waves='light' size="small" onClick={this.handleNextClick}>Next Page</Button>
+                    { this.props.next_page === 'None'? '': 
+                         <Button className='teal next_prev_btn' id="nextBtn" waves='light' size="small" onClick={this.handleNextClick}>Next Page</Button>}
                 </Col>
             </Row>
         );

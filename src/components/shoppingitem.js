@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Route} from 'react-router-dom';
 import Container from 'muicss/lib/react/container';
 import Row from 'muicss/lib/react/row';
 import Col from 'muicss/lib/react/col';
@@ -12,13 +13,12 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { Navigation } from './navbar';
 import requireLogin from './authenticate';
+import { Spinner } from './spinner';
 
 class ShoppingItemsPage extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            shoppingitems: [], next_page: '', previous_page: ''
-        }
+        this.state = { shoppingitems: [], next_page: '', previous_page: '', isLoading: false }
         this.handleShoppingItemCreate = this.handleShoppingItemCreate.bind(this);
         this.createShoppingItem = this.createShoppingItem.bind(this);
         this.editShoppingItem = this.editShoppingItem.bind(this);
@@ -34,21 +34,22 @@ class ShoppingItemsPage extends Component {
         this.handlePrevClick = this.handlePrevClick.bind(this);
         this.getPreviousPage = this.getPreviousPage.bind(this);
     }
-    componentDidMount() {
+    componentWillMount() {
+        this.setState({ isLoading: true });
         this.getShoppinglistsItems();
     }
     getShoppinglistsItems() {
         // Send GET request
         // this.props.match.url = /shoppinglists/4/items from shoppinglist file
-        const url = 'https://shoppinglist-restful-api.herokuapp.com' + this.props.match.url;
         axios({
             method: "get",
-            url: url,
+            url: this.props.match.url,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             }
         }).then((response) => {
+            this.setState({ isLoading: false });
             this.setState({
                 shoppingitems: response.data.shopping_items,
                 next_page: response.data.next_page,
@@ -63,7 +64,7 @@ class ShoppingItemsPage extends Component {
                 toast.error(error.response.data.message);
                 if(error.response.status === 408){
                     window.localStorage.removeItem('token');
-                    return requireLogin(ShoppingItemsPage)
+                    return <Route exact path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
                 }
             } else if (error.request) {
                 // The request was made but no response was received
@@ -79,15 +80,14 @@ class ShoppingItemsPage extends Component {
     }
     createShoppingItem(item) {
         // Send POST request
-        var data = {
+        let data = {
             name: item.shoppingitemname,
             price: item.price,
             quantity: item.quantity
         }
-        const url = 'https://shoppinglist-restful-api.herokuapp.com' + this.props.match.url;
         axios({
             method: "post",
-            url: url,
+            url: this.props.match.url,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
@@ -105,7 +105,7 @@ class ShoppingItemsPage extends Component {
                 toast.error(error.response.data.message);
                 if(error.response.status === 408){
                     window.localStorage.removeItem('token');
-                    return requireLogin(ShoppingItemsPage)
+                    return <Route exact ={true} path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
                 }
             } else if (error.request) {
                 // The request was made but no response was received
@@ -127,10 +127,9 @@ class ShoppingItemsPage extends Component {
             price: item.price,
             quantity: item.quantity
         }
-        const url = 'https://shoppinglist-restful-api.herokuapp.com' + this.props.match.url + '/' + item.item_id;
         axios({
             method: "put",
-            url: url,
+            url: this.props.match.url + '/' + item.item_id,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
@@ -148,7 +147,7 @@ class ShoppingItemsPage extends Component {
                 toast.error(error.response.data.message);
                 if(error.response.status === 408){
                     window.localStorage.removeItem('token');
-                    return requireLogin(ShoppingItemsPage)
+                    return <Route exact ={true} path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
                 }
             } else if (error.request) {
                 // The request was made but no response was received
@@ -165,10 +164,9 @@ class ShoppingItemsPage extends Component {
     }
     deleteItem(shoppingitem, item_id) {
         var data = { name: shoppingitem }
-        const url = 'https://shoppinglist-restful-api.herokuapp.com' + this.props.match.url + '/' + item_id;
         axios({
             method: "delete",
-            url: url,
+            url: this.props.match.url + '/' + item_id,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
@@ -186,7 +184,7 @@ class ShoppingItemsPage extends Component {
                 toast.error(error.response.data.message);
                 if(error.response.status === 408){
                     window.localStorage.removeItem('token');
-                    return requireLogin(ShoppingItemsPage);
+                    return <Route exact ={true} path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
                 }
             } else if (error.request) {
                 // The request was made but no response was received
@@ -202,16 +200,14 @@ class ShoppingItemsPage extends Component {
     }
     searchShoppingItem(searchtext) {
         // Send GET request
-        const url = 'https://shoppinglist-restful-api.herokuapp.com' + this.props.match.url + '?q=' + searchtext;
         axios({
             method: "get",
-            url: url,
+            url: this.props.match.url + '?q=' + searchtext,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             }
         }).then((response) => {
-            // console.log(response.data);
             this.setState({
                 shoppingitems: response.data
             });
@@ -224,7 +220,7 @@ class ShoppingItemsPage extends Component {
                 toast.error(error.response.data.message);
                 if(error.response.status === 408){
                     window.localStorage.removeItem('token');
-                    return requireLogin(ShoppingItemsPage)
+                    return <Route exact path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
                 }
             } else if (error.request) {
                 // The request was made but no response was received
@@ -240,10 +236,9 @@ class ShoppingItemsPage extends Component {
     }
     limitShoppingItems(limitValue) {
         // Send GET request with limit parameter
-        const url = 'https://shoppinglist-restful-api.herokuapp.com' + this.props.match.url + '?limit=' + limitValue;
         axios({
             method: "get",
-            url: url,
+            url: this.props.match.url + '?limit=' + limitValue,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
@@ -263,7 +258,7 @@ class ShoppingItemsPage extends Component {
                 toast.error(error.response.data.message);
                 if(error.response.status === 408){
                     window.localStorage.removeItem('token');
-                    return requireLogin(ShoppingItemsPage)
+                    return <Route exact path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
                 }
             } else if (error.request) {
                 // The request was made but no response was received
@@ -281,14 +276,9 @@ class ShoppingItemsPage extends Component {
     getNextPage() {
         // Send GET request with parameter page
         const next_page_url = this.state.next_page;
-
-        if (next_page_url === 'None') {
-            return toast.info("There are no shoppingitems in next page");
-        }
-        const url = 'https://shoppinglist-restful-api.herokuapp.com' + next_page_url;
         axios({
             method: "get",
-            url: url,
+            url: next_page_url,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
@@ -309,7 +299,7 @@ class ShoppingItemsPage extends Component {
                 toast.error(error.response.data.message);
                 if(error.response.status === 408){
                     window.localStorage.removeItem('token');
-                    return requireLogin(ShoppingItemsPage)
+                    return <Route exact path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
                 }
             } else if (error.request) {
                 // The request was made but no response was received
@@ -327,14 +317,9 @@ class ShoppingItemsPage extends Component {
     getPreviousPage() {
         // Send GET request with parameter page
         const prev_page_url = this.state.previous_page;
-
-        if (prev_page_url === 'None') {
-            return toast.info("There are no shoppingitems in previous page");
-        }
-        const url = 'https://shoppinglist-restful-api.herokuapp.com' + prev_page_url;
         axios({
             method: "get",
-            url: url,
+            url: prev_page_url,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
@@ -353,7 +338,7 @@ class ShoppingItemsPage extends Component {
                 toast.error(error.response.data.message);
                 if(error.response.status === 408){
                     window.localStorage.removeItem('token');
-                    return requireLogin(ShoppingItemsPage);
+                    return <Route exact path={`/shoppinglists/:sl_id/items`} component={requireLogin(ShoppingItemsPage)} />
                 }
             } else if (error.request) {
                 // The request was made but no response was received
@@ -366,10 +351,12 @@ class ShoppingItemsPage extends Component {
     }
 
     render() {
+        const isLoading = this.state.isLoading;
         return (
             <div>
                 <Navigation />
                 <div className="pagecontent">
+                { isLoading ? <Spinner/>: 
                     <Container >
                         <ToastContainer />
                         <ToggleShoppingItem
@@ -381,9 +368,12 @@ class ShoppingItemsPage extends Component {
                             onUpdateSubmit={this.handleUpdateItem}
                             onDeleteClick={this.handleDeleteItem} />
                         <NextPreviousPage
+                            next_page = {this.state.next_page}
+                            prev_page = {this.state.previous_page}
                             onPrevClick={this.handlePrevClick}
                             onNextClick={this.handleNextClick} />
                     </Container>
+                }
                 </div>
             </div>
         );
@@ -410,10 +400,12 @@ class NextPreviousPage extends Component {
         return (
             <Row>
                 <Col md="6" className="center">
-                    <Button className='teal next_prev_btn' waves='light' size="small" onClick={this.handlePrevClick}>Previous Page</Button>
+                { this.props.prev_page === 'None'? '':
+                    <Button className='teal next_prev_btn' waves='light' size="small" onClick={this.handlePrevClick}>Previous Page</Button>}
                 </Col>
                 <Col md="6" className="center">
-                    <Button className='teal next_prev_btn' waves='light' size="small" onClick={this.handleNextClick}>Next Page</Button>
+                {this.props.next_page === 'None'? '':
+                    <Button className='teal next_prev_btn' waves='light' size="small" onClick={this.handleNextClick}>Next Page</Button> }
                 </Col>
             </Row>
         );
