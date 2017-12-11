@@ -7,6 +7,7 @@ import { ShoppinglistPage } from '../components/shoppinglist';
 import sinon from 'sinon';
 import moxios from 'moxios';
 import { ToastContainer } from 'react-toastify';
+import axiosConfig from '../components/baseConfig';
 
 
 let shoppinglistPageComponent;
@@ -14,7 +15,7 @@ let parentUrl;
 
 describe('ShoppingItemsPage component', () => {
     beforeEach(function () {
-        moxios.install();
+        moxios.install(axiosConfig);
         shoppinglistPageComponent = mount(<ShoppinglistPage />);
         shoppinglistPageComponent.instance().handelShoppinglistNameSubmit('Furniture');
         moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/', {
@@ -192,6 +193,20 @@ describe('Editing, delete test case scenarions', () => {
         moxios.wait(function () {
             // Test state changes to contain data
             expect(shoppingItemComponent.instance().state.shoppingitems).toEqual({ created_by: 2, id: 8, name: "Bread", price: 100, quantity: 9 });
+            done();
+        })
+
+    })
+    it('Searches for a shoppinglist unsuccessfully', (done) => {
+        shoppingItemComponent.instance().searchShoppingItem('Bread1');
+        moxios.stubRequest(parentUrl.url + '?q=Bread1', {
+            status: 200,
+            response: { message: "No special characters in name" }
+        })
+        shoppingItemComponent.setState({ isLoading: false });
+        moxios.wait(function () {
+            // Test state changes to contain data
+            expect(shoppingItemComponent.find('ToastContainer').text()).toContain("No special characters in name");
             done();
         })
 
