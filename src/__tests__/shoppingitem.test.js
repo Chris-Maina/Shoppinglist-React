@@ -550,3 +550,38 @@ describe('ShoppingItemForm component test cases',()=>{
         expect(onCancelClickSpy).toHaveBeenCalled();
     })
 });
+describe('SearchShoppingItem component test cases',()=>{
+    it('Change event causes state changes',()=>{
+        const itemFormComponent = shallow(<SearchShoppingItem/>);
+        const searchInput = itemFormComponent.find("Input[name='searchtext']");
+        const event = {
+            target: {
+                name: 'searchtext',
+                value: 'Mangoes'
+            },
+            preventDefault: () => { }
+        };
+        searchInput.simulate('change', event);
+        expect(itemFormComponent.state().searchText).toBe(event.target.value);
+    });
+    it('handleSearch event calls onSearchSubmit function',()=>{
+        const onSearchSubmitSpy = jest.fn();
+        const searchFormComponent = shallow(<SearchShoppingItem onSearchSubmit={onSearchSubmitSpy}/>);
+        const event = {
+            preventDefault: () => { }
+        };
+        searchFormComponent.instance().handleSearch( event );
+        
+        expect(onSearchSubmitSpy).toHaveBeenCalled();
+    });
+    it('onCancelClick is called when handleCancelClick is invoked',()=>{
+        const onCancelClickSpy = jest.fn();
+        const searchFormComponent = shallow(<SearchShoppingItem onCancelClick={onCancelClickSpy}/>);
+        const event = {
+            preventDefault: () => { }
+        };
+        searchFormComponent.instance().handleCancelClick(event);
+        expect(onCancelClickSpy).toHaveBeenCalled();
+    })
+});
+
