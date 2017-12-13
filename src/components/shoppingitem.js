@@ -684,7 +684,7 @@ export class SearchShoppingItem extends Component {
                 <Col xs="8" xs-offset="2" md="8" md-offset="2">
                     <div>
                         <Form onSubmit={this.handleSearch}>
-                            <Input label="Search shoppinglist" floatingLabel={true} type="text" name='searchtext' value={this.state.searchText} onChange={this.onSearchInputChange}></Input>
+                            <Input label="Search shoppinglist" name="searchtext" floatingLabel={true} type="text"  value={this.state.searchText} onChange={this.onSearchInputChange}></Input>
                             <Button color="primary" size="small" onClick={this.handleSearch}>Search</Button>
                             &nbsp;&nbsp;&nbsp;&nbsp;
                         <Button className="red" size="small" onClick={this.handleCancelClick}>Cancel</Button>
