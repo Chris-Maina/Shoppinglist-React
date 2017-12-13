@@ -15,7 +15,7 @@ import { Navigation } from './navbar';
 import requireLogin from './authenticate';
 import { Spinner } from './spinner';
 
-class ShoppingItemsPage extends Component {
+export class ShoppingItemsPage extends Component {
     constructor(props) {
         super(props);
         this.state = { shoppingitems: [], next_page: '', previous_page: '', isLoading: false }
@@ -366,7 +366,7 @@ class ShoppingItemsPage extends Component {
     }
 }
 
-class NextPreviousPage extends Component {
+export class NextPreviousPage extends Component {
     constructor(props) {
         super(props);
         this.handleNextClick = this.handleNextClick.bind(this);
@@ -385,18 +385,18 @@ class NextPreviousPage extends Component {
             <Row>
                 <Col md="6" className="center">
                 { this.props.prev_page === 'None'? '':
-                    <Button className='teal next_prev_btn' waves='light' size="small" onClick={this.handlePrevClick}>Previous Page</Button>}
+                    <Button className='teal next_prev_btn' id="prevBtn" waves='light' size="small" onClick={this.handlePrevClick}>Previous Page</Button>}
                 </Col>
                 <Col md="6" className="center">
                 {this.props.next_page === 'None'? '':
-                    <Button className='teal next_prev_btn' waves='light' size="small" onClick={this.handleNextClick}>Next Page</Button> }
+                    <Button className='teal next_prev_btn' id="nextBtn" waves='light' size="small" onClick={this.handleNextClick}>Next Page</Button> }
                 </Col>
             </Row>
         );
     }
 }
 
-class ToggleShoppingItem extends Component {
+export class ToggleShoppingItem extends Component {
     constructor(props) {
         super(props);
         this.state = { isOpen: false, isSearchOpen: false, isLimitOpen: false };
@@ -462,9 +462,9 @@ class ToggleShoppingItem extends Component {
                         <div>
 
                             <Button floating fab='vertical' icon='expand_less' className='red' large style={{ bottom: '45px', right: '24px' }}>
-                                <Button floating icon='add' className='blue' waves='light' onClick={this.handleFormOpen} />
-                                <Button floating icon='filter_list' className='green ' waves='light' onClick={this.handleLimitOpen} />
-                                <Button floating icon='search' className='orange' waves='light' onClick={this.handleSearchOpen} />
+                                <Button floating icon='add' id="add" className='blue' waves='light' onClick={this.handleFormOpen} />
+                                <Button floating icon='filter_list' id="filter" className='green ' waves='light' onClick={this.handleLimitOpen} />
+                                <Button floating icon='search' id="search" className='orange' waves='light' onClick={this.handleSearchOpen} />
                             </Button>
                         </div>
                     </Col>
@@ -474,7 +474,7 @@ class ToggleShoppingItem extends Component {
     }
 }
 
-class ShoppingItemTable extends Component {
+export class ShoppingItemTable extends Component {
     render() {
         return (
             <Row>
@@ -496,7 +496,7 @@ class ShoppingItemTable extends Component {
     }
 
 }
-class TableHead extends Component {
+export class TableHead extends Component {
     render() {
         return (
             <thead>
@@ -511,7 +511,7 @@ class TableHead extends Component {
         );
     }
 }
-class TableBody extends Component {
+export class TableBody extends Component {
     render() {
 
         if (typeof (this.props.items) === 'string') {
@@ -540,7 +540,7 @@ class TableBody extends Component {
         );
     }
 }
-class EditableShoppingItem extends Component {
+export class EditableShoppingItem extends Component {
     constructor(props) {
         super(props);
         this.state = { editForm: false }
@@ -595,7 +595,7 @@ class EditableShoppingItem extends Component {
         );
     }
 }
-class ShoppingItem extends Component {
+export class ShoppingItem extends Component {
     render() {
         return (
             <tr>
@@ -608,7 +608,7 @@ class ShoppingItem extends Component {
         );
     }
 }
-class ShoppingItemForm extends Component {
+export class ShoppingItemForm extends Component {
     constructor(props) {
         super(props);
         this.state = { shoppingitemname: '', price: '', quantity: '' }
@@ -655,7 +655,7 @@ class ShoppingItemForm extends Component {
         );
     }
 }
-class SearchShoppingItem extends Component {
+export class SearchShoppingItem extends Component {
     constructor(props) {
         super(props);
         this.state = { searchText: '' };
@@ -696,7 +696,7 @@ class SearchShoppingItem extends Component {
     }
 }
 
-class LimitShoppingItems extends Component {
+export class LimitShoppingItems extends Component {
     constructor(props) {
         super(props);
         this.state = { limit_shoppingitem: '' };
@@ -732,4 +732,3 @@ class LimitShoppingItems extends Component {
         );
     }
 }
-export default ShoppingItemsPage;
