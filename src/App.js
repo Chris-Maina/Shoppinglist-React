@@ -5,7 +5,7 @@ import { RegisterPage } from './components/register';
 import { LoginForm } from './components/login';
 import {ShoppinglistPage }from './components/shoppinglist';
 import Home from './components/home';
-import ShoppingItemsPage from './components/shoppingitem';
+import {ShoppingItemsPage} from './components/shoppingitem';
 import UserProfile from './components/user_profile';
 import ForgotPassword from './components/forgot_password';
 import SubmitPassword from './components/submit_password';
