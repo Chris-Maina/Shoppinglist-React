@@ -516,3 +516,37 @@ describe('EditableShoppingItem test cases',()=>{
         expect(EditableShoppingItem).toHaveLength(1);
     });
 })
+describe('ShoppingItemForm component test cases',()=>{
+    it('Change event causes state changes',()=>{
+        const itemFormComponent = shallow(<ShoppingItemForm/>);
+        const inputItemName = itemFormComponent.find("Input[name='shoppingitemname']");
+        const event = {
+            target: {
+                name: 'shoppingitemname',
+                value: 'Mangoes'
+            },
+            preventDefault: () => { }
+        };
+        inputItemName.simulate('change', event);
+        expect(itemFormComponent.state().shoppingitemname).toBe(event.target.value);
+    });
+    it('Submit event calls formSubmit function',()=>{
+        const formSubmitSpy = jest.fn();
+        const itemFormComponent = shallow(<ShoppingItemForm formSubmit={formSubmitSpy}/>);
+        const event = {
+            preventDefault: () => { }
+        };
+        itemFormComponent.instance().handelsubmit( event );
+        
+        expect(formSubmitSpy).toHaveBeenCalled();
+    });
+    it('onCancelClick is called when handleCancelClick is invoked',()=>{
+        const onCancelClickSpy = jest.fn();
+        const itemFormComponent = shallow(<ShoppingItemForm onCancelClick={onCancelClickSpy}/>);
+        const event = {
+            preventDefault: () => { }
+        };
+        itemFormComponent.instance().handleCancelClick(event);
+        expect(onCancelClickSpy).toHaveBeenCalled();
+    })
+});
