@@ -2,8 +2,8 @@ import React from 'react';
 import { shallow, mount, render } from 'enzyme';
 import ReactDOM from 'react-dom';
 import { LoginForm } from '../components/login';
-import ShoppingItemsPage from '../components/shoppingitem';
-import { ShoppinglistPage, NextPreviousPage } from '../components/shoppinglist';
+import {ShoppingItemsPage, NextPreviousPage, ToggleShoppingItem, ShoppingItemForm, SearchShoppingItem, LimitShoppingItems }from '../components/shoppingitem';
+import { ShoppinglistPage } from '../components/shoppinglist';
 import sinon from 'sinon';
 import moxios from 'moxios';
 import { ToastContainer } from 'react-toastify';
@@ -390,5 +390,64 @@ describe('NextPreviousPage component test cases',() => {
         nextPrevComponent.find('#prevBtn').simulate('click', { preventDefault() { } });
         expect(onPrevClickSpy).toHaveBeenCalled();
 
+
+    });
+    it('Calls onNextClick prop when Next page button is clicked', () => {
+        // Spy on onNextClick prop function
+        const onNextClickSpy = jest.fn();
+        const nextPrevComponent = shallow(<NextPreviousPage onNextClick={onNextClickSpy} />)
+        nextPrevComponent.find('#nextBtn').simulate('click', { preventDefault() { } });
+        expect(onNextClickSpy).toHaveBeenCalled();
+
+    });
+});
+describe('ToggleShoppingItem component icon click tests', ()=>{
+    let toggleComponent;
+    beforeEach(function (){
+        toggleComponent = shallow(<ToggleShoppingItem />)
+    });
+    it('It opens up ShoppingItemForm when Add button is clicked', () => {
+        
+        toggleComponent.setState({isOpen: false});
+        const addButton = toggleComponent.find('#add');
+        addButton.simulate('click');
+        // Test state change of isOpen
+        // And if ShoppingItemForm is rendered.
+        expect(toggleComponent.instance().state.isOpen).toEqual(true);
+        expect(ShoppingItemForm).toHaveLength(1);
+    });
+    it('It opens up SearchShoppingItem when search button is clicked', () => {
+        toggleComponent.setState({isSearchOpen: false});
+        const searchButton = toggleComponent.find('#search');
+        searchButton.simulate('click');
+        // Test state change of isSearchOpen
+        // And if ShoppingItemForm is rendered.
+        expect(toggleComponent.instance().state.isSearchOpen).toEqual(true);
+        expect(SearchShoppingItem).toHaveLength(1);
+
+    });
+    it('It opens up LimitShoppingItems when filter button is clicked', () => {
+        toggleComponent.setState({isLimitOpen: false});
+        const addButton = toggleComponent.find('#filter');
+        addButton.simulate('click');
+        // Test state change of isLimitOpen
+        // And if ShoppingItemForm is rendered.
+        expect(toggleComponent.instance().state.isLimitOpen).toEqual(true);
+        expect(LimitShoppingItems).toHaveLength(1)
+    });
+    it('Changes state of isOpen when handleFormClose is invoked',()=>{
+        toggleComponent.setState({ isOpen: true });
+        toggleComponent.instance().handleFormClose();
+        expect(toggleComponent.instance().state.isOpen).toBe(false);
+    });
+    it('Changes state of isSearchOpen when handleSearchClose is invoked',()=>{
+        toggleComponent.setState({ isSearchOpen: true });
+        toggleComponent.instance().handleSearchClose();
+        expect(toggleComponent.instance().state.isSearchOpen).toBe(false);
+    });
+    it('Changes state of isLimitOpen when handleLimitClose is invoked',()=>{
+        toggleComponent.setState({ isLimitOpen: true });
+        toggleComponent.instance().handleLimitClose();
+        expect(toggleComponent.instance().state.isLimitOpen).toBe(false);
     });
 });
