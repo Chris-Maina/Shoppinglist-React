@@ -3,7 +3,7 @@ import { shallow, mount, render } from 'enzyme';
 import ReactDOM from 'react-dom';
 import { LoginForm } from '../components/login';
 import ShoppingItemsPage from '../components/shoppingitem';
-import { ShoppinglistPage } from '../components/shoppinglist';
+import { ShoppinglistPage, NextPreviousPage } from '../components/shoppinglist';
 import sinon from 'sinon';
 import moxios from 'moxios';
 import { ToastContainer } from 'react-toastify';
@@ -23,8 +23,7 @@ describe('ShoppingItemsPage component', () => {
         moxios.uninstall();
     })
     it('Renders ShoppingItemsPage component', () => {
-        
-        moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/1/items', {
+        moxios.stubRequest(parentUrl.url, {
             status: 200,
             response: { next_page: "None", previous_page: "None", shopping_items: "You have no shopping items" }
         })
@@ -33,7 +32,7 @@ describe('ShoppingItemsPage component', () => {
     it('Changes state when getShoppingItems is called', (done) => {
         const shoppingItemComponent = shallow(<ShoppingItemsPage match={parentUrl} />);
         shoppingItemComponent.instance().getShoppinglistsItems();
-        moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/1/items', {
+        moxios.stubRequest(parentUrl.url, {
             status: 200,
             response: { next_page: "None", previous_page: "None", shopping_items: "You have no shopping items" }
         })
@@ -57,15 +56,17 @@ describe('ShoppingItemsPage component', () => {
             done();
         })
     });
-    it(' getShoppinglistsItems return something on getting a timeout error', (done) => {
+    it(' GetshoppinglistItems responds with a 404 error', (done) => {
         const shoppingItemComponent = mount(<ShoppingItemsPage match={parentUrl} />);
         let getShoppinglist = shoppingItemComponent.instance().getShoppinglistsItems();
-        moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/3/items', {
-            status: 408
+        moxios.stubRequest(parentUrl.url, {
+            status: 408,
+            response: { message: "Invalid token. Please register or login" }
         })
         shoppingItemComponent.setState({ isLoading: false });
         moxios.wait(function () {
-            expect(shoppingItemComponent.instance().getShoppinglistsItems).toBeDefined();
+            // Test toast message has the error message 
+            expect(shoppingItemComponent.find('ToastContainer').text()).toContain("Invalid token. Please register or login");
             done();
         })
     });
@@ -87,7 +88,7 @@ describe('ShoppingItemsPage component', () => {
             done();
         })
     })
-    it('Creates a shopping item unsuccessfully', (done) => {
+    it('Creates a shopping item unsuccessfully responds with a 400 error', (done) => {
         const shoppingItemComponent = mount(<ShoppingItemsPage match={parentUrl} />);
         let shoppingItem = { shoppingitemname: 'Bread!', price: 20, quantity: 2 }
         shoppingItemComponent.instance().handleShoppingItemCreate(shoppingItem);
@@ -101,7 +102,23 @@ describe('ShoppingItemsPage component', () => {
             expect(shoppingItemComponent.find('ToastContainer').text()).toContain("No special characters in name");
             done();
         })
-    })
+    });
+
+    it('Creates a shopping item unsuccessfully responds with a 408 error', (done) => {
+        const shoppingItemComponent = mount(<ShoppingItemsPage match={parentUrl} />);
+        let shoppingItem = { shoppingitemname: 'Bread!', price: 20, quantity: 2 }
+        shoppingItemComponent.instance().handleShoppingItemCreate(shoppingItem);
+        moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/shoppinglists/1/items', {
+            status: 408,
+            response: { message: "Invalid token. Please register or login" }
+        })
+        shoppingItemComponent.setState({ isLoading: false });
+        moxios.wait(function () {
+            // Test toast message has the error message 
+            expect(shoppingItemComponent.find('ToastContainer').text()).toContain("Invalid token. Please register or login");
+            done();
+        })
+    });
 });
 
 describe('Editing, delete test case scenarions', () => {
@@ -151,6 +168,22 @@ describe('Editing, delete test case scenarions', () => {
             done();
         })
     });
+
+    it('Updates/edits a shopping item unsuccessfully responds with a 408 error', (done) => {
+        let editedShoppingItem = { shoppingitemname: 'Milk!', price: 20, quantity: 2, item_id: 8 }
+        shoppingItemComponent.instance().editShoppingItem(editedShoppingItem);
+        moxios.stubRequest(parentUrl.url + '/' + editedShoppingItem.item_id, {
+            status: 408,
+            response: { message: "Invalid token. Please register or login" }
+        })
+        shoppingItemComponent.setState({ isLoading: false });
+        moxios.wait(function () {
+            // Test toast message has an error message
+            expect(shoppingItemComponent.find('ToastContainer').text()).toContain("Invalid token. Please register or login");
+            done();
+        })
+    });
+
     it('Deletes a shopping item successfully', (done) => {
         let deleteItemSpy = sinon.spy(ShoppingItemsPage.prototype, 'deleteItem')
         const shoppingItemComponent = mount(<ShoppingItemsPage match={parentUrl} />);
@@ -348,4 +381,14 @@ describe('Editing, delete test case scenarions', () => {
         })
     });
 
+});
+describe('NextPreviousPage component test cases',() => {
+    it('Calls onPrevClick prop when Next page button is clicked', () => {
+        // Spy on onPrevClick prop function
+        const onPrevClickSpy = jest.fn();
+        const nextPrevComponent = shallow(<NextPreviousPage onPrevClick={onPrevClickSpy} />)
+        nextPrevComponent.find('#prevBtn').simulate('click', { preventDefault() { } });
+        expect(onPrevClickSpy).toHaveBeenCalled();
+
+    });
 });
