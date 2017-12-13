@@ -168,8 +168,7 @@ class ShoppingItemsPage extends Component {
         }).then((response) => {
             toast.success(response.data.message);
             // Get all shopping items
-            this.getShoppinglistsItems();
-            return response.data;
+            return  this.getShoppinglistsItems();
         }).catch(function (error) {
             if (error.response) {
                 // The request was made and the server responded with a status code
@@ -203,8 +202,6 @@ class ShoppingItemsPage extends Component {
             this.setState({
                 shoppingitems: response.data
             });
-
-            return response.data;
         }).catch(function (error) {
             if (error.response) {
                 // The request was made and the server responded with a status code
@@ -240,7 +237,6 @@ class ShoppingItemsPage extends Component {
                 next_page: response.data.next_page,
                 previous_page: response.data.previous_page
             });
-
             return response.data;
         }).catch(function (error) {
             if (error.response) {
@@ -274,7 +270,6 @@ class ShoppingItemsPage extends Component {
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             }
         }).then((response) => {
-            // console.log(response.data);
             this.setState({
                 shoppingitems: response.data.shopping_items,
                 next_page: response.data.next_page,
@@ -715,7 +710,6 @@ class LimitShoppingItems extends Component {
     }
     handleLimitItems = (evt) => {
         evt.preventDefault();
-        console.log(this.state.limit_shoppingitem);
         this.props.onLimitSubmit(this.state.limit_shoppingitem);
     }
     handleCancelClick = (evt) => {

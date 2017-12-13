@@ -54,7 +54,6 @@ export class ShoppinglistPage extends Component {
                 next_page: response.data.next_page,
                 previous_page: response.data.previous_page
             });
-            return response.data;
         }).catch(function (error) {
             if (error.response) {
                 // The request was made and the server responded with a status code
@@ -267,10 +266,6 @@ export class ShoppinglistPage extends Component {
     getNextPage () {
         // Send GET request with parameter page
         const next_page_url = this.state.next_page;
-
-        if (next_page_url === 'None') {
-            return toast.info("There are no shoppinglist in next page");
-        }
         axiosConfig.request({
             method: "get",
             url: next_page_url,
