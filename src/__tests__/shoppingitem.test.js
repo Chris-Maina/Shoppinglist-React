@@ -451,3 +451,29 @@ describe('ToggleShoppingItem component icon click tests', ()=>{
         expect(toggleComponent.instance().state.isLimitOpen).toBe(false);
     });
 });
+describe('ToggleShoppingItem spy method test cases',()=>{
+    it('formSubmit is invoked on calling handleCreateSubmit', () => {
+        const formSubmitSpy = jest.fn();
+        const toggleComponent = shallow(<ToggleShoppingItem formSubmit={formSubmitSpy} />);
+        toggleComponent.setState({ isOpen: true });
+        toggleComponent.instance().handleCreateSubmit();
+        expect(toggleComponent.instance().state.isOpen).toBe(false);
+        expect(formSubmitSpy).toHaveBeenCalled();
+    });
+    it('onSearchSubmit is invoked on calling handleSearch', () => {
+        const onSearchSubmitSpy = jest.fn();
+        const toggleComponent = shallow(<ToggleShoppingItem onSearchSubmit={onSearchSubmitSpy} />);
+        toggleComponent.setState({ isSearchOpen: true });
+        toggleComponent.instance().handleSearch();
+        expect(toggleComponent.instance().state.isSearchOpen).toBe(false);
+        expect(onSearchSubmitSpy).toHaveBeenCalled();
+    });
+    it('onLimitSubmit is invoked on calling handleLimit', () => {
+        const onLimitSubmitSpy = jest.fn();
+        const toggleComponent = shallow(<ToggleShoppingItem onLimitSubmit={onLimitSubmitSpy} />);
+        toggleComponent.setState({ isLimitOpen: true });
+        toggleComponent.instance().handleLimit();
+        expect(toggleComponent.instance().state.isLimitOpen).toBe(false);
+        expect(onLimitSubmitSpy).toHaveBeenCalled();
+    });
+});
