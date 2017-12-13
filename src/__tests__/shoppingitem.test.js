@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow, mount, render } from 'enzyme';
 import ReactDOM from 'react-dom';
 import { LoginForm } from '../components/login';
-import {ShoppingItemsPage, NextPreviousPage, ToggleShoppingItem, ShoppingItemForm, SearchShoppingItem, LimitShoppingItems }from '../components/shoppingitem';
+import {ShoppingItemsPage, NextPreviousPage, TableBody, ToggleShoppingItem, ShoppingItemForm, SearchShoppingItem, EditableShoppingItem, LimitShoppingItems }from '../components/shoppingitem';
 import { ShoppinglistPage } from '../components/shoppinglist';
 import sinon from 'sinon';
 import moxios from 'moxios';
@@ -433,7 +433,7 @@ describe('ToggleShoppingItem component icon click tests', ()=>{
         // Test state change of isLimitOpen
         // And if ShoppingItemForm is rendered.
         expect(toggleComponent.instance().state.isLimitOpen).toEqual(true);
-        expect(LimitShoppingItems).toHaveLength(1)
+        expect(LimitShoppingItems).toHaveLength(1);
     });
     it('Changes state of isOpen when handleFormClose is invoked',()=>{
         toggleComponent.setState({ isOpen: true });
@@ -477,3 +477,42 @@ describe('ToggleShoppingItem spy method test cases',()=>{
         expect(onLimitSubmitSpy).toHaveBeenCalled();
     });
 });
+describe('TableBody test case',()=>{
+    it('Returns EditableShoppingItem when prop type is string',()=>{
+        const tableBody = shallow(<TableBody items="No shopping items"/>)
+        expect(EditableShoppingItem).toHaveLength(1);
+    })
+});
+describe('EditableShoppingItem test cases',()=>{
+    it('Changes state of editForm when handelFormOpen is called',()=>{
+        const editableItemComponent = shallow(<EditableShoppingItem/>);
+        editableItemComponent.setState({ editForm: false });
+        editableItemComponent.instance().handelFormOpen();
+        expect(editableItemComponent.instance().state.editForm).toBe(true);
+    });
+    it('Changes state of editForm when handleFormClose is called',()=>{
+        const editableItemComponent = shallow(<EditableShoppingItem/>);
+        editableItemComponent.setState({ editForm: true });
+        editableItemComponent.instance().handleFormClose();
+        expect(editableItemComponent.instance().state.editForm).toBe(false);
+    });
+    it('onFormSubmit is called when handleUpdateSubmit is invoked',()=>{
+        let onFormSubmitSpy = jest.fn();
+        let editedShoppingItem = { shoppingitemname: 'Milk', price: 20, quantity: 2, item_id: 8 }
+        const editableItemComponent = shallow(<EditableShoppingItem formSubmit={onFormSubmitSpy}/>);
+        editableItemComponent.setState({ editForm: true });
+        editableItemComponent.instance().handleUpdateSubmit(editedShoppingItem);
+        expect(onFormSubmitSpy).toHaveBeenCalled();
+        expect(editableItemComponent.instance().state.editForm).toBe(false);
+    });
+    it('onDeleteClick is called when handleDeleteClick is invoked',()=>{
+        let onDeleteClickSpy = jest.fn();
+        const editableItemComponent = shallow(<EditableShoppingItem onDeleteClick={onDeleteClickSpy}/>);
+        editableItemComponent.instance().handleDeleteClick();
+        expect(onDeleteClickSpy).toHaveBeenCalled();
+    });
+    it('Returns tbody element',()=>{
+        const editableItemComponent = shallow(<EditableShoppingItem items="No shopping items"/>);
+        expect(EditableShoppingItem).toHaveLength(1);
+    });
+})
