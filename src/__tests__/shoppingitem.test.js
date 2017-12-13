@@ -584,4 +584,38 @@ describe('SearchShoppingItem component test cases',()=>{
         expect(onCancelClickSpy).toHaveBeenCalled();
     })
 });
+describe('LimitShoppingItems component test cases',()=>{
+    it('Change event causes state changes',()=>{
+        const limitComponent = shallow(<LimitShoppingItems/>);
+        const limitInput = limitComponent.find("Input[name='limit']");
+        const event = {
+            target: {
+                name: 'limit',
+                value: 4
+            },
+            preventDefault: () => { }
+        };
+        limitInput.simulate('change', event);
+        expect(limitComponent.state().limit_shoppingitem).toBe(event.target.value);
+    });
+    it('handleLimitItems event calls onLimitSubmit prop function',()=>{
+        const onLimitSubmitSpy = jest.fn();
+        const limitComponent = shallow(<LimitShoppingItems onLimitSubmit={onLimitSubmitSpy}/>);
+        const event = {
+            preventDefault: () => { }
+        };
+        limitComponent.instance().handleLimitItems( event );
+        
+        expect(onLimitSubmitSpy).toHaveBeenCalled();
+    });
+    it('onCancelClick is called when handleCancelClick is invoked',()=>{
+        const onCancelClickSpy = jest.fn();
+        const limitComponent = shallow(<LimitShoppingItems onCancelClick={onCancelClickSpy}/>);
+        const event = {
+            preventDefault: () => { }
+        };
+        limitComponent.instance().handleCancelClick(event);
+        expect(onCancelClickSpy).toHaveBeenCalled();
+    })
+});
 
