@@ -2,9 +2,10 @@ import React from 'react';
 import { shallow, mount } from 'enzyme';
 import sinon from 'sinon';
 import moxios from 'moxios';
-import axios from 'axios';
+import axiosConfig from '../components/baseConfig';
 import ReactDOM from 'react-dom';
 import { RegisterPage, RegisterForm } from '../components/register';
+import { ToastContainer } from 'react-toastify';
 
 describe('<RegisterPage/> component', () => {
     it('Renders RegisterPage component', () => {
@@ -22,65 +23,38 @@ describe('<RegisterPage/> component', () => {
     });
 });
 describe('Form Validation in Register page', () => {
-    let onFulfilled
-    let onRejected
+   
     beforeEach(function () {
-        moxios.install()
-        onFulfilled = sinon.spy()
-        onRejected = sinon.spy()
+        moxios.install(axiosConfig);
+        
     })
     afterEach(function () {
         moxios.uninstall()
     })
-    it('Submits user details to API server, registration success', () => {
+    it('Registration success', (done) => {
+        const register = mount(<RegisterPage/>);
+        const registerForm = shallow(<RegisterForm/>)
+        registerForm.instance().sendRequest("regTest@gmail.com", "pass123")
         moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/auth/register/', {
             status: 200,
-            responseText: "Successful registration"
+            responseText: {message: 'You have been registered successfully. Please login'}
         })
-        axios.post('https://shoppinglist-restful-api.herokuapp.com/auth/register/', {
-            email: 'chris@gmail.com',
-            password: 'chris1234'
-        }).then(onFulfilled)
         moxios.wait(function () {
-            expect(onFulfilled.getCall(0).args[0].data).toBe('Successful registration');
+            expect(register.find('ToastContainer').text()).toContain("You have been registered successfully. Please login");
             done()
         })
     });
-    it('Raises error when email is not submited', () => {
-
-        axios.post('https://shoppinglist-restful-api.herokuapp.com/auth/register/', {
-            email: '',
-            password: 'chris1234'
-        }).then(onFulfilled, onRejected)
-
-        moxios.wait(function () {
-            let request = moxios.requests.mostRecent()
-            request.respondWith({
-                status: 400,
-                response: "Error"
-            }).then(function () {
-                expect(onRejected.getCall(0).args[0].data).toBe('Error');
-                done()
-            })
+    it('Raises error when email is not submited', (done) => {
+        const register = mount(<RegisterPage/>);
+        const registerForm = shallow(<RegisterForm/>)
+        registerForm.instance().sendRequest("regTest@gmail", "pass123");
+        moxios.stubRequest('https://shoppinglist-restful-api.herokuapp.com/auth/register/', {
+            status: 403,
+            responseText: {message: 'Please provide a valid email address.'}
         })
-
-    })
-    it('Raises error when password is not submited', () => {
-
-        axios.post('https://shoppinglist-restful-api.herokuapp.com/auth/register/', {
-            email: 'chris@gmail.com',
-            password: ''
-        }).then(onFulfilled, onRejected)
-
         moxios.wait(function () {
-            let request = moxios.requests.mostRecent()
-            request.respondWith({
-                status: 400,
-                response: "Error"
-            }).then(function () {
-                expect(onRejected.getCall(0).args[0].data).toBe('Error');
-                done()
-            })
+            expect(register.find('ToastContainer').text()).toContain("Please provide a valid email address.");
+            done()
         })
 
     })

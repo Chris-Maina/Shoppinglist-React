@@ -6,7 +6,9 @@ import { LoginForm } from '../components/login';
 import {ShoppinglistPage} from '../components/shoppinglist';
 import sinon from 'sinon';
 import moxios from 'moxios';
-import axios from 'axios';
+import axiosConfig from '../components/baseConfig';
+import { ToastContainer } from 'react-toastify';
+
 
 describe('<LoginForm/> components', () => {
     it('Renders Form by default correctly', () => {
@@ -18,56 +20,50 @@ describe('<LoginForm/> components', () => {
         expect(container).toHaveLength(1);
     });
     describe('Mocking axios request to login ', () => {
-        let onFulfilled
-        let onRejected
         beforeEach(function () {
-            moxios.install()
-            onFulfilled = sinon.spy()
-            onRejected = sinon.spy()
+            moxios.install(axiosConfig);
         })
         afterEach(function () {
-            moxios.uninstall()
+            moxios.uninstall();
         })
-        it('Logins in a user successfully', () => {
-            axios.post('https://shoppinglist-restful-api.herokuapp.com/auth/login/', {
-                email: 'chris@gmail.com',
-                password: 'chris12345'
-            }).then(onFulfilled)
+        it('Logins in a user successfully', (done) => {
+            const login = mount(<LoginForm />);
+            login.instance().sendRequest("logintest@gmail.com", "chris12345")
+            moxios.stubRequest( "https://shoppinglist-restful-api.herokuapp.com/auth/login/" , {
+                status: 200,
+                response:{message: "You are logged in successfully"}
+            });
             moxios.wait(function () {
-                let request = moxios.request.mostRecent()
-                request.respondWith({
-                    status: 200,
-                    respondText: "Success login"
-                }).then(function () {
-                    equal(onFulfilled.getCall(0).args(0).data, "Success login")
-                    done()
-                })
+                // Expect state of isLoading changes
+                // Expect toast has success message
+                expect(login.instance().state.isLoading).toBe(false);
+                expect(login.find('ToastContainer').text()).toContain("You are logged in successfully");
+                done();
             })
-
         })
         it('Raises error when password is not submited', () => {
-
-            axios.post('https://shoppinglist-restful-api.herokuapp.com/auth/login/', {
-                email: 'chris@gmail.com',
-                password: ''
-            }).then(onFulfilled, onRejected)
+            const login = mount(<LoginForm />);
+            login.instance().sendRequest("chris@gmail.com", "")
+            moxios.stubRequest( "https://shoppinglist-restful-api.herokuapp.com/auth/login/" , {
+                status: 400,
+                response:{message: 'Please fill password field.'}
+            })
 
             moxios.wait(function () {
-                let request = moxios.requests.mostRecent()
-                request.respondWith({
-                    status: 400,
-                    response: "Error"
-                }).then(function () {
-                    expect(onRejected.getCall(0).args[0].data).toBe('Error');
-                    done()
-                })
+                // Expect state of isLoading changes
+                 // Expect toast has error message
+                expect(login.instance().state.isLoading).toEqual(false);
+                expect(login.find('ToastContainer').text()).toContain("Please fill password field.");
+                done();
             })
 
         })
-        // it('renders without crashing', () => {
-        //     const div = document.createElement('div');
-        //     ReactDOM.shallow(<LoginForm/>, div);
-        // });
+        it('Renders ShoppinglistPage when isLoggedIn is true', ()=>{
+            const login = shallow(<LoginForm />);
+            login.setState({isLoggedIn: true});
+            expect(ShoppinglistPage).toHaveLength(1);
+        })
+       
         it('Renders props correctly', () => {
             const login = shallow(<LoginForm title="Sign In" />);
             expect(login.instance().props.title).toBe("Sign In");
@@ -112,13 +108,5 @@ describe('<LoginForm/> components', () => {
             expect(login.state().email).toBe(event.target.value);
 
         })
-        // it('Redirects when redirect state is changed', () => {
-        //     const login = shallow(<LoginForm/>);
-        //     login.setState({isLoggedIn: true})
-            
-        //     expect(login.find('Redirect').calledOnce).toEqual(true);
-            
-
-        // })
     })
 });
