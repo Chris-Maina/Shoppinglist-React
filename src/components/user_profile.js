@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Card, Col, Button, Row, CardTitle, Modal, Input, Icon } from 'react-materialize';
-import { Route} from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import requireLogin from './authenticate';
 import Form from 'muicss/lib/react/form';
 import "./user_profile.css";
-import {Navigation} from './navbar';
+import { Navigation } from './navbar';
 import Container from 'muicss/lib/react/container';
 import { ToastContainer, toast } from 'react-toastify';
 import axiosConfig from '../components/baseConfig';
@@ -41,9 +41,9 @@ class UserProfile extends Component {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
                 toast.error(error.response.data.message);
-                if(error.response.status === 408){
+                if (error.response.status === 408) {
                     window.localStorage.removeItem('token');
-                    return <Route exact ={true} path={`/user`} component={requireLogin(UserProfile)} />
+                    return <Route exact={true} path={`/user`} component={requireLogin(UserProfile)} />
                 }
             } else if (error.request) {
                 // The request was made but no response was received
@@ -81,9 +81,9 @@ class UserProfile extends Component {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
                 toast.error(error.response.data.message);
-                if(error.response.status === 408){
+                if (error.response.status === 408) {
                     window.localStorage.removeItem('token');
-                    return <Route exact ={true} path={`/user`} component={requireLogin(UserProfile)} />
+                    return <Route exact={true} path={`/user`} component={requireLogin(UserProfile)} />
                 }
             } else if (error.request) {
                 // The request was made but no response was received
@@ -110,12 +110,13 @@ class UserProfile extends Component {
                                             [<Modal
                                                 trigger={<Button size="small" className="black yellow-text" waves='light' >
                                                     Update profile
-                                    </Button>}
-                                                header={<h4 className="mui--text-center teal-text">Change Email or Password</h4>}>
+                                                        </Button>}
+                                                header={<h4 className="mui--text-center teal-text">Change Email or Password</h4>}
+                                                >
                                                 <Row >
                                                     <Form onSubmit={this.handleSubmit}>
-                                                        <Input label="Email" className="black-text" name="email" validate type='email'  value={this.state.email} onChange={this.onInputChange} ><Icon>email</Icon></Input>
-                                                        <Input label="Password" className="black-text" name="password"  validate type='password' value={this.state.password} onChange={this.onInputChange} ><Icon>lock</Icon></Input><br />
+                                                        <Input label="Email" className="black-text" name="email" validate type='email' value={this.state.email} onChange={this.onInputChange} ><Icon>email</Icon></Input>
+                                                        <Input label="Password" className="black-text" name="password" validate type='password' value={this.state.password} onChange={this.onInputChange} ><Icon>lock</Icon></Input><br />
                                                         <Button size="small" waves='light'>Update </Button>
                                                     </Form>
                                                 </Row>
@@ -124,7 +125,7 @@ class UserProfile extends Component {
                                         }>
                                         <Row>
                                             <Col>
-                                                <h4>Profile user</h4>
+                                                <h4>User</h4>
                                                 <p>{this.state.email}</p>
                                             </Col>
                                         </Row>
