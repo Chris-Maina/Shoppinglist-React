@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { Card, Col, Button, Row, CardTitle, Modal, Input, Icon } from 'react-materialize';
+import { Route} from 'react-router-dom';
+import requireLogin from './authenticate';
 import Form from 'muicss/lib/react/form';
 import "./user_profile.css";
 import {Navigation} from './navbar';
 import Container from 'muicss/lib/react/container';
-import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import axiosConfig from '../components/baseConfig';
 
 class UserProfile extends Component {
     constructor(props) {
@@ -16,22 +18,19 @@ class UserProfile extends Component {
         this.getUserProfile = this.getUserProfile.bind(this);
         this.updatePasswordEmail = this.updatePasswordEmail.bind();
     }
-    componentDidMount() {
+    componentWillMount() {
         this.setState({ email: this.props.email, password: this.props.password });
         this.getUserProfile();
     }
     getUserProfile() {
         // Send GET request 
-        const url = 'https://shoppinglist-restful-api.herokuapp.com/user';
-        axios({
+        axiosConfig.request({
             method: "get",
-            url: url,
+            url: `/user`,
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             }
         }).then((response) => {
-            console.log(response.data);
             this.setState({
                 email: response.data.email,
             });
@@ -41,8 +40,11 @@ class UserProfile extends Component {
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
-                console.log(error.response.data);
-                toast.error(error.response.data.message)
+                toast.error(error.response.data.message);
+                if(error.response.status === 408){
+                    window.localStorage.removeItem('token');
+                    return <Route exact ={true} path={`/user`} component={requireLogin(UserProfile)} />
+                }
             } else if (error.request) {
                 // The request was made but no response was received
                 console.log(error.request);
@@ -65,25 +67,25 @@ class UserProfile extends Component {
         this.updatePasswordEmail(this.state.email, this.state.password);
     }
     updatePasswordEmail(email, password) {
-        // Send PUT request 
-        var data = { "email": email, "password": password };
-        const url = 'https://shoppinglist-restful-api.herokuapp.com/user';
-        axios({
+        // Send PUT request  
+        axiosConfig.request({
             method: "put",
-            url: url,
+            url: `/user`,
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + window.localStorage.getItem('token')
             },
-            data: data
+            data: { "email": email, "password": password }
         }).then((response) => {
-            toast.success("Profile updated ");
-            return response.data;
+            toast.success(response.data.message);
         }).catch(function (error) {
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
-                toast.error(error.response.data.message)
+                toast.error(error.response.data.message);
+                if(error.response.status === 408){
+                    window.localStorage.removeItem('token');
+                    return <Route exact ={true} path={`/user`} component={requireLogin(UserProfile)} />
+                }
             } else if (error.request) {
                 // The request was made but no response was received
                 console.log(error.request);
@@ -114,8 +116,8 @@ class UserProfile extends Component {
                                                 header={<h4 className="mui--text-center teal-text">Change Email or Password</h4>}>
                                                 <Row >
                                                     <Form onSubmit={this.handleSubmit}>
-                                                        <Input label="Email" className="black-text" validate type='email' name="email" value={this.state.email} onChange={this.onInputChange} ><Icon>email</Icon></Input>
-                                                        <Input label="Password" className="black-text" validate type='password' name="password" value={this.state.password} onChange={this.onInputChange} ><Icon>lock</Icon></Input><br />
+                                                        <Input label="Email" className="black-text" name="email" validate type='email'  value={this.state.email} onChange={this.onInputChange} ><Icon>email</Icon></Input>
+                                                        <Input label="Password" className="black-text" name="password"  validate type='password' value={this.state.password} onChange={this.onInputChange} ><Icon>lock</Icon></Input><br />
                                                         <Button size="small" waves='light'>Update </Button>
                                                     </Form>
                                                 </Row>

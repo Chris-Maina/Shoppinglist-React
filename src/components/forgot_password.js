@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Container from 'muicss/lib/react/container';
-import axios from 'axios';
 import { Button, Row, Col, Input, Icon, Card } from 'react-materialize';
 import Form from 'muicss/lib/react/form';
 import { ToastContainer, toast } from 'react-toastify';

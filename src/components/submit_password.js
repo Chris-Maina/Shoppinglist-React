@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Container from 'muicss/lib/react/container';
 import { ToastContainer, toast } from 'react-toastify';
-import axios from 'axios';
 import { Button, Row, Col, Input, Card } from 'react-materialize';
 import Form from 'muicss/lib/react/form';
 import './forgot_password.css';
