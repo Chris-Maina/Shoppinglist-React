@@ -59,7 +59,6 @@ export class LoginForm extends Component {
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
-                console.log(error.response.data.message);
                 toast.error(error.response.data.message);
             } else if (error.request) {
                 // The request was made but no response was received
