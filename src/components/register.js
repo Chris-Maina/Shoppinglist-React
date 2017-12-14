@@ -101,7 +101,6 @@ export class RegisterForm extends Component {
                 // Something happened in setting up the request that triggered an Error
                 console.log('Error', error.message);
             }
-            console.log(error.config);
         });
     }
     render() {
