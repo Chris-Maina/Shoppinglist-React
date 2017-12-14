@@ -224,9 +224,6 @@ export class ShoppinglistPage extends Component {
     getPreviousPage () {
         // Send GET request with parameter page
         const prev_page_url = this.state.previous_page;
-        if (prev_page_url === 'None') {
-            return toast.info("There are no shoppinglist in previous page");
-        }
         axiosConfig.request({
             method: "get",
             url: prev_page_url,
