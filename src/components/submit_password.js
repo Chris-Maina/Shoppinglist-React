@@ -7,12 +7,14 @@ import Form from 'muicss/lib/react/form';
 import './forgot_password.css';
 import { Navigation } from './navbar';
 import { Redirect } from 'react-router-dom';
+import axiosConfig from './baseConfig';
 
 
 export class SubmitPassword extends Component {
     constructor(props) {
         super(props);
         this.state = { newPassword: '', cNewPassword: '', redirect: false };
+        this.resetPassword = this.resetPassword.bind(this);
     }
     handleInputChange = (evt) => {
         evt.preventDefault();
@@ -40,25 +42,19 @@ export class SubmitPassword extends Component {
             return errors;
         }
     }
-    resetPassword = (pwd) => {
-        var data = { "password": pwd }
-        const url = 'https://shoppinglist-restful-api.herokuapp.com' + this.props.match.url;
-        axios({
+    resetPassword(pwd) {
+        axiosConfig.request({
             method: "put",
-            url: url,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            data: data
+            url: this.props.match.url,
+            data: { "password": pwd }
         }).then((response) => {
             toast.success(response.data.message);
             this.setState({ redirect: true });
             return response.data;
-        }).catch(function (error) {
+        }).catch((error) => {
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
-                console.log(error.response.data);
                 toast.error(error.response.data.message)
             } else if (error.request) {
                 // The request was made but no response was received
