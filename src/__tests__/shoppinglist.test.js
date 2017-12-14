@@ -69,7 +69,7 @@ describe('<ShoppinglistPage/> components', () => {
         })
         shoppinglistPageComponent.setState({ isLoading: false });
         moxios.wait(function () {
-            expect(shoppinglistPageComponent).toHaveLength(1);
+            expect(LoginForm).toHaveLength(1);
             done();
         })
 
@@ -138,6 +138,19 @@ describe('<ShoppinglistPage/> components', () => {
             done();
         })
     })
+    it(' postShoppinglist is unsuccessful exits with 408 err', (done) => {
+        shoppinglistPageComponent.instance().postShoppinglist('Furniture');
+        moxios.stubRequest( "https://shoppinglist-restful-api.herokuapp.com/shoppinglists/", {
+            status: 408,
+            response: { message: "Invalid token. Please register or login" }
+        });
+        moxios.wait(function () {
+            // Expect rendering of loginForm 
+            expect(LoginForm).toHaveLength(1);
+            done();
+        });
+    
+    })
     
     it('Raises an error when postShoppinglist contains an error message', (done) => {
         shoppinglistPageComponent.instance().postShoppinglist("Furniture");
@@ -165,6 +178,19 @@ describe('<ShoppinglistPage/> components', () => {
             done();
         })
 
+    });
+    it(' searchShoppinglist is unsuccessful exits with 408 err', (done) => {
+        shoppinglistPageComponent.instance().searchShoppinglist('Soko');
+        moxios.stubRequest( "https://shoppinglist-restful-api.herokuapp.com/shoppinglists/?q=Soko", {
+            status: 408,
+            response: { message: "Invalid token. Please register or login" }
+        });
+        moxios.wait(function () {
+            // Expect rendering of loginForm 
+            expect(LoginForm).toHaveLength(1);
+            done();
+        });
+    
     })
     it('Raises an error when search query contains an error message', (done) => {
         shoppinglistPageComponent.instance().handleSearchShoppinglist("Soko");
@@ -178,6 +204,21 @@ describe('<ShoppinglistPage/> components', () => {
             done();
         })
 
+    });
+    it(' deleteShoppinglist is unsuccessful exits with 408 err', (done) => {
+        const shoppinglistPageComponent = mount(<ShoppinglistPage />);
+        shoppinglistPageComponent.instance().handleDeleteShoppinglist("House warming", 8);
+        moxios.stubRequest( "https://shoppinglist-restful-api.herokuapp.com/shoppinglists/8", {
+            status: 408,
+            response: { message: "Invalid token. Please register or login" }
+        });
+        shoppinglistPageComponent.setState({ isLoading: false });
+        moxios.wait(function () {
+            // Expect rendering of loginForm 
+            expect(LoginForm).toHaveLength(1);
+            done();
+        });
+    
     })
 it('Calls deleteShoppinglist when handleDeleteShoppinglist is invoked', (done) => {
     const deleteShoppinglistSpy = sinon.spy(ShoppinglistPage.prototype, 'deleteShoppinglist')
@@ -211,6 +252,20 @@ it('Calls deleteShoppinglist when handleDeleteShoppinglist is invoked', (done) =
         })
 
     })
+    it(' getPreviousPage is unsuccessful exits with 408 err', (done) => {
+        shoppinglistPageComponent.setState({ previous_page: "/shoppinglists/?limit=2&page=2" });
+        shoppinglistPageComponent.instance().getPreviousPage();
+        moxios.stubRequest( "https://shoppinglist-restful-api.herokuapp.com/shoppinglists/?limit=2&page=2", {
+            status: 408,
+            response: { message: "Invalid token. Please register or login" }
+        });
+        moxios.wait(function () {
+            // Expect rendering of loginForm 
+            expect(LoginForm).toHaveLength(1);
+            done();
+        });
+    
+    })
     it('Calls getPreviousPage when handlePrevClick is called', (done) => {
         const getPreviousPageSpy = sinon.spy(ShoppinglistPage.prototype, 'getPreviousPage')
         const shoppinglistPageComponent = mount(<ShoppinglistPage />);
@@ -234,6 +289,20 @@ it('Calls deleteShoppinglist when handleDeleteShoppinglist is invoked', (done) =
         })
         expect(getNextPageSpy.calledOnce).toEqual(true);
         done();
+    })
+    it(' getNextPage is unsuccessful exits with 408 err', (done) => {
+        shoppinglistPageComponent.setState({ next_page: "/shoppinglists/?limit=2&page=2" });
+        shoppinglistPageComponent.instance().getNextPage();
+        moxios.stubRequest( "https://shoppinglist-restful-api.herokuapp.com/shoppinglists/?limit=2&page=2", {
+            status: 408,
+            response: { message: "Invalid token. Please register or login" }
+        });
+        moxios.wait(function () {
+            // Expect rendering of loginForm 
+            expect(LoginForm).toHaveLength(1);
+            done();
+        });
+    
     })
     it('function getNext returns a response ', (done) => {
         shoppinglistPageComponent.setState({ next_page: "/shoppinglists/?limit=2&page=2" });
@@ -261,6 +330,20 @@ it('Calls deleteShoppinglist when handleDeleteShoppinglist is invoked', (done) =
         expect(limitShoppinglistsSpy.calledOnce).toEqual(true);
         done();
     })
+    it(' limitShoppinglists is unsuccessful exits with 408 err', (done) => {
+        shoppinglistPageComponent.instance().limitShoppinglists(2);
+        moxios.stubRequest( "https://shoppinglist-restful-api.herokuapp.com/shoppinglists/?limit=2", {
+            status: 408,
+            response: { message: "Invalid token. Please register or login" }
+        });
+        moxios.wait(function () {
+            // Expect rendering of loginForm 
+            expect(LoginForm).toHaveLength(1);
+            done();
+        });
+    
+    })
+    
     it('limits a shoppinglists', (done) => {
         shoppinglistPageComponent.instance().limitShoppinglists(2);
 
@@ -520,7 +603,6 @@ describe('SearchShoppinglist component', () => {
         const searchForm = searchShoppinglistComponent.find('Form');
         searchForm.simulate('submit', { preventDefault() { } });
         expect(onSearchSubmitSpy).toHaveBeenCalled();
-
     })
 
 })
