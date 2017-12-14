@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/Chris-Maina/Shoppinglist-React.svg?branch=ch-testing)](https://travis-ci.org/Chris-Maina/Shoppinglist-React)
-[![Coverage Status](https://coveralls.io/repos/github/Chris-Maina/Shoppinglist-React/badge.svg?branch=ch-testing)](https://coveralls.io/github/Chris-Maina/Shoppinglist-React?branch=ch-testing)
+[![Build Status](https://travis-ci.org/Chris-Maina/Shoppinglist-React.svg?branch=develop)](https://travis-ci.org/Chris-Maina/Shoppinglist-React)
+[![Coverage Status](https://coveralls.io/repos/github/Chris-Maina/Shoppinglist-React/badge.svg?branch=ch-testing)](https://coveralls.io/github/Chris-Maina/Shoppinglist-React?branch=develop)
 
 ## Shoppinglist React Application.
 
