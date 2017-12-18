@@ -18,7 +18,7 @@ export class Navigation extends Component {
         <Redirect to="/auth/login/" />
       );
     }
-    var token = window.localStorage.getItem('token')
+    let token = window.localStorage.getItem('token')
     if (!token) {
       return (
         <Navbar brand='SHOPPINGLIST' className='amber accent-4' right>

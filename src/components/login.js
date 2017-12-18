@@ -38,14 +38,13 @@ export class LoginForm extends Component {
     }
 
     sendRequest(email, password) {
-        var data = { "email": email, "password": password };
         axiosConfig.request({
             method: "post",
             url: `/auth/login/`,
             headers: {
                 'Content-Type': 'application/json',
             },
-            data: data
+            data: { "email": email, "password": password }
         }).then((response) => {
             this.setState({ isLoading: false });
             toast.success(response.data.message);

@@ -23,7 +23,7 @@ export class SubmitPassword extends Component {
     }
     handleSubmit = (evt) => {
         evt.preventDefault();
-        var formError = '';
+        let formError = '';
         formError = this.validate(this.state.newPassword, this.state.cNewPassword);
         if (formError) {
             return toast.error(formError);
@@ -31,7 +31,7 @@ export class SubmitPassword extends Component {
         this.resetPassword(this.state.newPassword)
     }
     validate(pwd, cpwd) {
-        var errors = '';
+        let errors = '';
         if (pwd !== cpwd) {
             errors = "Password mismatch";
             return errors;

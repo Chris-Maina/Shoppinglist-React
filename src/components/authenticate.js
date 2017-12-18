@@ -5,7 +5,7 @@ import {withRouter} from "react-router-dom";
 export default function requireLogin(ComponentPassed){
     class AllowedComponent extends Component {
         componentWillMount(){
-            var token = window.localStorage.getItem('token')
+            let token = window.localStorage.getItem('token')
             if(!token){
                 this.props.history.push("/auth/login/");
             }

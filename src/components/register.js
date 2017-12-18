@@ -48,7 +48,7 @@ export class RegisterForm extends Component {
     }
     handelsubmit(evt) {
         evt.preventDefault();
-        var errors = '';
+        let errors = '';
         errors = this.validate(this.state.username, this.state.email, this.state.password, this.state.cpassword)
         if (errors) {
             toast.error(errors)
@@ -59,7 +59,7 @@ export class RegisterForm extends Component {
         this.setState({ username: '', email: '', password: '', cpassword: '' });
     }
     validate(username, email, password, cpassword) {
-        var errors = '';
+        let errors = '';
         if (password !== cpassword) {
             errors = "Password mismatch";
             return errors;
@@ -69,7 +69,7 @@ export class RegisterForm extends Component {
             return errors;
         }else{
         // Regular expression to check for special characters
-        var re = /^[a-zA-Z0-9_]+$/;
+        let re = /^[a-zA-Z0-9_]+$/;
         // console.log(re.test(username))
         if (!re.test(username)) {
             errors = "Username cannot have special characters";
@@ -79,12 +79,11 @@ export class RegisterForm extends Component {
         
     }
     sendRequest(email, password) {
-        var data = { "email": email, "password": password }
         // const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
         axiosConfig.request({
             method: "post",
             url: '/auth/register/',
-            data: data
+            data: { "email": email, "password": password }
         }).then((response)=> {
             toast.success(response.data.message);
             this.setState({ redirect: true })
